@@ -1,0 +1,14 @@
+﻿<?xml version="1.0"?>
+<DTS:ConnectionManager xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:ObjectName="Utility"
+  DTS:DTSID="{1A8664F3-BE3D-46FF-AEB7-5A71CAFC73DE}"
+  DTS:CreationName="OLEDB">
+  <DTS:PropertyExpression
+    DTS:Name="InitialCatalog">@[$Project::Utility_Catalog]</DTS:PropertyExpression>
+  <DTS:PropertyExpression
+    DTS:Name="ServerName">@[$Project::Utility_Server]</DTS:PropertyExpression>
+  <DTS:ObjectData>
+    <DTS:ConnectionManager
+      DTS:ConnectionString="data source=DELTA;initial catalog=ISR_Analytic;provider=SQLNCLI11.1;integrated security=SSPI;auto translate=False;" />
+  </DTS:ObjectData>
+</DTS:ConnectionManager>

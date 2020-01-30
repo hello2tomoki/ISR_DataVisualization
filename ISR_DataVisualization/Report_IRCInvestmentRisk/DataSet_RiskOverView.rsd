@@ -1,0 +1,106 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<SharedDataSet xmlns="http://schemas.microsoft.com/sqlserver/reporting/2010/01/shareddatasetdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
+  <DataSet Name="DataSet1">
+    <Query>
+      <DataSourceReference>DataSource_RiskDM</DataSourceReference>
+      <DataSetParameters>
+        <DataSetParameter Name="@SelectedDate">
+          <ReadOnly>false</ReadOnly>
+          <Nullable>false</Nullable>
+          <OmitFromQuery>false</OmitFromQuery>
+          <rd:DbType>Date</rd:DbType>
+        </DataSetParameter>
+        <DataSetParameter Name="@OffsetPrevious">
+          <ReadOnly>false</ReadOnly>
+          <Nullable>false</Nullable>
+          <OmitFromQuery>false</OmitFromQuery>
+          <rd:DbType>Int32</rd:DbType>
+        </DataSetParameter>
+      </DataSetParameters>
+      <CommandType>StoredProcedure</CommandType>
+      <CommandText>Rpt.GetRiskOverView</CommandText>
+    </Query>
+    <Fields>
+      <Field Name="MarketsType">
+        <DataField>MarketsType</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="RiskDate">
+        <DataField>RiskDate</DataField>
+        <rd:TypeName>System.DateTime</rd:TypeName>
+      </Field>
+      <Field Name="Shock">
+        <DataField>Shock</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="Confidence_Interval">
+        <DataField>Confidence_Interval</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="Contribution_By">
+        <DataField>Contribution By</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="Market_Value">
+        <DataField>Market_Value</DataField>
+        <rd:TypeName>System.Double</rd:TypeName>
+      </Field>
+      <Field Name="Description">
+        <DataField>Description</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="Market_Value_Percent">
+        <DataField>Market_Value_(%)</DataField>
+        <rd:TypeName>System.Double</rd:TypeName>
+      </Field>
+      <Field Name="Standalone_Absolute_VaR">
+        <DataField>Standalone_Absolute_VaR</DataField>
+        <rd:TypeName>System.Double</rd:TypeName>
+      </Field>
+      <Field Name="Standalone_Absolute_VaR_Percent">
+        <DataField>Standalone_Absolute_VaR_(%)</DataField>
+        <rd:TypeName>System.Double</rd:TypeName>
+      </Field>
+      <Field Name="Contribution_Absolute_VaR">
+        <DataField>Contribution_Absolute_VaR</DataField>
+        <rd:TypeName>System.Double</rd:TypeName>
+      </Field>
+      <Field Name="Contribution_Absolute_VaR_Percent">
+        <DataField>Contribution_Absolute_VaR_(%)</DataField>
+        <rd:TypeName>System.Double</rd:TypeName>
+      </Field>
+      <Field Name="DateKey">
+        <DataField>DateKey</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+      <Field Name="CalendarQuarter">
+        <DataField>CalendarQuarter</DataField>
+        <rd:TypeName>System.Byte</rd:TypeName>
+      </Field>
+      <Field Name="Evaluate_By">
+        <DataField>Evaluate_By</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="CalendarYear">
+        <DataField>CalendarYear</DataField>
+        <rd:TypeName>System.Int16</rd:TypeName>
+      </Field>
+      <Field Name="RptDateTime">
+        <DataField>RptDateTime</DataField>
+        <rd:TypeName>System.DateTime</rd:TypeName>
+      </Field>
+      <Field Name="DateNo">
+        <DataField>DateNo</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+      <Field Name="QY">
+        <DataField>QY</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="SortBy">
+        <DataField>SortBy</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+    </Fields>
+  </DataSet>
+</SharedDataSet>

@@ -1,0 +1,3949 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report MustUnderstand="df" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2016/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner" xmlns:df="http://schemas.microsoft.com/sqlserver/reporting/2016/01/reportdefinition/defaultfontfamily">
+  <df:DefaultFontFamily>calibri</df:DefaultFontFamily>
+  <AutoRefresh>0</AutoRefresh>
+  <DataSources>
+    <DataSource Name="DataSource_Sandbox2">
+      <DataSourceReference>DataSource_Sandbox2</DataSourceReference>
+      <rd:SecurityType>None</rd:SecurityType>
+      <rd:DataSourceID>5611a527-ccbd-4720-9a8e-b77cec9d63dd</rd:DataSourceID>
+    </DataSource>
+  </DataSources>
+  <DataSets>
+    <DataSet Name="Infra_Risk_KPI">
+      <Query>
+        <DataSourceName>DataSource_Sandbox2</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@QY_Date">
+            <Value>=Parameters!QY_Date.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandText>
+--DECLARE @QY_Date DATE= '07/31/2018';
+WITH Infra_Risk_KPI
+     AS (SELECT CAST(K.QY_Date AS DATE) QY_Date,
+                Risk_Type,
+                CAST(Risk_Trend AS FLOAT) Risk_Trend,
+                CAST(Risk_Level AS FLOAT) Risk_Level
+         FROM [Stg_Rpt].[Infra_Risk_KPI] K WITH (nolock)
+         WHERE CAST(K.QY_Date AS DATE) = @QY_Date)
+     SELECT K.QY_Date,
+            K.Risk_Type,
+            K.Risk_Trend,
+            K.Risk_Level
+		   ,case When Risk_Level &gt;=-1 and  Risk_Level &lt;=-0.001 Then '#c0433a'
+				  When Risk_Level &gt;=-0 and  Risk_Level &lt;= 0.001 Then '#e8d62e'
+				  When Risk_Level &gt;= 0.002  and  Risk_Level &lt;=1 Then'#00b050' Else '#dce6f1' End as Risk_Level_KPI_Color
+    
+     FROM Infra_Risk_KPI K;</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="QY_Date">
+          <DataField>QY_Date</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="Risk_Type">
+          <DataField>Risk_Type</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Risk_Trend">
+          <DataField>Risk_Trend</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="Risk_Level">
+          <DataField>Risk_Level</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="Risk_Level_KPI_Color">
+          <DataField>Risk_Level_KPI_Color</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="PE_US_Backed_Exits">
+      <Query>
+        <DataSourceName>DataSource_Sandbox2</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@QY_Date">
+            <Value>=Parameters!QY_Date.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandText>--DECLARE @QY_Date DATE= '07/31/2018'
+WITH PE_US_Backed_Exits
+     AS (SELECT CAST(QY_Date AS DATE) QY_Date,
+                CAST(Year AS FLOAT) Year,
+                RANK() OVER(ORDER BY CAST(Year AS FLOAT)) Year_rnk,
+                CAST(Secondary_Buyout AS FLOAT) Secondary_Buyout,
+                CAST(Strategic_Acquisition AS FLOAT) Strategic_Acquisition
+         FROM [Stg_Rpt].[PE_US_Backed_Exits] WITH (Nolock)
+         WHERE CAST(QY_Date AS DATE) = (@QY_Date))
+     SELECT E.QY_Date,
+            E.[Year],
+            CASE
+                WHEN RANK() OVER(ORDER BY E.[Year]) = 11
+                THEN CAST(E.[Year] AS VARCHAR(4))+'*'
+                ELSE CAST(E.[Year] AS VARCHAR(4))
+            END AS Year_Label,
+            E.Secondary_Buyout,
+            E.Strategic_Acquisition
+     FROM PE_US_Backed_Exits E
+     WHERE E.[Year] &gt;= YEAR(DATEADD(YEAR, -11, @QY_Date))
+           AND E.[Year] &lt;= YEAR(DATEADD(YEAR, 0, @QY_Date));
+</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="QY_Date">
+          <DataField>QY_Date</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="Year">
+          <DataField>Year</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="Year_Label">
+          <DataField>Year_Label</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Secondary_Buyout">
+          <DataField>Secondary_Buyout</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="Strategic_Acquisition">
+          <DataField>Strategic_Acquisition</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="PE_Cumilative_Overhang">
+      <Query>
+        <DataSourceName>DataSource_Sandbox2</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@QY_Date">
+            <Value>=Parameters!QY_Date.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandText>--DECLARE @QY_Date DATE= '07/31/2018';
+WITH PE_Cumilative_Overhang
+     AS (SELECT CAST(QY_Date AS DATE) QY_Date,
+                CAST(Year AS FLOAT) Year,
+                CAST(Cumilative_Overhang AS FLOAT) Cumilative_Overhang
+         FROM [Stg_Rpt].[PE_Dry_Powder_Cumilative_Overhang] WITH (Nolock)
+         WHERE CAST(QY_Date AS DATE) = (@QY_Date))
+     SELECT C.QY_Date,
+            C.[Year],
+		            CASE
+                WHEN RANK() OVER(ORDER BY C.[Year]) = 9
+                THEN CAST(C.[Year] AS VARCHAR(4))+'*'
+                ELSE CAST(C.[Year] AS VARCHAR(4))
+            END AS Year_Label,
+            C.Cumilative_Overhang
+     FROM PE_Cumilative_Overhang C
+	     WHERE C.[Year] &gt;= YEAR(DATEADD(YEAR, -11, @QY_Date))
+           AND C.[Year] &lt;= YEAR(DATEADD(YEAR, -3, @QY_Date));</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="QY_Date">
+          <DataField>QY_Date</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="Year">
+          <DataField>Year</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="Year_Label">
+          <DataField>Year_Label</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Cumilative_Overhang">
+          <DataField>Cumilative_Overhang</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="PE_Overhang_By_Vintage">
+      <Query>
+        <DataSourceName>DataSource_Sandbox2</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@QY_Date">
+            <Value>=Parameters!QY_Date.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandText>--DECLARE @QY_Date DATE= '07/31/2018';
+WITH PE_Overhang_By_Vintage
+     AS (SELECT CAST(QY_Date AS DATE) QY_Date,
+                CAST(Year AS FLOAT) Year,
+                CAST(Overhang_By_Vintage AS FLOAT) Overhang_By_Vintage
+         FROM [Stg_Rpt].[PE_Dry_Powder_Overhang_By_Vintage] WITH (Nolock)
+         WHERE CAST(QY_Date AS DATE) = (@QY_Date))
+     SELECT O.QY_Date,
+            O.[Year],
+		            CASE
+                WHEN RANK() OVER(ORDER BY O.[Year]) = 9
+                THEN CAST(O.[Year] AS VARCHAR(4))+'*'
+                ELSE CAST(O.[Year] AS VARCHAR(4))
+            END AS Year_Label,
+            O.Overhang_By_Vintage
+     FROM PE_Overhang_By_Vintage O
+	     WHERE O.[Year] &gt;= YEAR(DATEADD(YEAR, -11, @QY_Date))
+           AND O.[Year] &lt;= YEAR(DATEADD(YEAR, -2, @QY_Date));</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="QY_Date">
+          <DataField>QY_Date</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="Year">
+          <DataField>Year</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="Year_Label">
+          <DataField>Year_Label</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Overhang_By_Vintage">
+          <DataField>Overhang_By_Vintage</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="Infra_Portfolio_Overview">
+      <Query>
+        <DataSourceName>DataSource_Sandbox2</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@QY_Date">
+            <Value>=Parameters!QY_Date.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandText>--DECLARE @QY_Date DATE= '07/31/2018';
+WITH Infra_Portfolio_Overview
+     AS (SELECT CAST(QY_Date AS DATE) QY_Date,
+                CAST(Investments_As_of AS DATE) Investments_As_of,
+                Portfolio_Type,
+                Investment_Type,
+                CAST(Market_Value_M AS FLOAT) Market_Value,
+                CAST(Unfunded_Commitments AS FLOAT) Unfunded_Commitments,
+                CAST(VaR_Per AS FLOAT) VaR_Per,
+                CAST(Risk_Contribution AS FLOAT) Risk_Contribution,
+                CAST(Incremental_Risk AS FLOAT) Incremental_Risk,
+                CAST(IRR AS FLOAT) IRR
+         FROM [Stg_Rpt].[Infra_Portfolio_Overview] WITH (Nolock)
+         WHERE CAST(QY_Date AS DATE) = @QY_Date)
+     SELECT P.QY_Date,
+            P.Investments_As_of,
+            P.Portfolio_Type,
+            CASE
+                WHEN Portfolio_Type = 'Principal Investments'
+                THEN 1
+                WHEN Portfolio_Type = 'Funds Investments'
+                THEN 2
+            END AS Portfolio_Type_Sort,
+            P.Investment_Type,
+            P.Market_Value,
+            P.Unfunded_Commitments,
+            P.VaR_Per,
+            P.Risk_Contribution,
+            P.Incremental_Risk,
+            P.IRR
+     FROM Infra_Portfolio_Overview P;</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="QY_Date">
+          <DataField>QY_Date</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="Investments_As_of">
+          <DataField>Investments_As_of</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="Portfolio_Type">
+          <DataField>Portfolio_Type</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Portfolio_Type_Sort">
+          <DataField>Portfolio_Type_Sort</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="Investment_Type">
+          <DataField>Investment_Type</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Market_Value">
+          <DataField>Market_Value</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="Unfunded_Commitments">
+          <DataField>Unfunded_Commitments</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="VaR_Per">
+          <DataField>VaR_Per</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="Risk_Contribution">
+          <DataField>Risk_Contribution</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="Incremental_Risk">
+          <DataField>Incremental_Risk</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="IRR">
+          <DataField>IRR</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="Infra_Direct_Investment_Proportion">
+      <Query>
+        <DataSourceName>DataSource_Sandbox2</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@QY_Date">
+            <Value>=Parameters!QY_Date.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandText>--DECLARE @QY_Date DATE= '07/31/2018';
+
+WITH Infra_Direct_Investment_Proportion
+     AS (SELECT CAST(QY_Date AS DATE) QY_Date,
+                YEAR,
+                CAST(Direct_Investments AS FLOAT) Direct_Investments,
+                CAST(Funds AS FLOAT) Funds,
+                CAST(AUM AS FLOAT) AUM
+         FROM [Stg_Rpt].[Infra_Direct_Investment_Proportion] AS D WITH (Nolock)
+         WHERE CAST(QY_Date AS DATE) = (@QY_Date))
+     SELECT P.QY_Date,
+            YEAR,
+            P.Direct_Investments,
+            P.Funds,
+            P.AUM
+     FROM Infra_Direct_Investment_Proportion P;</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="QY_Date">
+          <DataField>QY_Date</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="YEAR">
+          <DataField>YEAR</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Direct_Investments">
+          <DataField>Direct_Investments</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="Funds">
+          <DataField>Funds</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="AUM">
+          <DataField>AUM</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="Infra_Risk_Contribution">
+      <Query>
+        <DataSourceName>DataSource_Sandbox2</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@QY_Date">
+            <Value>=Parameters!QY_Date.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandText>
+--DECLARE @QY_Date DATE= '07/31/2018';
+WITH Infra_Risk_Contribution
+     AS (SELECT CAST(QY_Date AS DATE) QY_Date,
+                [Type],
+                Sector,
+                CAST(Market_value AS FLOAT) Market_value,
+                CAST(Risk_Contribution AS FLOAT) Risk_Contribution
+         FROM [Stg_Rpt].[Infra_Risk_Contribution] AS R WITH (Nolock)
+         WHERE CAST(QY_Date AS DATE) = (@QY_Date))
+     SELECT R.QY_Date,
+            [Type],
+            R.Sector,
+		  Rank() Over(Partition by [Type] Order by Risk_Contribution desc) as Rnk,
+            R.Market_value AS Market_value,
+		  R.Market_value* (CAse When R.Market_value &gt;=0 and R.Market_value &lt;=0.165 Then 2 
+						When  R.Market_value &gt;= 0.166 and R.Market_value &lt;= 0.175  Then 3
+						When  R.Market_value &gt;= 0.176 Then 4.5 End)  as  Market_value_Lable_Position,
+            R.Risk_Contribution AS Risk_Contribution
+     FROM Infra_Risk_Contribution R</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="QY_Date">
+          <DataField>QY_Date</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="Type">
+          <DataField>Type</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Sector">
+          <DataField>Sector</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Rnk">
+          <DataField>Rnk</DataField>
+          <rd:TypeName>System.Int64</rd:TypeName>
+        </Field>
+        <Field Name="Market_value">
+          <DataField>Market_value</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="Market_value_Lable_Position">
+          <DataField>Market_value_Lable_Position</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="Risk_Contribution">
+          <DataField>Risk_Contribution</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="PE_Risk_Contribution_Geography">
+      <Query>
+        <DataSourceName>DataSource_Sandbox2</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@QY_Date">
+            <Value>=Parameters!QY_Date.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandText>--DECLARE @QY_Date DATE= '07/31/2018';
+WITH PE_Risk_Contribution
+     AS (SELECT CAST(QY_Date AS DATE) QY_Date,
+                [Type],
+                Sector,
+                CAST(Market_value AS FLOAT) Market_value,
+                CAST(Risk_Contribution AS FLOAT) Risk_Contribution
+         FROM [Stg_Rpt].[PE_Risk_Contribution] AS R WITH (Nolock)
+         WHERE CAST(QY_Date AS DATE) = (@QY_Date))
+     SELECT R.QY_Date,
+            [Type],
+            R.Sector,
+		  Rank() Over(Partition by [Type] Order by Risk_Contribution desc) as Rnk,
+            R.Market_value AS Market_value,
+		  R.Market_value* (CAse When R.Market_value &gt;=0 and R.Market_value &lt;=0.1 Then 3
+						When  R.Market_value &gt;= 0.11 and R.Market_value &lt;= 0.5  Then 8
+						When  R.Market_value &gt;= 0.5 Then 1.7 End)  as  Market_value_Lable_Position,
+            R.Risk_Contribution AS Risk_Contribution
+     FROM PE_Risk_Contribution R
+	Where  [Type] = 'Geography'
+</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="QY_Date">
+          <DataField>QY_Date</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="Type">
+          <DataField>Type</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Sector">
+          <DataField>Sector</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Rnk">
+          <DataField>Rnk</DataField>
+          <rd:TypeName>System.Int64</rd:TypeName>
+        </Field>
+        <Field Name="Market_value">
+          <DataField>Market_value</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="Market_value_Lable_Position">
+          <DataField>Market_value_Lable_Position</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="Risk_Contribution">
+          <DataField>Risk_Contribution</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="Infra_Key_Investments">
+      <Query>
+        <DataSourceName>DataSource_Sandbox2</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@QY_Date">
+            <Value>=Parameters!QY_Date.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandText>
+--DECLARE @QY_Date DATE= '07/31/2018';
+WITH Infra_Key_Investments
+     AS (SELECT
+                Portfolio_Type,
+                Major_Deals_GPs,
+                CAST(Market_Value_M AS FLOAT) Market_Value,
+                Industry,
+                [Geography],
+                CAST(Risk_Contribution AS FLOAT) Risk_Contribution,
+                CAST(Vintage_Year AS FLOAT) Vintage_Year,
+                CAST(Risk_Analysis AS FLOAT) Risk_Analysis
+         FROM [Stg_Rpt].[Infra_Key_Investments] WITH (Nolock)
+         WHERE CAST(QY_Date AS DATE) = @QY_Date)
+     SELECT 
+            K.Portfolio_Type,
+		        CASE
+                WHEN Portfolio_Type = 'Principal Investments'
+                THEN 1
+                WHEN Portfolio_Type = 'Funds Investments'
+                THEN 2
+            END AS Portfolio_Type_Sort,
+	
+            K.Major_Deals_GPs,
+            K.Market_Value,
+            K.Industry,
+            K.Geography,
+            K.Risk_Contribution,
+            K.Vintage_Year,
+            K.Risk_Analysis
+     FROM Infra_Key_Investments K;</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="Portfolio_Type">
+          <DataField>Portfolio_Type</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Portfolio_Type_Sort">
+          <DataField>Portfolio_Type_Sort</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="Major_Deals_GPs">
+          <DataField>Major_Deals_GPs</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Market_Value">
+          <DataField>Market_Value</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="Industry">
+          <DataField>Industry</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Geography">
+          <DataField>Geography</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Risk_Contribution">
+          <DataField>Risk_Contribution</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="Vintage_Year">
+          <DataField>Vintage_Year</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="Risk_Analysis">
+          <DataField>Risk_Analysis</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="PE_Risk_Adjusted_Returns">
+      <Query>
+        <DataSourceName>DataSource_Sandbox2</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@QY_Date">
+            <Value>=Parameters!QY_Date.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandText>--DECLARE @QY_Date DATE= '07/31/2018';
+WITH PE_Risk_Adjusted_Returns
+     AS (SELECT CAST(QY_Date AS DATE) AS QY_Date,
+                Holdings,
+                CAST(R.Realized_SI_IRR AS FLOAT) Realized_SI_IRR,
+                CAST(R.Absolute_Risk AS FLOAT) Absolute_Risk,
+                CAST(R.MV AS FLOAT) MV,
+                CAST(R.Per_of_Total_Portfolio AS FLOAT) Per_of_Total_Portfolio
+         FROM [Stg_Rpt].[PE_Risk_Adjusted_Returns] R WITH (Nolock)
+         WHERE CAST(QY_Date AS DATE) = (@QY_Date))
+     SELECT R.QY_Date,
+            R.Holdings,
+            R.Realized_SI_IRR,
+            R.Absolute_Risk,
+            R.MV,
+            R.Per_of_Total_Portfolio
+     FROM PE_Risk_Adjusted_Returns R;
+</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="QY_Date">
+          <DataField>QY_Date</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="Holdings">
+          <DataField>Holdings</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Realized_SI_IRR">
+          <DataField>Realized_SI_IRR</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="Absolute_Risk">
+          <DataField>Absolute_Risk</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="MV">
+          <DataField>MV</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="Per_of_Total_Portfolio">
+          <DataField>Per_of_Total_Portfolio</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="PE_Stressed_Liquidity_Coverage_Ratios">
+      <Query>
+        <DataSourceName>DataSource_Sandbox2</DataSourceName>
+        <CommandText>
+--DECLARE @QY_Date DATE= '07/31/2018';
+WITH PE_Stressed_Liquidity_Coverage_Ratios
+     AS (SELECT CAST(S.QY_Date AS DATE) AS QY_Date,
+                S.QY,
+                CAST(S.Core AS FLOAT) Core,
+                CAST(S.Core_Plus AS FLOAT) Core_Plus,
+                CAST(S.Projected_Core AS FLOAT) Projected_Core,
+                CAST(S.Projected_Core_Plus AS FLOAT) Projected_Core_Plus,
+                CAST(S.Core_Plus_Limit AS FLOAT) Core_Plus_Limit,
+                CAST(S.Core_Limit AS FLOAT) Core_Limit
+         FROM [Stg_Rpt].[Stressed_Liquidity_Coverage_Ratios] S WITH (nolock))
+     SELECT RANK() OVER(ORDER BY CAST(S.QY_Date AS DATE)) AS rnk,
+            CAST(S.QY_Date AS DATE) AS QY_Date,
+            S.QY,
+            CAST(S.Core AS FLOAT) Core,
+            IIF(S.Projected_Core = 0, NULL, S.Projected_Core) Projected_Core,
+            Core_Plus,
+            IIF(S.Projected_Core_Plus= 0, NULL, S.Projected_Core_Plus) Projected_Core_Plus,
+		  Core_Limit,
+		   Core_Plus_Limit,
+            CASE
+                WHEN QY_Date = '06/30/2018'
+                THEN MAX(CAST(S.Core_Plus AS FLOAT)) OVER(PARTITION BY 1)
+                ELSE 0
+            END AS Line
+     FROM PE_Stressed_Liquidity_Coverage_Ratios S WITH (nolock)
+     ORDER BY QY_Date;</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="rnk">
+          <DataField>rnk</DataField>
+          <rd:TypeName>System.Int64</rd:TypeName>
+        </Field>
+        <Field Name="QY_Date">
+          <DataField>QY_Date</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="QY">
+          <DataField>QY</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Core">
+          <DataField>Core</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="Projected_Core">
+          <DataField>Projected_Core</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="Core_Plus">
+          <DataField>Core_Plus</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="Projected_Core_Plus">
+          <DataField>Projected_Core_Plus</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="Core_Limit">
+          <DataField>Core_Limit</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="Core_Plus_Limit">
+          <DataField>Core_Plus_Limit</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="Line">
+          <DataField>Line</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="PE_Credit_Rating">
+      <Query>
+        <DataSourceName>DataSource_Sandbox2</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@QY_Date">
+            <Value>=Parameters!QY_Date.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandText>
+--DECLARE @QY_Date DATE= '07/31/2018';
+
+WITH PE_Credit_Rating
+     AS (SELECT CAST(QY_Date AS DATE) QY_Date,
+                [Credit_Rating],
+                CAST([Credit_Rating_Value] AS FLOAT) Credit_Rating_Value
+         FROM [Sandbox2].[Stg_Rpt].[PE_Credit_Rating] R WITH (nolock)
+         WHERE CAST(QY_Date AS DATE) = @QY_Date)
+     SELECT QY_Date,
+            SUM(CASE
+                    WHEN Credit_Rating = 'BB-'
+                    THEN Credit_Rating_Value
+                    ELSE 0
+                END) AS "BB_Neg",
+            SUM(CASE
+                    WHEN Credit_Rating = 'BB'
+                    THEN Credit_Rating_Value
+                    ELSE 0
+                END) AS "BB",
+            SUM(CASE
+                    WHEN Credit_Rating = 'BB+'
+                    THEN Credit_Rating_Value
+                    ELSE 0
+                END) AS "BB_Plus",
+            SUM(CASE
+                    WHEN Credit_Rating = 'Actual Rating'
+                    THEN Credit_Rating_Value
+                    ELSE 0
+                END) AS "Actual Rating"
+     FROM PE_Credit_Rating
+     GROUP BY QY_Date;</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="QY_Date">
+          <DataField>QY_Date</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="BB_Neg">
+          <DataField>BB_Neg</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="BB">
+          <DataField>BB</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="BB_Plus">
+          <DataField>BB_Plus</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="Actual_Rating">
+          <DataField>Actual Rating</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="Infra_Risk_Contribution_To_Total_Fund">
+      <Query>
+        <DataSourceName>DataSource_Sandbox2</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@QY_Date">
+            <Value>=Parameters!QY_Date.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandText>--DECLARE @QY_Date DATE= '07/31/2018';
+WITH Infra_Risk_Contribution_To_Total_Fund
+     AS (SELECT CAST(K.QY_Date AS DATE) QY_Date,
+                CAST(Quarter_Date AS DATE) Quarter_Date,
+                Quarter_Name,
+                CAST(Absolute_Risk AS FLOAT) Absolute_Risk,
+                CAST(Risk_Contribution AS FLOAT) Risk_Contribution
+         FROM [Stg_Rpt].[Infra_Risk_Contribution_To_Total_Fund] K WITH (nolock)
+         WHERE CAST(K.QY_Date AS DATE) = @QY_Date)
+
+     SELECT R.QY_Date,
+            R.Quarter_Date,
+            R.Quarter_Name,
+            R.Absolute_Risk,
+            R.Risk_Contribution
+     FROM Infra_Risk_Contribution_To_Total_Fund R;</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="QY_Date">
+          <DataField>QY_Date</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="Quarter_Date">
+          <DataField>Quarter_Date</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="Quarter_Name">
+          <DataField>Quarter_Name</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Absolute_Risk">
+          <DataField>Absolute_Risk</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="Risk_Contribution">
+          <DataField>Risk_Contribution</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="Infra_Global_Quaterly_Unlisted_Fundraising">
+      <Query>
+        <DataSourceName>DataSource_Sandbox2</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@QY_Date">
+            <Value>=Parameters!QY_Date.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandText>
+--DECLARE @QY_Date DATE= '07/31/2018';
+WITH Infra_Global_Quaterly_Unlisted_Fundraising
+     AS (SELECT CAST(F.[Year] AS INT) AS Year,
+                F.Quarter,
+                CAST(F.Quarter_Date AS DATE) AS Quarter_Date,
+                CAST(F.No_of_Funds_Closed AS FLOAT) No_of_Funds_Closed,
+                CAST(F.Capital_Raised_$bn AS FLOAT) AS Capital_Raised_$bn,
+                CAST(F.QY_Date AS DATE) AS QY_Date
+         FROM [Stg_Rpt].[Infra_Global_Quaterly_Unlisted_Fundraising] F
+         WHERE CAST(F.QY_Date AS DATE) = @QY_Date)
+     SELECT F.[Year],
+            F.Quarter,
+            F.Quarter_Date,
+            F.No_of_Funds_Closed,
+            F.Capital_Raised_$bn,
+            F.QY_Date
+     FROM Infra_Global_Quaterly_Unlisted_Fundraising F; </CommandText>
+      </Query>
+      <Fields>
+        <Field Name="Year">
+          <DataField>Year</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="Quarter">
+          <DataField>Quarter</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Quarter_Date">
+          <DataField>Quarter_Date</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="No_of_Funds_Closed">
+          <DataField>No_of_Funds_Closed</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="Capital_Raised__bn">
+          <DataField>Capital_Raised_$bn</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="QY_Date">
+          <DataField>QY_Date</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="Infra_Global_Quaterly_Infrastructure_Deals">
+      <Query>
+        <DataSourceName>DataSource_Sandbox2</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@QY_Date">
+            <Value>=Parameters!QY_Date.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandText>
+--DECLARE @QY_Date DATE= '07/31/2018';
+WITH Infra_Global_Quaterly_Infrastructure_Deals
+     AS (SELECT CAST(D.[Year] AS INT) AS Year,
+                D.Quarter,
+                CAST(D.Quarter_Date AS DATE) AS Quarter_Date,
+                CAST(D.No_of_Deals AS FLOAT) No_of_Deals,
+                CAST(D.Aggregate_Deal_Value_$bn AS FLOAT) AS Aggregate_Deal_Value_$bn,
+                CAST(D.QY_Date AS DATE) AS QY_Date
+         FROM [Stg_Rpt].[Infra_Global_Quaterly_Infrastructure_Deals] D
+         WHERE CAST(D.QY_Date AS DATE) = @QY_Date)
+     SELECT D.[Year],
+            D.Quarter,
+            D.Quarter_Date,
+            D.No_of_Deals,
+            D.Aggregate_Deal_Value_$bn,
+            D.QY_Date
+     FROM Infra_Global_Quaterly_Infrastructure_Deals D; </CommandText>
+      </Query>
+      <Fields>
+        <Field Name="Year">
+          <DataField>Year</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="Quarter">
+          <DataField>Quarter</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Quarter_Date">
+          <DataField>Quarter_Date</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="No_of_Deals">
+          <DataField>No_of_Deals</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="Aggregate_Deal_Value__bn">
+          <DataField>Aggregate_Deal_Value_$bn</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="QY_Date">
+          <DataField>QY_Date</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="Infra_Unlisted_Infrastructure_Dry_Powder_by_Fund_Size">
+      <Query>
+        <DataSourceName>DataSource_Sandbox2</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@QY_Date">
+            <Value>=Parameters!QY_Date.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandText>
+--DECLARE @QY_Date DATE= '07/31/2018';
+WITH Infra_Unlisted_Infrastructure_Dry_Powder_by_Fund_Size
+     AS (SELECT CAST(QY_Date AS DATE) QY_Date,
+                CAST([Date] AS DATE) [Date],
+                CAST([Mega_Funds:_$2bn_or_More] AS FLOAT) [Mega_Funds:_$2bn_or_More],
+                CAST([Large_Funds:_$1-1.9bn] AS FLOAT) [Large_Funds:_$1-1.9bn],
+                CAST([Medium_Funds:_$500-999mn] AS FLOAT) [Medium_Funds:_$500-999mn],
+                CAST([Small_Funds:_Less_than_$500mn] AS FLOAT) [Small_Funds:_Less_than_$500mn]
+         FROM [Stg_Rpt].[Infra_Unlisted_Infrastructure_Dry_Powder_by_Fund_Size] F WITH (nolock)
+         WHERE CAST(F.QY_Date AS DATE) = @QY_Date)
+     SELECT F.QY_Date,
+            F.[Date],
+            F.[Mega_Funds:_$2bn_or_More],
+            F.[Large_Funds:_$1-1.9bn],
+            F.[Medium_Funds:_$500-999mn],
+            F.[Small_Funds:_Less_than_$500mn]
+     FROM Infra_Unlisted_Infrastructure_Dry_Powder_by_Fund_Size F
+	Order by [Date];</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="QY_Date">
+          <DataField>QY_Date</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="Date">
+          <DataField>Date</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="Mega_Funds___2bn_or_More">
+          <DataField>Mega_Funds:_$2bn_or_More</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="Large_Funds___1_1_9bn">
+          <DataField>Large_Funds:_$1-1.9bn</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="Medium_Funds___500_999mn">
+          <DataField>Medium_Funds:_$500-999mn</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="Small_Funds__Less_than__500mn">
+          <DataField>Small_Funds:_Less_than_$500mn</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="Infra_Unlisted_Infrastructure_by_Vintage_Year">
+      <Query>
+        <DataSourceName>DataSource_Sandbox2</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@QY_Date">
+            <Value>=Parameters!QY_Date.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandText>--DECLARE @QY_Date DATE= '07/31/2018';
+WITH Infra_Unlisted_Infrastructure_by_Vintage_Year
+     AS (SELECT CAST(QY_Date AS DATE) QY_Date,
+                CAST(Vintage_Year AS INT) Vintage_Year,
+			 Rank() over (order by Vintage_Year ) Vintage_Year_rank,
+                CAST(Top_Quartile_Net_IRR_Boundary AS FLOAT) Top_Quartile_Net_IRR_Boundary,
+                CAST(Median_Net_IRR AS FLOAT) Median_Net_IRR,
+                CAST(Bottom_Quartile_Net_IRR_Boundary AS FLOAT) Bottom_Quartile_Net_IRR_Boundary
+         FROM [Stg_Rpt].[Infra_Unlisted_Infrastructure_by_Vintage_Year] V WITH (nolock)
+         WHERE CAST(V.QY_Date AS DATE) = @QY_Date)
+     SELECT V.QY_Date,
+            V.Vintage_Year,
+		  V.Top_Quartile_Net_IRR_Boundary,
+		  Case When Vintage_Year_rank = 2 Then 'Top Quartile Boundary' Else ''  End  as Top_Quartile_Net_IRR_Boundary_Label,
+            V.Median_Net_IRR,
+		  Case When Vintage_Year_rank = 2 Then 'Median' Else ''  End  as Median_Net_IRR_Label,
+            V.Bottom_Quartile_Net_IRR_Boundary,
+		  Case When Vintage_Year_rank = 2 Then 'Bottom Quartile Boundary' Else ''  End  as Bottom_Quartile_Net_IRR_Boundary_Label
+     FROM Infra_Unlisted_Infrastructure_by_Vintage_Year V
+     ORDER BY Vintage_Year; </CommandText>
+      </Query>
+      <Fields>
+        <Field Name="QY_Date">
+          <DataField>QY_Date</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="Vintage_Year">
+          <DataField>Vintage_Year</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="Top_Quartile_Net_IRR_Boundary">
+          <DataField>Top_Quartile_Net_IRR_Boundary</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="Top_Quartile_Net_IRR_Boundary_Label">
+          <DataField>Top_Quartile_Net_IRR_Boundary_Label</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Median_Net_IRR">
+          <DataField>Median_Net_IRR</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="Median_Net_IRR_Label">
+          <DataField>Median_Net_IRR_Label</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Bottom_Quartile_Net_IRR_Boundary">
+          <DataField>Bottom_Quartile_Net_IRR_Boundary</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="Bottom_Quartile_Net_IRR_Boundary_Label">
+          <DataField>Bottom_Quartile_Net_IRR_Boundary_Label</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="Infra_Risk_Adjusted_Returns">
+      <Query>
+        <DataSourceName>DataSource_Sandbox2</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@QY_Date">
+            <Value>=Parameters!QY_Date.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandText>---DECLARE @QY_Date DATE= '07/31/2018';
+WITH Infra_Risk_Adjusted_Returns
+     AS (SELECT CAST(QY_Date AS DATE) QY_Date,
+                Holdings,
+                CAST(Realized_SI_IRR AS FLOAT) Realized_SI_IRR,
+                CAST(Absolute_Risk AS FLOAT) Absolute_Risk,
+                CAST(MV AS FLOAT) MV,
+                CAST(Per_of_Total_Portfolio AS FLOAT) Per_of_Total_Portfolio
+         FROM [Stg_Rpt].[Infra_Risk_Adjusted_Returns] WITH (Nolock)
+         WHERE CAST(QY_Date AS DATE) = (@QY_Date))
+     SELECT R.QY_Date,
+            R.Holdings,
+            R.Realized_SI_IRR,
+            R.Absolute_Risk,
+            R.MV,
+            R.Per_of_Total_Portfolio
+     FROM Infra_Risk_Adjusted_Returns R;</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="QY_Date">
+          <DataField>QY_Date</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="Holdings">
+          <DataField>Holdings</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Realized_SI_IRR">
+          <DataField>Realized_SI_IRR</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="Absolute_Risk">
+          <DataField>Absolute_Risk</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="MV">
+          <DataField>MV</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="Per_of_Total_Portfolio">
+          <DataField>Per_of_Total_Portfolio</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="Infra_Intrest_Rate_Sensivity">
+      <Query>
+        <DataSourceName>DataSource_Sandbox2</DataSourceName>
+        <CommandText>DECLARE @QY_Date DATE= '07/31/2018';
+WITH Infra_Intrest_Rate_Sensitivity
+     AS (SELECT CAST(K.QY_Date AS DATE) QY_Date,
+                [Top_10],
+                CAST(Sensitivity_To_Interest_Rate AS FLOAT) Sensitivity_To_Interest_Rate
+         FROM [Stg_Rpt].[Infra_Interest_Rate_Sensitivity] K WITH (nolock)
+         WHERE CAST(K.QY_Date AS DATE) = @QY_Date)
+     SELECT 
+            K.[Top_10],
+            K.Sensitivity_To_Interest_Rate
+     FROM Infra_Intrest_Rate_Sensitivity K;</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="Top_10">
+          <DataField>Top_10</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Sensitivity_To_Interest_Rate">
+          <DataField>Sensitivity_To_Interest_Rate</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+  </DataSets>
+  <ReportSections>
+    <ReportSection>
+      <Body>
+        <ReportItems>
+          <Rectangle Name="Rectangle1">
+            <ReportItems>
+              <Textbox Name="Textbox4">
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>Key Investments                                                                                                                                                     Top 10 Holdings (Risk Adjusted Returns)</Value>
+                        <Style>
+                          <FontWeight>Bold</FontWeight>
+                          <Color>White</Color>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style>
+                      <TextAlign>Left</TextAlign>
+                    </Style>
+                  </Paragraph>
+                </Paragraphs>
+                <rd:DefaultName>Textbox4</rd:DefaultName>
+                <Height>0.2in</Height>
+                <Width>12.28in</Width>
+                <Style>
+                  <Border>
+                    <Style>None</Style>
+                  </Border>
+                  <RightBorder>
+                    <Style>Solid</Style>
+                  </RightBorder>
+                  <BackgroundColor>#002060</BackgroundColor>
+                  <VerticalAlign>Middle</VerticalAlign>
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingRight>2pt</PaddingRight>
+                </Style>
+              </Textbox>
+              <Textbox Name="Textbox11">
+                <CanGrow>true</CanGrow>
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>Intrest Rate Sensitivity</Value>
+                        <Style>
+                          <FontWeight>Bold</FontWeight>
+                          <Color>White</Color>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style>
+                      <TextAlign>Left</TextAlign>
+                    </Style>
+                  </Paragraph>
+                </Paragraphs>
+                <rd:DefaultName>Textbox4</rd:DefaultName>
+                <Top>2.64236in</Top>
+                <Height>0.25in</Height>
+                <Width>12.28in</Width>
+                <ZIndex>1</ZIndex>
+                <Style>
+                  <Border>
+                    <Style>None</Style>
+                  </Border>
+                  <BackgroundColor>#002060</BackgroundColor>
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                  <PaddingBottom>2pt</PaddingBottom>
+                </Style>
+              </Textbox>
+              <Chart Name="Chart8">
+                <ChartCategoryHierarchy>
+                  <ChartMembers>
+                    <ChartMember>
+                      <Group Name="ChartGroup" />
+                      <Label />
+                    </ChartMember>
+                  </ChartMembers>
+                </ChartCategoryHierarchy>
+                <ChartSeriesHierarchy>
+                  <ChartMembers>
+                    <ChartMember>
+                      <Label>Realized SI IRR</Label>
+                    </ChartMember>
+                  </ChartMembers>
+                </ChartSeriesHierarchy>
+                <ChartData>
+                  <ChartSeriesCollection>
+                    <ChartSeries Name="Realized_SI_IRR">
+                      <ChartDataPoints>
+                        <ChartDataPoint>
+                          <ChartDataPointValues>
+                            <X>=Fields!Absolute_Risk.Value</X>
+                            <Y>=Sum(Fields!Realized_SI_IRR.Value)</Y>
+                            <Size>=Sum(Fields!MV.Value)*10</Size>
+                          </ChartDataPointValues>
+                          <ChartDataLabel>
+                            <Style>
+                              <FontSize>6.5pt</FontSize>
+                              <FontWeight>Bold</FontWeight>
+                              <Color>#515259</Color>
+                            </Style>
+                            <Label>=Fields!Holdings.Value &amp; Microsoft.VisualBasic.Constants.vbcrlf &amp; Format(Fields!MV.Value, "0,0")</Label>
+                            <Visible>true</Visible>
+                            <Position>TopLeft</Position>
+                          </ChartDataLabel>
+                          <Style>
+                            <Color>#3e699d</Color>
+                          </Style>
+                          <ChartMarker>
+                            <Type>Circle</Type>
+                            <Size>10pt</Size>
+                            <Style />
+                          </ChartMarker>
+                          <DataElementOutput>Output</DataElementOutput>
+                        </ChartDataPoint>
+                      </ChartDataPoints>
+                      <Type>Scatter</Type>
+                      <Subtype>Bubble</Subtype>
+                      <Style />
+                      <ChartEmptyPoints>
+                        <Style />
+                        <ChartMarker>
+                          <Style />
+                        </ChartMarker>
+                        <ChartDataLabel>
+                          <Style />
+                        </ChartDataLabel>
+                      </ChartEmptyPoints>
+                      <ValueAxisName>Primary</ValueAxisName>
+                      <CategoryAxisName>Primary</CategoryAxisName>
+                      <ChartSmartLabel>
+                        <Disabled>true</Disabled>
+                        <AllowOutSidePlotArea>True</AllowOutSidePlotArea>
+                        <CalloutBackColor>Black</CalloutBackColor>
+                        <CalloutLineAnchor>None</CalloutLineAnchor>
+                        <CalloutLineColor>LightSteelBlue</CalloutLineColor>
+                        <MarkerOverlapping>true</MarkerOverlapping>
+                        <MaxMovingDistance>=.1</MaxMovingDistance>
+                        <MinMovingDistance>0pt</MinMovingDistance>
+                      </ChartSmartLabel>
+                    </ChartSeries>
+                  </ChartSeriesCollection>
+                </ChartData>
+                <ChartAreas>
+                  <ChartArea Name="Default">
+                    <ChartCategoryAxes>
+                      <ChartAxis Name="Primary">
+                        <Style>
+                          <Border>
+                            <Color>Gainsboro</Color>
+                            <Style>None</Style>
+                          </Border>
+                          <FontSize>7pt</FontSize>
+                          <FontWeight>Bold</FontWeight>
+                          <Format>0%</Format>
+                          <Color>#515259</Color>
+                        </Style>
+                        <ChartAxisTitle>
+                          <Caption>Absolute Risk </Caption>
+                          <Style>
+                            <FontSize>8pt</FontSize>
+                            <FontWeight>Bold</FontWeight>
+                            <Color>#515259</Color>
+                          </Style>
+                        </ChartAxisTitle>
+                        <Interval>0.01</Interval>
+                        <ChartMajorGridLines>
+                          <Enabled>False</Enabled>
+                          <Style>
+                            <Border>
+                              <Color>#d9d9d9</Color>
+                              <Width>0.5pt</Width>
+                            </Border>
+                          </Style>
+                        </ChartMajorGridLines>
+                        <ChartMinorGridLines>
+                          <Style>
+                            <Border>
+                              <Color>Gainsboro</Color>
+                              <Style>Dotted</Style>
+                            </Border>
+                          </Style>
+                        </ChartMinorGridLines>
+                        <ChartMajorTickMarks>
+                          <Style>
+                            <Border>
+                              <Color>Gainsboro</Color>
+                              <Style>None</Style>
+                            </Border>
+                          </Style>
+                        </ChartMajorTickMarks>
+                        <ChartMinorTickMarks>
+                          <Style>
+                            <Border>
+                              <Color>Gainsboro</Color>
+                            </Border>
+                          </Style>
+                          <Length>0.5</Length>
+                        </ChartMinorTickMarks>
+                        <CrossAt>NaN</CrossAt>
+                        <Scalar>true</Scalar>
+                        <Minimum>0.05</Minimum>
+                        <Maximum>NaN</Maximum>
+                        <LabelsAutoFitDisabled>true</LabelsAutoFitDisabled>
+                        <ChartAxisScaleBreak>
+                          <Style />
+                        </ChartAxisScaleBreak>
+                      </ChartAxis>
+                      <ChartAxis Name="Secondary">
+                        <Style>
+                          <Border>
+                            <Color>Gainsboro</Color>
+                            <Style>None</Style>
+                          </Border>
+                          <FontSize>8pt</FontSize>
+                          <Color>#5c5c5c</Color>
+                        </Style>
+                        <ChartAxisTitle>
+                          <Caption />
+                          <Style>
+                            <FontSize>9pt</FontSize>
+                            <Color>#5c5c5c</Color>
+                          </Style>
+                        </ChartAxisTitle>
+                        <ChartMajorGridLines>
+                          <Enabled>False</Enabled>
+                          <Style>
+                            <Border>
+                              <Color>Gainsboro</Color>
+                            </Border>
+                          </Style>
+                        </ChartMajorGridLines>
+                        <ChartMinorGridLines>
+                          <Style>
+                            <Border>
+                              <Color>Gainsboro</Color>
+                              <Style>Dotted</Style>
+                            </Border>
+                          </Style>
+                        </ChartMinorGridLines>
+                        <ChartMajorTickMarks>
+                          <Style>
+                            <Border>
+                              <Color>Gainsboro</Color>
+                              <Style>None</Style>
+                            </Border>
+                          </Style>
+                        </ChartMajorTickMarks>
+                        <ChartMinorTickMarks>
+                          <Style>
+                            <Border>
+                              <Color>Gainsboro</Color>
+                            </Border>
+                          </Style>
+                          <Length>0.5</Length>
+                        </ChartMinorTickMarks>
+                        <CrossAt>NaN</CrossAt>
+                        <Location>Opposite</Location>
+                        <Minimum>NaN</Minimum>
+                        <Maximum>NaN</Maximum>
+                        <ChartAxisScaleBreak>
+                          <Style />
+                        </ChartAxisScaleBreak>
+                      </ChartAxis>
+                    </ChartCategoryAxes>
+                    <ChartValueAxes>
+                      <ChartAxis Name="Primary">
+                        <Style>
+                          <Border>
+                            <Color>Gainsboro</Color>
+                            <Style>None</Style>
+                          </Border>
+                          <FontSize>7pt</FontSize>
+                          <FontWeight>Bold</FontWeight>
+                          <Format>0%</Format>
+                          <Color>#515259</Color>
+                        </Style>
+                        <ChartAxisTitle>
+                          <Caption>Realized IRR (since inception)</Caption>
+                          <Style>
+                            <FontSize>8pt</FontSize>
+                            <FontWeight>Bold</FontWeight>
+                            <Color>#515259</Color>
+                          </Style>
+                        </ChartAxisTitle>
+                        <Interval>0.05</Interval>
+                        <ChartMajorGridLines>
+                          <Style>
+                            <Border>
+                              <Color>#d9d9d9</Color>
+                              <Width>0.5pt</Width>
+                            </Border>
+                          </Style>
+                        </ChartMajorGridLines>
+                        <ChartMinorGridLines>
+                          <Style>
+                            <Border>
+                              <Color>Gainsboro</Color>
+                              <Style>Dotted</Style>
+                            </Border>
+                          </Style>
+                        </ChartMinorGridLines>
+                        <ChartMajorTickMarks>
+                          <Style>
+                            <Border>
+                              <Color>Gainsboro</Color>
+                              <Style>None</Style>
+                            </Border>
+                          </Style>
+                        </ChartMajorTickMarks>
+                        <ChartMinorTickMarks>
+                          <Style>
+                            <Border>
+                              <Color>Gainsboro</Color>
+                            </Border>
+                          </Style>
+                          <Length>0.5</Length>
+                        </ChartMinorTickMarks>
+                        <CrossAt>NaN</CrossAt>
+                        <Minimum>=-.25</Minimum>
+                        <Maximum>=.25</Maximum>
+                        <LabelsAutoFitDisabled>true</LabelsAutoFitDisabled>
+                        <ChartAxisScaleBreak>
+                          <Style />
+                        </ChartAxisScaleBreak>
+                      </ChartAxis>
+                      <ChartAxis Name="Secondary">
+                        <Style>
+                          <Border>
+                            <Color>Gainsboro</Color>
+                            <Style>None</Style>
+                          </Border>
+                          <FontSize>8pt</FontSize>
+                          <Color>#5c5c5c</Color>
+                        </Style>
+                        <ChartAxisTitle>
+                          <Caption />
+                          <Style>
+                            <FontSize>9pt</FontSize>
+                            <Color>#5c5c5c</Color>
+                          </Style>
+                        </ChartAxisTitle>
+                        <ChartMajorGridLines>
+                          <Style>
+                            <Border>
+                              <Color>Gainsboro</Color>
+                            </Border>
+                          </Style>
+                        </ChartMajorGridLines>
+                        <ChartMinorGridLines>
+                          <Style>
+                            <Border>
+                              <Color>Gainsboro</Color>
+                              <Style>Dotted</Style>
+                            </Border>
+                          </Style>
+                        </ChartMinorGridLines>
+                        <ChartMajorTickMarks>
+                          <Style>
+                            <Border>
+                              <Color>Gainsboro</Color>
+                              <Style>None</Style>
+                            </Border>
+                          </Style>
+                        </ChartMajorTickMarks>
+                        <ChartMinorTickMarks>
+                          <Style>
+                            <Border>
+                              <Color>Gainsboro</Color>
+                            </Border>
+                          </Style>
+                          <Length>0.5</Length>
+                        </ChartMinorTickMarks>
+                        <CrossAt>NaN</CrossAt>
+                        <Location>Opposite</Location>
+                        <Minimum>NaN</Minimum>
+                        <Maximum>NaN</Maximum>
+                        <ChartAxisScaleBreak>
+                          <Style />
+                        </ChartAxisScaleBreak>
+                      </ChartAxis>
+                    </ChartValueAxes>
+                    <Style>
+                      <BackgroundColor>#00ffffff</BackgroundColor>
+                      <BackgroundGradientType>None</BackgroundGradientType>
+                    </Style>
+                  </ChartArea>
+                </ChartAreas>
+                <ChartTitles>
+                  <ChartTitle Name="Default">
+                    <Caption>="Top 10 =" &amp; Format(Sum(Fields!Per_of_Total_Portfolio.Value), "0%") &amp; "of Principal Investments              Top 10 = 61% of I&amp;RR Investments"</Caption>
+                    <Style>
+                      <BackgroundGradientType>None</BackgroundGradientType>
+                      <FontSize>8pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                      <TextAlign>Left</TextAlign>
+                      <VerticalAlign>Top</VerticalAlign>
+                      <Color>#515259</Color>
+                    </Style>
+                    <Position>BottomCenter</Position>
+                    <DockToChartArea>Default</DockToChartArea>
+                    <DockOutsideChartArea>true</DockOutsideChartArea>
+                  </ChartTitle>
+                </ChartTitles>
+                <Palette>PacificSemiTransparent</Palette>
+                <ChartBorderSkin>
+                  <Style>
+                    <BackgroundColor>Gray</BackgroundColor>
+                    <BackgroundGradientType>None</BackgroundGradientType>
+                    <Color>White</Color>
+                  </Style>
+                </ChartBorderSkin>
+                <ChartNoDataMessage Name="NoDataMessage">
+                  <Caption>No Data Available</Caption>
+                  <Style>
+                    <BackgroundGradientType>None</BackgroundGradientType>
+                    <FontWeight>Bold</FontWeight>
+                    <TextAlign>General</TextAlign>
+                    <VerticalAlign>Top</VerticalAlign>
+                  </Style>
+                </ChartNoDataMessage>
+                <DataSetName>Infra_Risk_Adjusted_Returns</DataSetName>
+                <Top>0.255in</Top>
+                <Left>14.42901cm</Left>
+                <Height>2.34514in</Height>
+                <Width>6.51944in</Width>
+                <ZIndex>2</ZIndex>
+                <Style>
+                  <Border>
+                    <Style>None</Style>
+                  </Border>
+                  <BackgroundColor>White</BackgroundColor>
+                  <BackgroundGradientType>None</BackgroundGradientType>
+                </Style>
+              </Chart>
+              <Chart Name="Chart1">
+                <ChartCategoryHierarchy>
+                  <ChartMembers>
+                    <ChartMember>
+                      <Group Name="Chart1_CategoryGroup">
+                        <GroupExpressions>
+                          <GroupExpression>=Fields!Top_10.Value</GroupExpression>
+                        </GroupExpressions>
+                      </Group>
+                      <SortExpressions>
+                        <SortExpression>
+                          <Value>=Fields!Top_10.Value</Value>
+                        </SortExpression>
+                      </SortExpressions>
+                      <Label>=Fields!Top_10.Value</Label>
+                    </ChartMember>
+                  </ChartMembers>
+                </ChartCategoryHierarchy>
+                <ChartSeriesHierarchy>
+                  <ChartMembers>
+                    <ChartMember>
+                      <Label>Sensitivity To Interest Rate</Label>
+                    </ChartMember>
+                  </ChartMembers>
+                </ChartSeriesHierarchy>
+                <ChartData>
+                  <ChartSeriesCollection>
+                    <ChartSeries Name="Sensitivity_To_Interest_Rate">
+                      <ChartDataPoints>
+                        <ChartDataPoint>
+                          <ChartDataPointValues>
+                            <Y>=Sum(Fields!Sensitivity_To_Interest_Rate.Value)</Y>
+                          </ChartDataPointValues>
+                          <ChartDataLabel>
+                            <Style>
+                              <FontSize>7pt</FontSize>
+                              <FontWeight>Bold</FontWeight>
+                              <Color>#515259</Color>
+                            </Style>
+                            <Label>#AXISLABEL</Label>
+                            <Visible>true</Visible>
+                            <Position>Center</Position>
+                            <Rotation>-45</Rotation>
+                          </ChartDataLabel>
+                          <Style>
+                            <Color>#4f81bd</Color>
+                          </Style>
+                          <ChartMarker>
+                            <Style />
+                          </ChartMarker>
+                          <DataElementOutput>Output</DataElementOutput>
+                        </ChartDataPoint>
+                      </ChartDataPoints>
+                      <Style />
+                      <ChartEmptyPoints>
+                        <Style />
+                        <ChartMarker>
+                          <Style />
+                        </ChartMarker>
+                        <ChartDataLabel>
+                          <Style />
+                        </ChartDataLabel>
+                      </ChartEmptyPoints>
+                      <CustomProperties>
+                        <CustomProperty>
+                          <Name>PointWidth</Name>
+                          <Value>0.6</Value>
+                        </CustomProperty>
+                      </CustomProperties>
+                      <ValueAxisName>Primary</ValueAxisName>
+                      <CategoryAxisName>Primary</CategoryAxisName>
+                      <ChartSmartLabel>
+                        <Disabled>true</Disabled>
+                        <CalloutLineColor>Black</CalloutLineColor>
+                        <MinMovingDistance>0pt</MinMovingDistance>
+                      </ChartSmartLabel>
+                    </ChartSeries>
+                  </ChartSeriesCollection>
+                </ChartData>
+                <ChartAreas>
+                  <ChartArea Name="Default">
+                    <ChartCategoryAxes>
+                      <ChartAxis Name="Primary">
+                        <Visible>False</Visible>
+                        <Style>
+                          <Border>
+                            <Color>Gainsboro</Color>
+                            <Style>None</Style>
+                          </Border>
+                          <FontSize>8pt</FontSize>
+                          <Color>#5c5c5c</Color>
+                        </Style>
+                        <ChartAxisTitle>
+                          <Caption />
+                          <Style>
+                            <FontSize>9pt</FontSize>
+                            <Color>#5c5c5c</Color>
+                          </Style>
+                        </ChartAxisTitle>
+                        <ChartMajorGridLines>
+                          <Enabled>False</Enabled>
+                          <Style>
+                            <Border>
+                              <Color>Gainsboro</Color>
+                            </Border>
+                          </Style>
+                        </ChartMajorGridLines>
+                        <ChartMinorGridLines>
+                          <Style>
+                            <Border>
+                              <Color>Gainsboro</Color>
+                              <Style>Dotted</Style>
+                            </Border>
+                          </Style>
+                        </ChartMinorGridLines>
+                        <ChartMajorTickMarks>
+                          <Style>
+                            <Border>
+                              <Color>Gainsboro</Color>
+                              <Style>None</Style>
+                            </Border>
+                          </Style>
+                        </ChartMajorTickMarks>
+                        <ChartMinorTickMarks>
+                          <Style>
+                            <Border>
+                              <Color>Gainsboro</Color>
+                            </Border>
+                          </Style>
+                          <Length>0.5</Length>
+                        </ChartMinorTickMarks>
+                        <CrossAt>NaN</CrossAt>
+                        <Minimum>NaN</Minimum>
+                        <Maximum>NaN</Maximum>
+                        <ChartAxisScaleBreak>
+                          <Style />
+                        </ChartAxisScaleBreak>
+                      </ChartAxis>
+                      <ChartAxis Name="Secondary">
+                        <Style>
+                          <Border>
+                            <Color>Gainsboro</Color>
+                            <Style>None</Style>
+                          </Border>
+                          <FontSize>8pt</FontSize>
+                          <Color>#5c5c5c</Color>
+                        </Style>
+                        <ChartAxisTitle>
+                          <Caption />
+                          <Style>
+                            <FontSize>9pt</FontSize>
+                            <Color>#5c5c5c</Color>
+                          </Style>
+                        </ChartAxisTitle>
+                        <ChartMajorGridLines>
+                          <Enabled>False</Enabled>
+                          <Style>
+                            <Border>
+                              <Color>Gainsboro</Color>
+                            </Border>
+                          </Style>
+                        </ChartMajorGridLines>
+                        <ChartMinorGridLines>
+                          <Style>
+                            <Border>
+                              <Color>Gainsboro</Color>
+                              <Style>Dotted</Style>
+                            </Border>
+                          </Style>
+                        </ChartMinorGridLines>
+                        <ChartMajorTickMarks>
+                          <Style>
+                            <Border>
+                              <Color>Gainsboro</Color>
+                              <Style>None</Style>
+                            </Border>
+                          </Style>
+                        </ChartMajorTickMarks>
+                        <ChartMinorTickMarks>
+                          <Style>
+                            <Border>
+                              <Color>Gainsboro</Color>
+                            </Border>
+                          </Style>
+                          <Length>0.5</Length>
+                        </ChartMinorTickMarks>
+                        <CrossAt>NaN</CrossAt>
+                        <Location>Opposite</Location>
+                        <Minimum>NaN</Minimum>
+                        <Maximum>NaN</Maximum>
+                        <ChartAxisScaleBreak>
+                          <Style />
+                        </ChartAxisScaleBreak>
+                      </ChartAxis>
+                    </ChartCategoryAxes>
+                    <ChartValueAxes>
+                      <ChartAxis Name="Primary">
+                        <Style>
+                          <Border>
+                            <Color>Gainsboro</Color>
+                            <Style>None</Style>
+                          </Border>
+                          <FontSize>8pt</FontSize>
+                          <Format>0%</Format>
+                          <Color>#515259</Color>
+                        </Style>
+                        <ChartAxisTitle>
+                          <Caption />
+                          <Style>
+                            <FontSize>9pt</FontSize>
+                            <Color>#5c5c5c</Color>
+                          </Style>
+                        </ChartAxisTitle>
+                        <ChartMajorGridLines>
+                          <Style>
+                            <Border>
+                              <Color>Gainsboro</Color>
+                            </Border>
+                          </Style>
+                        </ChartMajorGridLines>
+                        <ChartMinorGridLines>
+                          <Style>
+                            <Border>
+                              <Color>Gainsboro</Color>
+                              <Style>Dotted</Style>
+                            </Border>
+                          </Style>
+                        </ChartMinorGridLines>
+                        <ChartMajorTickMarks>
+                          <Style>
+                            <Border>
+                              <Color>Gainsboro</Color>
+                              <Style>None</Style>
+                            </Border>
+                          </Style>
+                        </ChartMajorTickMarks>
+                        <ChartMinorTickMarks>
+                          <Style>
+                            <Border>
+                              <Color>Gainsboro</Color>
+                            </Border>
+                          </Style>
+                          <Length>0.5</Length>
+                        </ChartMinorTickMarks>
+                        <CrossAt>NaN</CrossAt>
+                        <Minimum>NaN</Minimum>
+                        <Maximum>NaN</Maximum>
+                        <MaxFontSize>7pt</MaxFontSize>
+                        <ChartAxisScaleBreak>
+                          <Style />
+                        </ChartAxisScaleBreak>
+                      </ChartAxis>
+                      <ChartAxis Name="Secondary">
+                        <Style>
+                          <Border>
+                            <Color>Gainsboro</Color>
+                            <Style>None</Style>
+                          </Border>
+                          <FontSize>8pt</FontSize>
+                          <Color>#5c5c5c</Color>
+                        </Style>
+                        <ChartAxisTitle>
+                          <Caption />
+                          <Style>
+                            <FontSize>9pt</FontSize>
+                            <Color>#5c5c5c</Color>
+                          </Style>
+                        </ChartAxisTitle>
+                        <ChartMajorGridLines>
+                          <Style>
+                            <Border>
+                              <Color>Gainsboro</Color>
+                            </Border>
+                          </Style>
+                        </ChartMajorGridLines>
+                        <ChartMinorGridLines>
+                          <Style>
+                            <Border>
+                              <Color>Gainsboro</Color>
+                              <Style>Dotted</Style>
+                            </Border>
+                          </Style>
+                        </ChartMinorGridLines>
+                        <ChartMajorTickMarks>
+                          <Style>
+                            <Border>
+                              <Color>Gainsboro</Color>
+                              <Style>None</Style>
+                            </Border>
+                          </Style>
+                        </ChartMajorTickMarks>
+                        <ChartMinorTickMarks>
+                          <Style>
+                            <Border>
+                              <Color>Gainsboro</Color>
+                            </Border>
+                          </Style>
+                          <Length>0.5</Length>
+                        </ChartMinorTickMarks>
+                        <CrossAt>NaN</CrossAt>
+                        <Location>Opposite</Location>
+                        <Minimum>NaN</Minimum>
+                        <Maximum>NaN</Maximum>
+                        <ChartAxisScaleBreak>
+                          <Style />
+                        </ChartAxisScaleBreak>
+                      </ChartAxis>
+                    </ChartValueAxes>
+                    <Style>
+                      <BackgroundColor>#00ffffff</BackgroundColor>
+                      <BackgroundGradientType>None</BackgroundGradientType>
+                    </Style>
+                  </ChartArea>
+                </ChartAreas>
+                <Palette>Pacific</Palette>
+                <ChartBorderSkin>
+                  <Style>
+                    <BackgroundColor>Gray</BackgroundColor>
+                    <BackgroundGradientType>None</BackgroundGradientType>
+                    <Color>White</Color>
+                  </Style>
+                </ChartBorderSkin>
+                <ChartNoDataMessage Name="NoDataMessage">
+                  <Caption>No Data Available</Caption>
+                  <Style>
+                    <BackgroundGradientType>None</BackgroundGradientType>
+                    <FontWeight>Bold</FontWeight>
+                    <TextAlign>General</TextAlign>
+                    <VerticalAlign>Top</VerticalAlign>
+                  </Style>
+                </ChartNoDataMessage>
+                <DataSetName>Infra_Intrest_Rate_Sensivity</DataSetName>
+                <Top>2.89236in</Top>
+                <Height>2.39292in</Height>
+                <Width>5.6in</Width>
+                <ZIndex>3</ZIndex>
+                <Style>
+                  <Border>
+                    <Style>None</Style>
+                  </Border>
+                  <RightBorder>
+                    <Color>Black</Color>
+                    <Style>Solid</Style>
+                    <Width>1pt</Width>
+                  </RightBorder>
+                  <BackgroundColor>White</BackgroundColor>
+                  <BackgroundGradientType>None</BackgroundGradientType>
+                </Style>
+              </Chart>
+              <Chart Name="Chart5">
+                <ChartCategoryHierarchy>
+                  <ChartMembers>
+                    <ChartMember>
+                      <Group Name="Chart3_CategoryGroup">
+                        <GroupExpressions>
+                          <GroupExpression>=Fields!rnk.Value</GroupExpression>
+                        </GroupExpressions>
+                      </Group>
+                      <SortExpressions>
+                        <SortExpression>
+                          <Value>=Fields!rnk.Value</Value>
+                        </SortExpression>
+                      </SortExpressions>
+                      <Label>=Fields!QY.Value</Label>
+                    </ChartMember>
+                  </ChartMembers>
+                </ChartCategoryHierarchy>
+                <ChartSeriesHierarchy>
+                  <ChartMembers>
+                    <ChartMember>
+                      <Label>Core</Label>
+                    </ChartMember>
+                    <ChartMember>
+                      <Label>Core Limit</Label>
+                    </ChartMember>
+                    <ChartMember>
+                      <Label>Projected Core</Label>
+                    </ChartMember>
+                    <ChartMember>
+                      <Label>Core Plus</Label>
+                    </ChartMember>
+                    <ChartMember>
+                      <Label>Core Plus Limit</Label>
+                    </ChartMember>
+                    <ChartMember>
+                      <Label>Projected Core Plus</Label>
+                    </ChartMember>
+                  </ChartMembers>
+                </ChartSeriesHierarchy>
+                <ChartData>
+                  <ChartSeriesCollection>
+                    <ChartSeries Name="Core">
+                      <ChartDataPoints>
+                        <ChartDataPoint>
+                          <ChartDataPointValues>
+                            <Y>=Sum(Fields!Core.Value)</Y>
+                          </ChartDataPointValues>
+                          <ChartDataLabel>
+                            <Style>
+                              <FontFamily>Calibri</FontFamily>
+                              <FontSize>6pt</FontSize>
+                              <FontWeight>Bold</FontWeight>
+                              <Color>#515259</Color>
+                            </Style>
+                            <Label>=IIF(Fields!rnk.Value = 10, Fields!Core.Value, "")</Label>
+                            <Visible>true</Visible>
+                            <Position>Top</Position>
+                          </ChartDataLabel>
+                          <Style>
+                            <Border>
+                              <Width>2pt</Width>
+                            </Border>
+                            <Color>=IIF(Fields!Core.Value=0,"#00ffffff","#00365b")</Color>
+                            <BackgroundHatchType>DarkHorizontal</BackgroundHatchType>
+                          </Style>
+                          <ChartMarker>
+                            <Size>=IIF(Fields!Line.Value&lt;&gt;0,"0pt","6pt")</Size>
+                            <Style />
+                          </ChartMarker>
+                          <DataElementOutput>Output</DataElementOutput>
+                        </ChartDataPoint>
+                      </ChartDataPoints>
+                      <Type>Line</Type>
+                      <Style />
+                      <ChartEmptyPoints>
+                        <Style />
+                        <ChartMarker>
+                          <Style />
+                        </ChartMarker>
+                        <ChartDataLabel>
+                          <Style>
+                            <FontFamily>Calibri</FontFamily>
+                          </Style>
+                        </ChartDataLabel>
+                      </ChartEmptyPoints>
+                      <ValueAxisName>Primary</ValueAxisName>
+                      <CategoryAxisName>Primary</CategoryAxisName>
+                      <ChartSmartLabel>
+                        <CalloutLineColor>Black</CalloutLineColor>
+                        <MinMovingDistance>0pt</MinMovingDistance>
+                      </ChartSmartLabel>
+                    </ChartSeries>
+                    <ChartSeries Name="Core_Limit">
+                      <ChartDataPoints>
+                        <ChartDataPoint>
+                          <ChartDataPointValues>
+                            <Y>=Sum(Fields!Core_Limit.Value)</Y>
+                          </ChartDataPointValues>
+                          <ChartDataLabel>
+                            <Style>
+                              <FontFamily>Calibri</FontFamily>
+                            </Style>
+                          </ChartDataLabel>
+                          <Style>
+                            <Border>
+                              <Width>2pt</Width>
+                            </Border>
+                            <Color>Black</Color>
+                          </Style>
+                          <ChartMarker>
+                            <Style />
+                          </ChartMarker>
+                          <DataElementOutput>Output</DataElementOutput>
+                        </ChartDataPoint>
+                      </ChartDataPoints>
+                      <Type>Line</Type>
+                      <Style />
+                      <ChartEmptyPoints>
+                        <Style />
+                        <ChartMarker>
+                          <Style />
+                        </ChartMarker>
+                        <ChartDataLabel>
+                          <Style>
+                            <FontFamily>Calibri</FontFamily>
+                          </Style>
+                        </ChartDataLabel>
+                      </ChartEmptyPoints>
+                      <ValueAxisName>Primary</ValueAxisName>
+                      <CategoryAxisName>Primary</CategoryAxisName>
+                      <ChartSmartLabel>
+                        <CalloutLineColor>Black</CalloutLineColor>
+                        <MinMovingDistance>0pt</MinMovingDistance>
+                      </ChartSmartLabel>
+                    </ChartSeries>
+                    <ChartSeries Name="Projected_Core">
+                      <ChartDataPoints>
+                        <ChartDataPoint>
+                          <ChartDataPointValues>
+                            <Y>=Sum(Fields!Projected_Core.Value)</Y>
+                          </ChartDataPointValues>
+                          <ChartDataLabel>
+                            <Style>
+                              <FontFamily>Calibri</FontFamily>
+                              <FontSize>6pt</FontSize>
+                              <FontWeight>Bold</FontWeight>
+                              <Color>#515259</Color>
+                            </Style>
+                            <UseValueAsLabel>true</UseValueAsLabel>
+                            <Visible>true</Visible>
+                            <Position>TopLeft</Position>
+                          </ChartDataLabel>
+                          <Style>
+                            <Border>
+                              <Style>Dashed</Style>
+                              <Width>2pt</Width>
+                            </Border>
+                            <Color>#00365b</Color>
+                            <BackgroundGradientType>None</BackgroundGradientType>
+                            <BackgroundHatchType>Percent90</BackgroundHatchType>
+                          </Style>
+                          <ChartMarker>
+                            <Type>=IIF(Fields!Line.Value&lt;&gt;0,"Circle","None")</Type>
+                            <Size>6pt</Size>
+                            <Style />
+                          </ChartMarker>
+                          <DataElementOutput>Output</DataElementOutput>
+                        </ChartDataPoint>
+                      </ChartDataPoints>
+                      <Type>Line</Type>
+                      <Style />
+                      <ChartEmptyPoints>
+                        <Style />
+                        <ChartMarker>
+                          <Style />
+                        </ChartMarker>
+                        <ChartDataLabel>
+                          <Style>
+                            <FontFamily>Calibri</FontFamily>
+                          </Style>
+                        </ChartDataLabel>
+                      </ChartEmptyPoints>
+                      <ValueAxisName>Primary</ValueAxisName>
+                      <CategoryAxisName>Primary</CategoryAxisName>
+                      <ChartSmartLabel>
+                        <CalloutLineColor>Black</CalloutLineColor>
+                        <MinMovingDistance>0pt</MinMovingDistance>
+                      </ChartSmartLabel>
+                    </ChartSeries>
+                    <ChartSeries Name="Core_Plus">
+                      <ChartDataPoints>
+                        <ChartDataPoint>
+                          <ChartDataPointValues>
+                            <Y>=Sum(Fields!Core_Plus.Value)</Y>
+                          </ChartDataPointValues>
+                          <ChartDataLabel>
+                            <Style>
+                              <FontFamily>Calibri</FontFamily>
+                              <FontSize>96pt</FontSize>
+                              <FontWeight>Bold</FontWeight>
+                              <Color>#515259</Color>
+                            </Style>
+                            <Label>=IIF(Fields!rnk.Value = 10, Fields!Core_Plus.Value, " ")</Label>
+                            <Visible>true</Visible>
+                          </ChartDataLabel>
+                          <Style>
+                            <Border>
+                              <Width>2pt</Width>
+                            </Border>
+                            <Color>=IIF(Fields!Core.Value=0,"#00ffffff","#00ABBD")</Color>
+                          </Style>
+                          <ChartMarker>
+                            <Style />
+                          </ChartMarker>
+                          <DataElementOutput>Output</DataElementOutput>
+                        </ChartDataPoint>
+                      </ChartDataPoints>
+                      <Type>Line</Type>
+                      <Style />
+                      <ChartEmptyPoints>
+                        <Style />
+                        <ChartMarker>
+                          <Style />
+                        </ChartMarker>
+                        <ChartDataLabel>
+                          <Style>
+                            <FontFamily>Calibri</FontFamily>
+                          </Style>
+                        </ChartDataLabel>
+                      </ChartEmptyPoints>
+                      <ValueAxisName>Primary</ValueAxisName>
+                      <CategoryAxisName>Primary</CategoryAxisName>
+                      <ChartSmartLabel>
+                        <CalloutLineColor>Black</CalloutLineColor>
+                        <MinMovingDistance>0pt</MinMovingDistance>
+                      </ChartSmartLabel>
+                    </ChartSeries>
+                    <ChartSeries Name="Core_Plus_Limit">
+                      <ChartDataPoints>
+                        <ChartDataPoint>
+                          <ChartDataPointValues>
+                            <Y>=Sum(Fields!Core_Plus_Limit.Value)</Y>
+                          </ChartDataPointValues>
+                          <ChartDataLabel>
+                            <Style>
+                              <FontFamily>Calibri</FontFamily>
+                            </Style>
+                          </ChartDataLabel>
+                          <Style>
+                            <Border>
+                              <Width>2pt</Width>
+                            </Border>
+                            <Color>#c0caab</Color>
+                          </Style>
+                          <ChartMarker>
+                            <Style />
+                          </ChartMarker>
+                          <DataElementOutput>Output</DataElementOutput>
+                        </ChartDataPoint>
+                      </ChartDataPoints>
+                      <Type>Line</Type>
+                      <Style />
+                      <ChartEmptyPoints>
+                        <Style />
+                        <ChartMarker>
+                          <Style />
+                        </ChartMarker>
+                        <ChartDataLabel>
+                          <Style>
+                            <FontFamily>Calibri</FontFamily>
+                          </Style>
+                        </ChartDataLabel>
+                      </ChartEmptyPoints>
+                      <ValueAxisName>Primary</ValueAxisName>
+                      <CategoryAxisName>Primary</CategoryAxisName>
+                      <ChartSmartLabel>
+                        <CalloutLineColor>Black</CalloutLineColor>
+                        <MinMovingDistance>0pt</MinMovingDistance>
+                      </ChartSmartLabel>
+                    </ChartSeries>
+                    <ChartSeries Name="Projected_Core_Plus">
+                      <ChartDataPoints>
+                        <ChartDataPoint>
+                          <ChartDataPointValues>
+                            <Y>=Sum(Fields!Projected_Core_Plus.Value)</Y>
+                          </ChartDataPointValues>
+                          <ChartDataLabel>
+                            <Style>
+                              <FontFamily>Calibri</FontFamily>
+                              <FontSize>6pt</FontSize>
+                              <FontWeight>Bold</FontWeight>
+                            </Style>
+                            <UseValueAsLabel>true</UseValueAsLabel>
+                            <Visible>true</Visible>
+                          </ChartDataLabel>
+                          <Style>
+                            <Border>
+                              <Style>Dashed</Style>
+                              <Width>2pt</Width>
+                            </Border>
+                            <Color>#00abbd</Color>
+                          </Style>
+                          <ChartMarker>
+                            <Type>=IIF(Fields!Line.Value&lt;&gt;0,"Circle","None")</Type>
+                            <Size>6pt</Size>
+                            <Style />
+                          </ChartMarker>
+                          <DataElementOutput>Output</DataElementOutput>
+                        </ChartDataPoint>
+                      </ChartDataPoints>
+                      <Type>Line</Type>
+                      <Style />
+                      <ChartEmptyPoints>
+                        <Style />
+                        <ChartMarker>
+                          <Style />
+                        </ChartMarker>
+                        <ChartDataLabel>
+                          <Style>
+                            <FontFamily>Calibri</FontFamily>
+                          </Style>
+                        </ChartDataLabel>
+                      </ChartEmptyPoints>
+                      <ValueAxisName>Primary</ValueAxisName>
+                      <CategoryAxisName>Primary</CategoryAxisName>
+                      <ChartSmartLabel>
+                        <CalloutLineColor>Black</CalloutLineColor>
+                        <MinMovingDistance>0pt</MinMovingDistance>
+                      </ChartSmartLabel>
+                    </ChartSeries>
+                  </ChartSeriesCollection>
+                </ChartData>
+                <ChartAreas>
+                  <ChartArea Name="Default">
+                    <ChartCategoryAxes>
+                      <ChartAxis Name="Primary">
+                        <Style>
+                          <Border>
+                            <Color>Gainsboro</Color>
+                            <Style>Solid</Style>
+                          </Border>
+                          <FontFamily>Calibri</FontFamily>
+                          <FontSize>6pt</FontSize>
+                          <FontWeight>Bold</FontWeight>
+                          <Color>#515259</Color>
+                        </Style>
+                        <ChartAxisTitle>
+                          <Caption />
+                          <Style>
+                            <FontFamily>Calibri</FontFamily>
+                            <FontSize>9pt</FontSize>
+                            <Color>#5c5c5c</Color>
+                          </Style>
+                        </ChartAxisTitle>
+                        <Interval>1</Interval>
+                        <ChartMajorGridLines>
+                          <Enabled>False</Enabled>
+                          <Style>
+                            <Border>
+                              <Color>Gainsboro</Color>
+                            </Border>
+                          </Style>
+                        </ChartMajorGridLines>
+                        <ChartMinorGridLines>
+                          <Style>
+                            <Border>
+                              <Color>Gainsboro</Color>
+                              <Style>Dotted</Style>
+                            </Border>
+                          </Style>
+                        </ChartMinorGridLines>
+                        <ChartMajorTickMarks>
+                          <Style>
+                            <Border>
+                              <Color>Gainsboro</Color>
+                              <Style>None</Style>
+                            </Border>
+                          </Style>
+                        </ChartMajorTickMarks>
+                        <ChartMinorTickMarks>
+                          <Style>
+                            <Border>
+                              <Color>Gainsboro</Color>
+                            </Border>
+                          </Style>
+                          <Length>0.5</Length>
+                        </ChartMinorTickMarks>
+                        <CrossAt>NaN</CrossAt>
+                        <Minimum>NaN</Minimum>
+                        <Maximum>NaN</Maximum>
+                        <Angle>-45</Angle>
+                        <LabelsAutoFitDisabled>true</LabelsAutoFitDisabled>
+                        <ChartAxisScaleBreak>
+                          <Style />
+                        </ChartAxisScaleBreak>
+                      </ChartAxis>
+                      <ChartAxis Name="Secondary">
+                        <Style>
+                          <Border>
+                            <Color>Gainsboro</Color>
+                            <Style>None</Style>
+                          </Border>
+                          <FontFamily>Calibri</FontFamily>
+                          <FontSize>8pt</FontSize>
+                          <Color>#5c5c5c</Color>
+                        </Style>
+                        <ChartAxisTitle>
+                          <Caption />
+                          <Style>
+                            <FontFamily>Calibri</FontFamily>
+                            <FontSize>9pt</FontSize>
+                            <Color>#5c5c5c</Color>
+                          </Style>
+                        </ChartAxisTitle>
+                        <ChartMajorGridLines>
+                          <Enabled>False</Enabled>
+                          <Style>
+                            <Border>
+                              <Color>Gainsboro</Color>
+                            </Border>
+                          </Style>
+                        </ChartMajorGridLines>
+                        <ChartMinorGridLines>
+                          <Style>
+                            <Border>
+                              <Color>Gainsboro</Color>
+                              <Style>Dotted</Style>
+                            </Border>
+                          </Style>
+                        </ChartMinorGridLines>
+                        <ChartMajorTickMarks>
+                          <Style>
+                            <Border>
+                              <Color>Gainsboro</Color>
+                              <Style>None</Style>
+                            </Border>
+                          </Style>
+                        </ChartMajorTickMarks>
+                        <ChartMinorTickMarks>
+                          <Style>
+                            <Border>
+                              <Color>Gainsboro</Color>
+                            </Border>
+                          </Style>
+                          <Length>0.5</Length>
+                        </ChartMinorTickMarks>
+                        <CrossAt>NaN</CrossAt>
+                        <Location>Opposite</Location>
+                        <Minimum>NaN</Minimum>
+                        <Maximum>NaN</Maximum>
+                        <ChartAxisScaleBreak>
+                          <Style />
+                        </ChartAxisScaleBreak>
+                      </ChartAxis>
+                    </ChartCategoryAxes>
+                    <ChartValueAxes>
+                      <ChartAxis Name="Primary">
+                        <Style>
+                          <Border>
+                            <Color>Gainsboro</Color>
+                            <Style>None</Style>
+                          </Border>
+                          <FontFamily>Calibri</FontFamily>
+                          <FontSize>6pt</FontSize>
+                          <FontWeight>Bold</FontWeight>
+                          <Format>0.0;(0.0)</Format>
+                          <Color>#515259</Color>
+                        </Style>
+                        <ChartAxisTitle>
+                          <Caption />
+                          <Style>
+                            <FontFamily>Calibri</FontFamily>
+                            <FontSize>9pt</FontSize>
+                            <Color>#5c5c5c</Color>
+                          </Style>
+                        </ChartAxisTitle>
+                        <Interval>0.5</Interval>
+                        <ChartMajorGridLines>
+                          <Enabled>False</Enabled>
+                          <Style>
+                            <Border>
+                              <Color>Gainsboro</Color>
+                            </Border>
+                          </Style>
+                        </ChartMajorGridLines>
+                        <ChartMinorGridLines>
+                          <Style>
+                            <Border>
+                              <Color>Gainsboro</Color>
+                              <Style>Dotted</Style>
+                            </Border>
+                          </Style>
+                        </ChartMinorGridLines>
+                        <ChartMajorTickMarks>
+                          <Style>
+                            <Border>
+                              <Color>Gainsboro</Color>
+                              <Style>None</Style>
+                            </Border>
+                          </Style>
+                        </ChartMajorTickMarks>
+                        <ChartMinorTickMarks>
+                          <Style>
+                            <Border>
+                              <Color>Gainsboro</Color>
+                            </Border>
+                          </Style>
+                          <Length>0.5</Length>
+                        </ChartMinorTickMarks>
+                        <CrossAt>NaN</CrossAt>
+                        <Minimum>NaN</Minimum>
+                        <Maximum>NaN</Maximum>
+                        <LabelsAutoFitDisabled>true</LabelsAutoFitDisabled>
+                        <ChartAxisScaleBreak>
+                          <Style />
+                        </ChartAxisScaleBreak>
+                      </ChartAxis>
+                      <ChartAxis Name="Secondary">
+                        <Visible>False</Visible>
+                        <Style>
+                          <Border>
+                            <Color>Gainsboro</Color>
+                            <Style>None</Style>
+                          </Border>
+                          <FontFamily>Calibri</FontFamily>
+                          <FontSize>8pt</FontSize>
+                          <Color>#5c5c5c</Color>
+                        </Style>
+                        <ChartAxisTitle>
+                          <Caption />
+                          <Style>
+                            <FontFamily>Calibri</FontFamily>
+                            <FontSize>9pt</FontSize>
+                            <Color>#5c5c5c</Color>
+                          </Style>
+                        </ChartAxisTitle>
+                        <Interval>0.5</Interval>
+                        <ChartMajorGridLines>
+                          <Style>
+                            <Border>
+                              <Color>Gainsboro</Color>
+                            </Border>
+                          </Style>
+                        </ChartMajorGridLines>
+                        <ChartMinorGridLines>
+                          <Style>
+                            <Border>
+                              <Color>Gainsboro</Color>
+                              <Style>Dotted</Style>
+                            </Border>
+                          </Style>
+                        </ChartMinorGridLines>
+                        <ChartMajorTickMarks>
+                          <Style>
+                            <Border>
+                              <Color>Gainsboro</Color>
+                              <Style>None</Style>
+                            </Border>
+                          </Style>
+                        </ChartMajorTickMarks>
+                        <ChartMinorTickMarks>
+                          <Style>
+                            <Border>
+                              <Color>Gainsboro</Color>
+                            </Border>
+                          </Style>
+                          <Length>0.5</Length>
+                        </ChartMinorTickMarks>
+                        <CrossAt>NaN</CrossAt>
+                        <Location>Opposite</Location>
+                        <Minimum>0.5</Minimum>
+                        <Maximum>5</Maximum>
+                        <ChartAxisScaleBreak>
+                          <Style />
+                        </ChartAxisScaleBreak>
+                      </ChartAxis>
+                    </ChartValueAxes>
+                    <Style>
+                      <BackgroundColor>#00ffffff</BackgroundColor>
+                      <BackgroundGradientType>None</BackgroundGradientType>
+                    </Style>
+                  </ChartArea>
+                </ChartAreas>
+                <ChartLegends>
+                  <ChartLegend Name="Legend1">
+                    <Style>
+                      <BackgroundGradientType>None</BackgroundGradientType>
+                      <FontFamily>Calibri</FontFamily>
+                      <FontSize>6pt</FontSize>
+                    </Style>
+                    <Position>BottomCenter</Position>
+                    <ChartLegendTitle>
+                      <Caption />
+                      <Style>
+                        <FontFamily>Calibri</FontFamily>
+                        <FontSize>8pt</FontSize>
+                        <FontWeight>Bold</FontWeight>
+                        <TextAlign>Center</TextAlign>
+                      </Style>
+                    </ChartLegendTitle>
+                    <AutoFitTextDisabled>true</AutoFitTextDisabled>
+                    <HeaderSeparatorColor>Black</HeaderSeparatorColor>
+                    <ColumnSeparatorColor>Black</ColumnSeparatorColor>
+                  </ChartLegend>
+                </ChartLegends>
+                <Palette>Pacific</Palette>
+                <ChartBorderSkin>
+                  <Style>
+                    <BackgroundColor>Gray</BackgroundColor>
+                    <BackgroundGradientType>None</BackgroundGradientType>
+                    <Color>White</Color>
+                  </Style>
+                </ChartBorderSkin>
+                <ChartNoDataMessage Name="NoDataMessage">
+                  <Caption>No Data Available</Caption>
+                  <Style>
+                    <BackgroundGradientType>None</BackgroundGradientType>
+                    <FontFamily>Calibri</FontFamily>
+                    <FontWeight>Bold</FontWeight>
+                    <TextAlign>General</TextAlign>
+                    <VerticalAlign>Top</VerticalAlign>
+                  </Style>
+                </ChartNoDataMessage>
+                <DataSetName>PE_Stressed_Liquidity_Coverage_Ratios</DataSetName>
+                <Top>5.58737in</Top>
+                <Height>1.72943in</Height>
+                <Width>5.45556in</Width>
+                <ZIndex>4</ZIndex>
+                <Style>
+                  <Border>
+                    <Color>LightGrey</Color>
+                    <Style>None</Style>
+                  </Border>
+                  <BackgroundColor>White</BackgroundColor>
+                  <BackgroundGradientType>None</BackgroundGradientType>
+                </Style>
+              </Chart>
+              <Tablix Name="Tablix29">
+                <TablixBody>
+                  <TablixColumns>
+                    <TablixColumn>
+                      <Width>0.84166in</Width>
+                    </TablixColumn>
+                    <TablixColumn>
+                      <Width>0.74167in</Width>
+                    </TablixColumn>
+                    <TablixColumn>
+                      <Width>0.74096in</Width>
+                    </TablixColumn>
+                    <TablixColumn>
+                      <Width>0.79168in</Width>
+                    </TablixColumn>
+                    <TablixColumn>
+                      <Width>0.60696in</Width>
+                    </TablixColumn>
+                    <TablixColumn>
+                      <Width>0.69167in</Width>
+                    </TablixColumn>
+                    <TablixColumn>
+                      <Width>0.54096in</Width>
+                    </TablixColumn>
+                  </TablixColumns>
+                  <TablixRows>
+                    <TablixRow>
+                      <Height>0.25in</Height>
+                      <TablixCells>
+                        <TablixCell>
+                          <CellContents>
+                            <Textbox Name="Textbox465">
+                              <KeepTogether>true</KeepTogether>
+                              <Paragraphs>
+                                <Paragraph>
+                                  <TextRuns>
+                                    <TextRun>
+                                      <Value>Major Deals GPs</Value>
+                                      <Style>
+                                        <FontSize>7pt</FontSize>
+                                        <FontWeight>Bold</FontWeight>
+                                        <Color>#515259</Color>
+                                      </Style>
+                                    </TextRun>
+                                  </TextRuns>
+                                  <Style>
+                                    <TextAlign>Center</TextAlign>
+                                  </Style>
+                                </Paragraph>
+                              </Paragraphs>
+                              <rd:DefaultName>Textbox465</rd:DefaultName>
+                              <Style>
+                                <Border>
+                                  <Style>None</Style>
+                                </Border>
+                                <BackgroundColor>#6c9dc6</BackgroundColor>
+                                <VerticalAlign>Middle</VerticalAlign>
+                              </Style>
+                            </Textbox>
+                          </CellContents>
+                        </TablixCell>
+                        <TablixCell>
+                          <CellContents>
+                            <Textbox Name="Textbox467">
+                              <KeepTogether>true</KeepTogether>
+                              <Paragraphs>
+                                <Paragraph>
+                                  <TextRuns>
+                                    <TextRun>
+                                      <Value>Market Value</Value>
+                                      <Style>
+                                        <FontSize>7pt</FontSize>
+                                        <FontWeight>Bold</FontWeight>
+                                        <Color>#515259</Color>
+                                      </Style>
+                                    </TextRun>
+                                  </TextRuns>
+                                  <Style>
+                                    <TextAlign>Center</TextAlign>
+                                  </Style>
+                                </Paragraph>
+                              </Paragraphs>
+                              <rd:DefaultName>Textbox467</rd:DefaultName>
+                              <Style>
+                                <Border>
+                                  <Style>None</Style>
+                                </Border>
+                                <BackgroundColor>#6c9dc6</BackgroundColor>
+                                <VerticalAlign>Middle</VerticalAlign>
+                              </Style>
+                            </Textbox>
+                          </CellContents>
+                        </TablixCell>
+                        <TablixCell>
+                          <CellContents>
+                            <Textbox Name="Textbox472">
+                              <KeepTogether>true</KeepTogether>
+                              <Paragraphs>
+                                <Paragraph>
+                                  <TextRuns>
+                                    <TextRun>
+                                      <Value>Industry</Value>
+                                      <Style>
+                                        <FontSize>7pt</FontSize>
+                                        <FontWeight>Bold</FontWeight>
+                                        <Color>#515259</Color>
+                                      </Style>
+                                    </TextRun>
+                                  </TextRuns>
+                                  <Style>
+                                    <TextAlign>Center</TextAlign>
+                                  </Style>
+                                </Paragraph>
+                              </Paragraphs>
+                              <rd:DefaultName>Textbox472</rd:DefaultName>
+                              <Style>
+                                <Border>
+                                  <Style>None</Style>
+                                </Border>
+                                <BackgroundColor>#6c9dc6</BackgroundColor>
+                                <VerticalAlign>Middle</VerticalAlign>
+                              </Style>
+                            </Textbox>
+                          </CellContents>
+                        </TablixCell>
+                        <TablixCell>
+                          <CellContents>
+                            <Textbox Name="Textbox474">
+                              <CanGrow>true</CanGrow>
+                              <KeepTogether>true</KeepTogether>
+                              <Paragraphs>
+                                <Paragraph>
+                                  <TextRuns>
+                                    <TextRun>
+                                      <Value>Geography</Value>
+                                      <Style>
+                                        <FontSize>7pt</FontSize>
+                                        <FontWeight>Bold</FontWeight>
+                                        <Color>#515259</Color>
+                                      </Style>
+                                    </TextRun>
+                                  </TextRuns>
+                                  <Style>
+                                    <TextAlign>Center</TextAlign>
+                                  </Style>
+                                </Paragraph>
+                              </Paragraphs>
+                              <rd:DefaultName>Textbox474</rd:DefaultName>
+                              <Style>
+                                <Border>
+                                  <Style>None</Style>
+                                </Border>
+                                <BackgroundColor>#6c9dc6</BackgroundColor>
+                                <VerticalAlign>Middle</VerticalAlign>
+                              </Style>
+                            </Textbox>
+                          </CellContents>
+                        </TablixCell>
+                        <TablixCell>
+                          <CellContents>
+                            <Textbox Name="Textbox478">
+                              <CanGrow>true</CanGrow>
+                              <KeepTogether>true</KeepTogether>
+                              <Paragraphs>
+                                <Paragraph>
+                                  <TextRuns>
+                                    <TextRun>
+                                      <Value>Risk</Value>
+                                      <Style>
+                                        <FontSize>7pt</FontSize>
+                                        <FontWeight>Bold</FontWeight>
+                                        <Color>#515259</Color>
+                                      </Style>
+                                    </TextRun>
+                                  </TextRuns>
+                                  <Style>
+                                    <TextAlign>Center</TextAlign>
+                                  </Style>
+                                </Paragraph>
+                                <Paragraph>
+                                  <TextRuns>
+                                    <TextRun>
+                                      <Value> Contribution</Value>
+                                      <Style>
+                                        <FontSize>7pt</FontSize>
+                                        <FontWeight>Bold</FontWeight>
+                                        <Color>#515259</Color>
+                                      </Style>
+                                    </TextRun>
+                                  </TextRuns>
+                                  <Style>
+                                    <TextAlign>Center</TextAlign>
+                                  </Style>
+                                </Paragraph>
+                              </Paragraphs>
+                              <rd:DefaultName>Textbox478</rd:DefaultName>
+                              <Style>
+                                <Border>
+                                  <Style>None</Style>
+                                </Border>
+                                <BackgroundColor>#6c9dc6</BackgroundColor>
+                                <VerticalAlign>Middle</VerticalAlign>
+                                <PaddingBottom>1pt</PaddingBottom>
+                              </Style>
+                            </Textbox>
+                          </CellContents>
+                        </TablixCell>
+                        <TablixCell>
+                          <CellContents>
+                            <Textbox Name="Textbox480">
+                              <KeepTogether>true</KeepTogether>
+                              <Paragraphs>
+                                <Paragraph>
+                                  <TextRuns>
+                                    <TextRun>
+                                      <Value>Vintage</Value>
+                                      <Style>
+                                        <FontSize>7pt</FontSize>
+                                        <FontWeight>Bold</FontWeight>
+                                        <Color>#515259</Color>
+                                      </Style>
+                                    </TextRun>
+                                  </TextRuns>
+                                  <Style>
+                                    <TextAlign>Center</TextAlign>
+                                  </Style>
+                                </Paragraph>
+                                <Paragraph>
+                                  <TextRuns>
+                                    <TextRun>
+                                      <Value>Year</Value>
+                                      <Style>
+                                        <FontSize>7pt</FontSize>
+                                        <FontWeight>Bold</FontWeight>
+                                        <Color>#515259</Color>
+                                      </Style>
+                                    </TextRun>
+                                  </TextRuns>
+                                  <Style>
+                                    <TextAlign>Center</TextAlign>
+                                  </Style>
+                                </Paragraph>
+                              </Paragraphs>
+                              <rd:DefaultName>Textbox480</rd:DefaultName>
+                              <Style>
+                                <Border>
+                                  <Style>None</Style>
+                                </Border>
+                                <BackgroundColor>#6c9dc6</BackgroundColor>
+                                <VerticalAlign>Middle</VerticalAlign>
+                                <PaddingBottom>1pt</PaddingBottom>
+                              </Style>
+                            </Textbox>
+                          </CellContents>
+                        </TablixCell>
+                        <TablixCell>
+                          <CellContents>
+                            <Textbox Name="Textbox482">
+                              <CanGrow>true</CanGrow>
+                              <KeepTogether>true</KeepTogether>
+                              <Paragraphs>
+                                <Paragraph>
+                                  <TextRuns>
+                                    <TextRun>
+                                      <Value>Risk Analysis</Value>
+                                      <Style>
+                                        <FontSize>7pt</FontSize>
+                                        <FontWeight>Bold</FontWeight>
+                                        <Color>#515259</Color>
+                                      </Style>
+                                    </TextRun>
+                                  </TextRuns>
+                                  <Style>
+                                    <TextAlign>Center</TextAlign>
+                                  </Style>
+                                </Paragraph>
+                              </Paragraphs>
+                              <rd:DefaultName>Textbox482</rd:DefaultName>
+                              <Style>
+                                <Border>
+                                  <Style>None</Style>
+                                </Border>
+                                <BottomBorder>
+                                  <Color>LightGrey</Color>
+                                  <Style>Solid</Style>
+                                  <Width>1pt</Width>
+                                </BottomBorder>
+                                <RightBorder>
+                                  <Color>Black</Color>
+                                  <Style>Solid</Style>
+                                  <Width>1pt</Width>
+                                </RightBorder>
+                                <BackgroundColor>#6c9dc6</BackgroundColor>
+                                <VerticalAlign>Middle</VerticalAlign>
+                              </Style>
+                            </Textbox>
+                          </CellContents>
+                        </TablixCell>
+                      </TablixCells>
+                    </TablixRow>
+                    <TablixRow>
+                      <Height>0.2in</Height>
+                      <TablixCells>
+                        <TablixCell>
+                          <CellContents>
+                            <Textbox Name="Major_Deals_GPs">
+                              <CanGrow>true</CanGrow>
+                              <KeepTogether>true</KeepTogether>
+                              <Paragraphs>
+                                <Paragraph>
+                                  <TextRuns>
+                                    <TextRun>
+                                      <Value>=IIF(Fields!Major_Deals_GPs.Value="","---",Fields!Major_Deals_GPs.Value)</Value>
+                                      <Style>
+                                        <FontSize>7pt</FontSize>
+                                        <Color>#515259</Color>
+                                      </Style>
+                                    </TextRun>
+                                  </TextRuns>
+                                  <Style>
+                                    <TextAlign>Center</TextAlign>
+                                  </Style>
+                                </Paragraph>
+                              </Paragraphs>
+                              <rd:DefaultName>Major_Deals_GPs</rd:DefaultName>
+                              <Style>
+                                <Border>
+                                  <Color>LightGrey</Color>
+                                  <Style>Solid</Style>
+                                </Border>
+                                <BackgroundColor>#dce6f1</BackgroundColor>
+                                <VerticalAlign>Middle</VerticalAlign>
+                              </Style>
+                            </Textbox>
+                          </CellContents>
+                        </TablixCell>
+                        <TablixCell>
+                          <CellContents>
+                            <Textbox Name="Market_Value">
+                              <CanGrow>true</CanGrow>
+                              <KeepTogether>true</KeepTogether>
+                              <Paragraphs>
+                                <Paragraph>
+                                  <TextRuns>
+                                    <TextRun>
+                                      <Value>=IIF(Fields!Market_Value.Value=0,"---",Fields!Market_Value.Value)</Value>
+                                      <Style>
+                                        <FontSize>7pt</FontSize>
+                                        <Color>#515259</Color>
+                                      </Style>
+                                    </TextRun>
+                                  </TextRuns>
+                                  <Style>
+                                    <TextAlign>Center</TextAlign>
+                                  </Style>
+                                </Paragraph>
+                              </Paragraphs>
+                              <rd:DefaultName>Market_Value</rd:DefaultName>
+                              <Style>
+                                <Border>
+                                  <Color>LightGrey</Color>
+                                  <Style>Solid</Style>
+                                </Border>
+                                <BackgroundColor>#dce6f1</BackgroundColor>
+                                <VerticalAlign>Middle</VerticalAlign>
+                              </Style>
+                            </Textbox>
+                          </CellContents>
+                        </TablixCell>
+                        <TablixCell>
+                          <CellContents>
+                            <Textbox Name="Industry">
+                              <CanGrow>true</CanGrow>
+                              <KeepTogether>true</KeepTogether>
+                              <Paragraphs>
+                                <Paragraph>
+                                  <TextRuns>
+                                    <TextRun>
+                                      <Value>=IIF(Fields!Industry.Value="","---",Fields!Industry.Value)</Value>
+                                      <Style>
+                                        <FontSize>7pt</FontSize>
+                                        <Color>#515259</Color>
+                                      </Style>
+                                    </TextRun>
+                                  </TextRuns>
+                                  <Style>
+                                    <TextAlign>Center</TextAlign>
+                                  </Style>
+                                </Paragraph>
+                              </Paragraphs>
+                              <rd:DefaultName>Industry</rd:DefaultName>
+                              <Style>
+                                <Border>
+                                  <Color>LightGrey</Color>
+                                  <Style>Solid</Style>
+                                </Border>
+                                <BackgroundColor>#dce6f1</BackgroundColor>
+                                <VerticalAlign>Middle</VerticalAlign>
+                              </Style>
+                            </Textbox>
+                          </CellContents>
+                        </TablixCell>
+                        <TablixCell>
+                          <CellContents>
+                            <Textbox Name="Geography">
+                              <CanGrow>true</CanGrow>
+                              <KeepTogether>true</KeepTogether>
+                              <Paragraphs>
+                                <Paragraph>
+                                  <TextRuns>
+                                    <TextRun>
+                                      <Value>=IIF(Fields!Geography.Value="","---",Fields!Geography.Value)</Value>
+                                      <Style>
+                                        <FontSize>7pt</FontSize>
+                                        <Color>#515259</Color>
+                                      </Style>
+                                    </TextRun>
+                                  </TextRuns>
+                                  <Style>
+                                    <TextAlign>Center</TextAlign>
+                                  </Style>
+                                </Paragraph>
+                              </Paragraphs>
+                              <rd:DefaultName>Geography</rd:DefaultName>
+                              <Style>
+                                <Border>
+                                  <Color>LightGrey</Color>
+                                  <Style>Solid</Style>
+                                </Border>
+                                <BackgroundColor>#dce6f1</BackgroundColor>
+                                <VerticalAlign>Middle</VerticalAlign>
+                              </Style>
+                            </Textbox>
+                          </CellContents>
+                        </TablixCell>
+                        <TablixCell>
+                          <CellContents>
+                            <Textbox Name="Risk_Contribution">
+                              <CanGrow>true</CanGrow>
+                              <KeepTogether>true</KeepTogether>
+                              <Paragraphs>
+                                <Paragraph>
+                                  <TextRuns>
+                                    <TextRun>
+                                      <Value>=IIF(Fields!Risk_Contribution.Value=0,"---",Fields!Risk_Contribution.Value)</Value>
+                                      <Style>
+                                        <FontSize>7pt</FontSize>
+                                        <Color>#515259</Color>
+                                      </Style>
+                                    </TextRun>
+                                  </TextRuns>
+                                  <Style>
+                                    <TextAlign>Center</TextAlign>
+                                  </Style>
+                                </Paragraph>
+                              </Paragraphs>
+                              <rd:DefaultName>Risk_Contribution</rd:DefaultName>
+                              <Style>
+                                <Border>
+                                  <Color>LightGrey</Color>
+                                  <Style>Solid</Style>
+                                </Border>
+                                <BackgroundColor>#dce6f1</BackgroundColor>
+                                <VerticalAlign>Middle</VerticalAlign>
+                              </Style>
+                            </Textbox>
+                          </CellContents>
+                        </TablixCell>
+                        <TablixCell>
+                          <CellContents>
+                            <Textbox Name="Vintage_Year">
+                              <CanGrow>true</CanGrow>
+                              <KeepTogether>true</KeepTogether>
+                              <Paragraphs>
+                                <Paragraph>
+                                  <TextRuns>
+                                    <TextRun>
+                                      <Value>=IIF(Fields!Vintage_Year.Value=0,"---",Fields!Vintage_Year.Value)</Value>
+                                      <Style>
+                                        <FontSize>7pt</FontSize>
+                                        <Color>#515259</Color>
+                                      </Style>
+                                    </TextRun>
+                                  </TextRuns>
+                                  <Style>
+                                    <TextAlign>Center</TextAlign>
+                                  </Style>
+                                </Paragraph>
+                              </Paragraphs>
+                              <rd:DefaultName>Vintage_Year</rd:DefaultName>
+                              <Style>
+                                <Border>
+                                  <Color>LightGrey</Color>
+                                  <Style>Solid</Style>
+                                </Border>
+                                <BackgroundColor>#dce6f1</BackgroundColor>
+                                <VerticalAlign>Middle</VerticalAlign>
+                              </Style>
+                            </Textbox>
+                          </CellContents>
+                        </TablixCell>
+                        <TablixCell>
+                          <CellContents>
+                            <Textbox Name="Textbox9">
+                              <KeepTogether>true</KeepTogether>
+                              <Paragraphs>
+                                <Paragraph>
+                                  <TextRuns>
+                                    <TextRun>
+                                      <Value>=Chr(108)</Value>
+                                      <Style>
+                                        <FontFamily>Wingdings</FontFamily>
+                                        <FontSize>12pt</FontSize>
+                                        <Color>=IIF( Sum(Fields!Risk_Analysis.Value) &gt;=-1 and  Sum(Fields!Risk_Analysis.Value) &lt;=  -0.001,"#c0433a",IIF(Sum(Fields!Risk_Analysis.Value) &gt;=0 and Sum(Fields!Risk_Analysis.Value)  &lt;=  0.001, "#e8d62e",IIF( Sum(Fields!Risk_Analysis.Value) &gt;=1 and Sum(Fields!Risk_Analysis.Value) &lt;=  100,"#00b050","#dce6f1")))</Color>
+                                      </Style>
+                                    </TextRun>
+                                  </TextRuns>
+                                  <Style>
+                                    <TextAlign>Center</TextAlign>
+                                  </Style>
+                                </Paragraph>
+                              </Paragraphs>
+                              <rd:DefaultName>Textbox4</rd:DefaultName>
+                              <Style>
+                                <Border>
+                                  <Style>None</Style>
+                                </Border>
+                                <BottomBorder>
+                                  <Color>LightGrey</Color>
+                                  <Style>Solid</Style>
+                                  <Width>1pt</Width>
+                                </BottomBorder>
+                                <RightBorder>
+                                  <Color>Black</Color>
+                                  <Style>Solid</Style>
+                                  <Width>1pt</Width>
+                                </RightBorder>
+                                <BackgroundColor>#dce6f1</BackgroundColor>
+                                <PaddingLeft>2pt</PaddingLeft>
+                                <PaddingRight>2pt</PaddingRight>
+                                <PaddingTop>2pt</PaddingTop>
+                                <PaddingBottom>2pt</PaddingBottom>
+                              </Style>
+                            </Textbox>
+                          </CellContents>
+                        </TablixCell>
+                      </TablixCells>
+                    </TablixRow>
+                    <TablixRow>
+                      <Height>0.2in</Height>
+                      <TablixCells>
+                        <TablixCell>
+                          <CellContents>
+                            <Textbox Name="Textbox485">
+                              <CanGrow>true</CanGrow>
+                              <KeepTogether>true</KeepTogether>
+                              <Paragraphs>
+                                <Paragraph>
+                                  <TextRuns>
+                                    <TextRun>
+                                      <Value>=replace(Fields!Portfolio_Type.Value,"Investments","")&amp;" Total"</Value>
+                                      <Style>
+                                        <FontSize>7pt</FontSize>
+                                        <FontWeight>Bold</FontWeight>
+                                        <Color>#515259</Color>
+                                      </Style>
+                                    </TextRun>
+                                  </TextRuns>
+                                  <Style>
+                                    <TextAlign>Center</TextAlign>
+                                  </Style>
+                                </Paragraph>
+                              </Paragraphs>
+                              <rd:DefaultName>Textbox485</rd:DefaultName>
+                              <Style>
+                                <Border>
+                                  <Color>LightGrey</Color>
+                                  <Style>Solid</Style>
+                                </Border>
+                                <BackgroundColor>#6c9dc6</BackgroundColor>
+                                <VerticalAlign>Middle</VerticalAlign>
+                              </Style>
+                            </Textbox>
+                          </CellContents>
+                        </TablixCell>
+                        <TablixCell>
+                          <CellContents>
+                            <Textbox Name="Textbox486">
+                              <CanGrow>true</CanGrow>
+                              <KeepTogether>true</KeepTogether>
+                              <Paragraphs>
+                                <Paragraph>
+                                  <TextRuns>
+                                    <TextRun>
+                                      <Value>=IIF(Sum(Fields!Market_Value.Value)=0,"---",Sum(Fields!Market_Value.Value))</Value>
+                                      <Style>
+                                        <FontSize>7pt</FontSize>
+                                        <FontWeight>Bold</FontWeight>
+                                        <Color>#515259</Color>
+                                      </Style>
+                                    </TextRun>
+                                  </TextRuns>
+                                  <Style>
+                                    <TextAlign>Center</TextAlign>
+                                  </Style>
+                                </Paragraph>
+                              </Paragraphs>
+                              <rd:DefaultName>Textbox486</rd:DefaultName>
+                              <Style>
+                                <Border>
+                                  <Color>LightGrey</Color>
+                                  <Style>Solid</Style>
+                                </Border>
+                                <BackgroundColor>#6c9dc6</BackgroundColor>
+                                <VerticalAlign>Middle</VerticalAlign>
+                              </Style>
+                            </Textbox>
+                          </CellContents>
+                        </TablixCell>
+                        <TablixCell>
+                          <CellContents>
+                            <Textbox Name="Textbox487">
+                              <CanGrow>true</CanGrow>
+                              <KeepTogether>true</KeepTogether>
+                              <Paragraphs>
+                                <Paragraph>
+                                  <TextRuns>
+                                    <TextRun>
+                                      <Value />
+                                      <Style>
+                                        <FontSize>7pt</FontSize>
+                                        <FontWeight>Bold</FontWeight>
+                                        <Color>#515259</Color>
+                                      </Style>
+                                    </TextRun>
+                                  </TextRuns>
+                                  <Style>
+                                    <TextAlign>Center</TextAlign>
+                                  </Style>
+                                </Paragraph>
+                              </Paragraphs>
+                              <rd:DefaultName>Textbox487</rd:DefaultName>
+                              <Style>
+                                <Border>
+                                  <Color>LightGrey</Color>
+                                  <Style>Solid</Style>
+                                </Border>
+                                <BackgroundColor>#6c9dc6</BackgroundColor>
+                                <VerticalAlign>Middle</VerticalAlign>
+                              </Style>
+                            </Textbox>
+                          </CellContents>
+                        </TablixCell>
+                        <TablixCell>
+                          <CellContents>
+                            <Textbox Name="Textbox488">
+                              <CanGrow>true</CanGrow>
+                              <KeepTogether>true</KeepTogether>
+                              <Paragraphs>
+                                <Paragraph>
+                                  <TextRuns>
+                                    <TextRun>
+                                      <Value />
+                                      <Style>
+                                        <FontSize>7pt</FontSize>
+                                        <FontWeight>Bold</FontWeight>
+                                        <Color>#515259</Color>
+                                      </Style>
+                                    </TextRun>
+                                  </TextRuns>
+                                  <Style>
+                                    <TextAlign>Center</TextAlign>
+                                  </Style>
+                                </Paragraph>
+                              </Paragraphs>
+                              <rd:DefaultName>Textbox488</rd:DefaultName>
+                              <Style>
+                                <Border>
+                                  <Color>LightGrey</Color>
+                                  <Style>Solid</Style>
+                                </Border>
+                                <BackgroundColor>#6c9dc6</BackgroundColor>
+                                <VerticalAlign>Middle</VerticalAlign>
+                              </Style>
+                            </Textbox>
+                          </CellContents>
+                        </TablixCell>
+                        <TablixCell>
+                          <CellContents>
+                            <Textbox Name="Textbox489">
+                              <CanGrow>true</CanGrow>
+                              <KeepTogether>true</KeepTogether>
+                              <Paragraphs>
+                                <Paragraph>
+                                  <TextRuns>
+                                    <TextRun>
+                                      <Value>=IIF(Sum(Fields!Risk_Contribution.Value)=0,"---",Sum(Fields!Risk_Contribution.Value))</Value>
+                                      <Style>
+                                        <FontSize>7pt</FontSize>
+                                        <FontWeight>Bold</FontWeight>
+                                        <Color>#515259</Color>
+                                      </Style>
+                                    </TextRun>
+                                  </TextRuns>
+                                  <Style>
+                                    <TextAlign>Center</TextAlign>
+                                  </Style>
+                                </Paragraph>
+                              </Paragraphs>
+                              <rd:DefaultName>Textbox489</rd:DefaultName>
+                              <Style>
+                                <Border>
+                                  <Color>LightGrey</Color>
+                                  <Style>Solid</Style>
+                                </Border>
+                                <BackgroundColor>#6c9dc6</BackgroundColor>
+                                <VerticalAlign>Middle</VerticalAlign>
+                              </Style>
+                            </Textbox>
+                          </CellContents>
+                        </TablixCell>
+                        <TablixCell>
+                          <CellContents>
+                            <Textbox Name="Textbox490">
+                              <CanGrow>true</CanGrow>
+                              <KeepTogether>true</KeepTogether>
+                              <Paragraphs>
+                                <Paragraph>
+                                  <TextRuns>
+                                    <TextRun>
+                                      <Value />
+                                      <Style>
+                                        <FontSize>7pt</FontSize>
+                                        <FontWeight>Bold</FontWeight>
+                                        <Color>#515259</Color>
+                                      </Style>
+                                    </TextRun>
+                                  </TextRuns>
+                                  <Style>
+                                    <TextAlign>Center</TextAlign>
+                                  </Style>
+                                </Paragraph>
+                              </Paragraphs>
+                              <rd:DefaultName>Textbox490</rd:DefaultName>
+                              <Style>
+                                <Border>
+                                  <Color>LightGrey</Color>
+                                  <Style>Solid</Style>
+                                </Border>
+                                <BackgroundColor>#6c9dc6</BackgroundColor>
+                                <VerticalAlign>Middle</VerticalAlign>
+                              </Style>
+                            </Textbox>
+                          </CellContents>
+                        </TablixCell>
+                        <TablixCell>
+                          <CellContents>
+                            <Textbox Name="Textbox491">
+                              <CanGrow>true</CanGrow>
+                              <KeepTogether>true</KeepTogether>
+                              <Paragraphs>
+                                <Paragraph>
+                                  <TextRuns>
+                                    <TextRun>
+                                      <Value />
+                                      <Style>
+                                        <FontSize>7pt</FontSize>
+                                        <FontWeight>Bold</FontWeight>
+                                        <Color>#515259</Color>
+                                      </Style>
+                                    </TextRun>
+                                  </TextRuns>
+                                  <Style>
+                                    <TextAlign>Center</TextAlign>
+                                  </Style>
+                                </Paragraph>
+                              </Paragraphs>
+                              <rd:DefaultName>Textbox491</rd:DefaultName>
+                              <Style>
+                                <Border>
+                                  <Style>None</Style>
+                                </Border>
+                                <BottomBorder>
+                                  <Color>LightGrey</Color>
+                                  <Style>Solid</Style>
+                                  <Width>1pt</Width>
+                                </BottomBorder>
+                                <RightBorder>
+                                  <Color>Black</Color>
+                                  <Style>Solid</Style>
+                                  <Width>1pt</Width>
+                                </RightBorder>
+                                <BackgroundColor>#6c9dc6</BackgroundColor>
+                                <VerticalAlign>Middle</VerticalAlign>
+                              </Style>
+                            </Textbox>
+                          </CellContents>
+                        </TablixCell>
+                      </TablixCells>
+                    </TablixRow>
+                    <TablixRow>
+                      <Height>0.2in</Height>
+                      <TablixCells>
+                        <TablixCell>
+                          <CellContents>
+                            <Textbox Name="Textbox493">
+                              <KeepTogether>true</KeepTogether>
+                              <Paragraphs>
+                                <Paragraph>
+                                  <TextRuns>
+                                    <TextRun>
+                                      <Value />
+                                      <Style>
+                                        <FontSize>7pt</FontSize>
+                                        <FontWeight>Bold</FontWeight>
+                                        <Color>#515259</Color>
+                                      </Style>
+                                    </TextRun>
+                                  </TextRuns>
+                                  <Style>
+                                    <TextAlign>Center</TextAlign>
+                                  </Style>
+                                </Paragraph>
+                              </Paragraphs>
+                              <rd:DefaultName>Textbox493</rd:DefaultName>
+                              <Style>
+                                <Border>
+                                  <Color>LightGrey</Color>
+                                  <Style>Solid</Style>
+                                </Border>
+                                <BackgroundColor>#6c9dc6</BackgroundColor>
+                                <VerticalAlign>Middle</VerticalAlign>
+                              </Style>
+                            </Textbox>
+                          </CellContents>
+                        </TablixCell>
+                        <TablixCell>
+                          <CellContents>
+                            <Textbox Name="Textbox494">
+                              <KeepTogether>true</KeepTogether>
+                              <Paragraphs>
+                                <Paragraph>
+                                  <TextRuns>
+                                    <TextRun>
+                                      <Value>=IIF(Sum(Fields!Market_Value.Value)=0,"---",Sum(Fields!Market_Value.Value))</Value>
+                                      <Style>
+                                        <FontSize>7pt</FontSize>
+                                        <FontWeight>Bold</FontWeight>
+                                        <Color>#515259</Color>
+                                      </Style>
+                                    </TextRun>
+                                  </TextRuns>
+                                  <Style>
+                                    <TextAlign>Center</TextAlign>
+                                  </Style>
+                                </Paragraph>
+                              </Paragraphs>
+                              <rd:DefaultName>Textbox494</rd:DefaultName>
+                              <Style>
+                                <Border>
+                                  <Color>LightGrey</Color>
+                                  <Style>Solid</Style>
+                                </Border>
+                                <BackgroundColor>#6c9dc6</BackgroundColor>
+                                <VerticalAlign>Middle</VerticalAlign>
+                              </Style>
+                            </Textbox>
+                          </CellContents>
+                        </TablixCell>
+                        <TablixCell>
+                          <CellContents>
+                            <Textbox Name="Textbox495">
+                              <KeepTogether>true</KeepTogether>
+                              <Paragraphs>
+                                <Paragraph>
+                                  <TextRuns>
+                                    <TextRun>
+                                      <Value />
+                                      <Style>
+                                        <FontSize>7pt</FontSize>
+                                        <FontWeight>Bold</FontWeight>
+                                        <Color>#515259</Color>
+                                      </Style>
+                                    </TextRun>
+                                  </TextRuns>
+                                  <Style>
+                                    <TextAlign>Center</TextAlign>
+                                  </Style>
+                                </Paragraph>
+                              </Paragraphs>
+                              <rd:DefaultName>Textbox495</rd:DefaultName>
+                              <Style>
+                                <Border>
+                                  <Color>LightGrey</Color>
+                                  <Style>Solid</Style>
+                                </Border>
+                                <BackgroundColor>#6c9dc6</BackgroundColor>
+                                <VerticalAlign>Middle</VerticalAlign>
+                              </Style>
+                            </Textbox>
+                          </CellContents>
+                        </TablixCell>
+                        <TablixCell>
+                          <CellContents>
+                            <Textbox Name="Textbox496">
+                              <KeepTogether>true</KeepTogether>
+                              <Paragraphs>
+                                <Paragraph>
+                                  <TextRuns>
+                                    <TextRun>
+                                      <Value />
+                                      <Style>
+                                        <FontSize>7pt</FontSize>
+                                        <FontWeight>Bold</FontWeight>
+                                        <Color>#515259</Color>
+                                      </Style>
+                                    </TextRun>
+                                  </TextRuns>
+                                  <Style>
+                                    <TextAlign>Center</TextAlign>
+                                  </Style>
+                                </Paragraph>
+                              </Paragraphs>
+                              <rd:DefaultName>Textbox496</rd:DefaultName>
+                              <Style>
+                                <Border>
+                                  <Color>LightGrey</Color>
+                                  <Style>Solid</Style>
+                                </Border>
+                                <BackgroundColor>#6c9dc6</BackgroundColor>
+                                <VerticalAlign>Middle</VerticalAlign>
+                              </Style>
+                            </Textbox>
+                          </CellContents>
+                        </TablixCell>
+                        <TablixCell>
+                          <CellContents>
+                            <Textbox Name="Textbox497">
+                              <KeepTogether>true</KeepTogether>
+                              <Paragraphs>
+                                <Paragraph>
+                                  <TextRuns>
+                                    <TextRun>
+                                      <Value>=IIF(Sum(Fields!Risk_Contribution.Value)=0,"---",Sum(Fields!Risk_Contribution.Value))</Value>
+                                      <Style>
+                                        <FontSize>7pt</FontSize>
+                                        <FontWeight>Bold</FontWeight>
+                                        <Color>#515259</Color>
+                                      </Style>
+                                    </TextRun>
+                                  </TextRuns>
+                                  <Style>
+                                    <TextAlign>Center</TextAlign>
+                                  </Style>
+                                </Paragraph>
+                              </Paragraphs>
+                              <rd:DefaultName>Textbox497</rd:DefaultName>
+                              <Style>
+                                <Border>
+                                  <Color>LightGrey</Color>
+                                  <Style>Solid</Style>
+                                </Border>
+                                <BackgroundColor>#6c9dc6</BackgroundColor>
+                                <VerticalAlign>Middle</VerticalAlign>
+                              </Style>
+                            </Textbox>
+                          </CellContents>
+                        </TablixCell>
+                        <TablixCell>
+                          <CellContents>
+                            <Textbox Name="Textbox502">
+                              <KeepTogether>true</KeepTogether>
+                              <Paragraphs>
+                                <Paragraph>
+                                  <TextRuns>
+                                    <TextRun>
+                                      <Value />
+                                      <Style>
+                                        <FontSize>7pt</FontSize>
+                                        <FontWeight>Bold</FontWeight>
+                                        <Color>#515259</Color>
+                                      </Style>
+                                    </TextRun>
+                                  </TextRuns>
+                                  <Style>
+                                    <TextAlign>Center</TextAlign>
+                                  </Style>
+                                </Paragraph>
+                              </Paragraphs>
+                              <rd:DefaultName>Textbox502</rd:DefaultName>
+                              <Style>
+                                <Border>
+                                  <Color>LightGrey</Color>
+                                  <Style>Solid</Style>
+                                </Border>
+                                <BackgroundColor>#6c9dc6</BackgroundColor>
+                                <VerticalAlign>Middle</VerticalAlign>
+                              </Style>
+                            </Textbox>
+                          </CellContents>
+                        </TablixCell>
+                        <TablixCell>
+                          <CellContents>
+                            <Textbox Name="Textbox499">
+                              <KeepTogether>true</KeepTogether>
+                              <Paragraphs>
+                                <Paragraph>
+                                  <TextRuns>
+                                    <TextRun>
+                                      <Value />
+                                      <Style>
+                                        <FontSize>7pt</FontSize>
+                                        <FontWeight>Bold</FontWeight>
+                                        <Color>#515259</Color>
+                                      </Style>
+                                    </TextRun>
+                                  </TextRuns>
+                                  <Style>
+                                    <TextAlign>Center</TextAlign>
+                                  </Style>
+                                </Paragraph>
+                              </Paragraphs>
+                              <rd:DefaultName>Textbox499</rd:DefaultName>
+                              <Style>
+                                <Border>
+                                  <Style>None</Style>
+                                </Border>
+                                <BottomBorder>
+                                  <Color>LightGrey</Color>
+                                  <Style>Solid</Style>
+                                </BottomBorder>
+                                <RightBorder>
+                                  <Style>Solid</Style>
+                                </RightBorder>
+                                <BackgroundColor>#6c9dc6</BackgroundColor>
+                                <VerticalAlign>Middle</VerticalAlign>
+                              </Style>
+                            </Textbox>
+                          </CellContents>
+                        </TablixCell>
+                      </TablixCells>
+                    </TablixRow>
+                  </TablixRows>
+                </TablixBody>
+                <TablixColumnHierarchy>
+                  <TablixMembers>
+                    <TablixMember />
+                    <TablixMember />
+                    <TablixMember />
+                    <TablixMember />
+                    <TablixMember />
+                    <TablixMember />
+                    <TablixMember />
+                  </TablixMembers>
+                </TablixColumnHierarchy>
+                <TablixRowHierarchy>
+                  <TablixMembers>
+                    <TablixMember>
+                      <TablixHeader>
+                        <Size>0.64443in</Size>
+                        <CellContents>
+                          <Textbox Name="Textbox501">
+                            <KeepTogether>true</KeepTogether>
+                            <Paragraphs>
+                              <Paragraph>
+                                <TextRuns>
+                                  <TextRun>
+                                    <Value />
+                                    <Style>
+                                      <FontSize>7pt</FontSize>
+                                      <FontWeight>Bold</FontWeight>
+                                      <Color>#515259</Color>
+                                    </Style>
+                                  </TextRun>
+                                </TextRuns>
+                                <Style>
+                                  <TextAlign>Center</TextAlign>
+                                </Style>
+                              </Paragraph>
+                            </Paragraphs>
+                            <rd:DefaultName>Textbox501</rd:DefaultName>
+                            <Style>
+                              <Border>
+                                <Style>None</Style>
+                              </Border>
+                              <BottomBorder>
+                                <Color>LightGrey</Color>
+                                <Style>Solid</Style>
+                                <Width>1pt</Width>
+                              </BottomBorder>
+                              <BackgroundColor>#6c9dc6</BackgroundColor>
+                              <VerticalAlign>Middle</VerticalAlign>
+                            </Style>
+                          </Textbox>
+                        </CellContents>
+                      </TablixHeader>
+                      <TablixMembers>
+                        <TablixMember />
+                      </TablixMembers>
+                      <KeepWithGroup>After</KeepWithGroup>
+                    </TablixMember>
+                    <TablixMember>
+                      <Group Name="Portfolio_Type">
+                        <GroupExpressions>
+                          <GroupExpression>=Fields!Portfolio_Type.Value</GroupExpression>
+                        </GroupExpressions>
+                      </Group>
+                      <SortExpressions>
+                        <SortExpression>
+                          <Value>=Fields!Portfolio_Type_Sort.Value</Value>
+                        </SortExpression>
+                      </SortExpressions>
+                      <TablixHeader>
+                        <Size>0.64443in</Size>
+                        <CellContents>
+                          <Textbox Name="Portfolio_Type1">
+                            <KeepTogether>true</KeepTogether>
+                            <Paragraphs>
+                              <Paragraph>
+                                <TextRuns>
+                                  <TextRun>
+                                    <Value>=Fields!Portfolio_Type.Value</Value>
+                                    <Style>
+                                      <FontSize>7pt</FontSize>
+                                      <FontWeight>Bold</FontWeight>
+                                      <Color>#515259</Color>
+                                    </Style>
+                                  </TextRun>
+                                </TextRuns>
+                                <Style>
+                                  <TextAlign>Center</TextAlign>
+                                </Style>
+                              </Paragraph>
+                            </Paragraphs>
+                            <rd:DefaultName>Portfolio_Type1</rd:DefaultName>
+                            <Style>
+                              <Border>
+                                <Style>None</Style>
+                              </Border>
+                              <BottomBorder>
+                                <Color>LightGrey</Color>
+                                <Style>Solid</Style>
+                                <Width>0.5pt</Width>
+                              </BottomBorder>
+                              <BackgroundColor>#6c9dc6</BackgroundColor>
+                              <VerticalAlign>Middle</VerticalAlign>
+                              <WritingMode>Rotate270</WritingMode>
+                            </Style>
+                          </Textbox>
+                        </CellContents>
+                      </TablixHeader>
+                      <TablixMembers>
+                        <TablixMember>
+                          <Group Name="Details" />
+                        </TablixMember>
+                        <TablixMember>
+                          <KeepWithGroup>Before</KeepWithGroup>
+                        </TablixMember>
+                      </TablixMembers>
+                    </TablixMember>
+                    <TablixMember>
+                      <TablixHeader>
+                        <Size>0.64443in</Size>
+                        <CellContents>
+                          <Textbox Name="Textbox492">
+                            <KeepTogether>true</KeepTogether>
+                            <Paragraphs>
+                              <Paragraph>
+                                <TextRuns>
+                                  <TextRun>
+                                    <Value>Total</Value>
+                                    <Style>
+                                      <FontSize>7pt</FontSize>
+                                      <FontWeight>Bold</FontWeight>
+                                      <Color>#515259</Color>
+                                    </Style>
+                                  </TextRun>
+                                </TextRuns>
+                                <Style>
+                                  <TextAlign>Left</TextAlign>
+                                </Style>
+                              </Paragraph>
+                            </Paragraphs>
+                            <rd:DefaultName>Textbox492</rd:DefaultName>
+                            <Style>
+                              <Border>
+                                <Style>None</Style>
+                              </Border>
+                              <BottomBorder>
+                                <Color>LightGrey</Color>
+                                <Style>Solid</Style>
+                              </BottomBorder>
+                              <BackgroundColor>#6c9dc6</BackgroundColor>
+                              <VerticalAlign>Middle</VerticalAlign>
+                            </Style>
+                          </Textbox>
+                        </CellContents>
+                      </TablixHeader>
+                      <KeepWithGroup>Before</KeepWithGroup>
+                    </TablixMember>
+                  </TablixMembers>
+                </TablixRowHierarchy>
+                <DataSetName>Infra_Key_Investments</DataSetName>
+                <Top>0.2in</Top>
+                <Height>0.85in</Height>
+                <Width>5.59999in</Width>
+                <ZIndex>5</ZIndex>
+                <Style>
+                  <Border>
+                    <Style>None</Style>
+                  </Border>
+                </Style>
+              </Tablix>
+              <Textbox Name="Textbox12">
+                <CanGrow>true</CanGrow>
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>Liquidity Risk</Value>
+                        <Style>
+                          <FontWeight>Bold</FontWeight>
+                          <Color>White</Color>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style>
+                      <TextAlign>Left</TextAlign>
+                    </Style>
+                  </Paragraph>
+                </Paragraphs>
+                <rd:DefaultName>Textbox4</rd:DefaultName>
+                <Top>5.28528in</Top>
+                <Height>0.25in</Height>
+                <Width>12.28in</Width>
+                <ZIndex>6</ZIndex>
+                <Style>
+                  <Border>
+                    <Style>None</Style>
+                  </Border>
+                  <BackgroundColor>#002060</BackgroundColor>
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                  <PaddingBottom>2pt</PaddingBottom>
+                </Style>
+              </Textbox>
+            </ReportItems>
+            <KeepTogether>true</KeepTogether>
+            <Height>7.35846in</Height>
+            <Width>12.28in</Width>
+            <Style>
+              <Border>
+                <Style>Solid</Style>
+                <Width>0.75pt</Width>
+              </Border>
+              <TopBorder>
+                <Color>Black</Color>
+                <Style>Solid</Style>
+                <Width>0.75pt</Width>
+              </TopBorder>
+              <BottomBorder>
+                <Color>Black</Color>
+                <Style>Solid</Style>
+                <Width>1pt</Width>
+              </BottomBorder>
+              <LeftBorder>
+                <Color>Black</Color>
+                <Style>Solid</Style>
+                <Width>0.75pt</Width>
+              </LeftBorder>
+              <RightBorder>
+                <Color>Black</Color>
+                <Style>Solid</Style>
+                <Width>0.75pt</Width>
+              </RightBorder>
+            </Style>
+          </Rectangle>
+        </ReportItems>
+        <Height>7.35846in</Height>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+        </Style>
+      </Body>
+      <Width>12.31125in</Width>
+      <Page>
+        <PageHeader>
+          <Height>0.7112cm</Height>
+          <PrintOnFirstPage>true</PrintOnFirstPage>
+          <PrintOnLastPage>true</PrintOnLastPage>
+          <ReportItems>
+            <Textbox Name="textbox1">
+              <CanGrow>true</CanGrow>
+              <KeepTogether>true</KeepTogether>
+              <Paragraphs>
+                <Paragraph>
+                  <TextRuns>
+                    <TextRun>
+                      <Value>="Infrastructure and Renewable Resources Risk  Dashboard - Q" &amp; DatePart("q",Parameters!QY_Date.Value) &amp;" "&amp; Year(Parameters!QY_Date.Value) &amp;" (Prototype)"</Value>
+                      <Style>
+                        <FontSize>12pt</FontSize>
+                        <FontWeight>Bold</FontWeight>
+                        <Color>#595959</Color>
+                      </Style>
+                    </TextRun>
+                  </TextRuns>
+                  <Style>
+                    <TextAlign>Center</TextAlign>
+                  </Style>
+                </Paragraph>
+              </Paragraphs>
+              <rd:DefaultName>textbox1</rd:DefaultName>
+              <ActionInfo>
+                <Actions>
+                  <Action>
+                    <Hyperlink>="http://delta/ReportServer/Pages/ReportViewer.aspx?%2FRiskReports%2FReport_PrivateEquity%2FPrivate%20Equity%20Risk%20Dashboard&amp;rs:Format=PDF&amp;QY_Date="&amp; Parameters!QY_Date.Value</Hyperlink>
+                  </Action>
+                </Actions>
+              </ActionInfo>
+              <Height>0.25in</Height>
+              <Width>12.28in</Width>
+              <Style>
+                <Border>
+                  <Style>None</Style>
+                </Border>
+                <VerticalAlign>Middle</VerticalAlign>
+                <PaddingLeft>2pt</PaddingLeft>
+                <PaddingRight>2pt</PaddingRight>
+                <PaddingTop>2pt</PaddingTop>
+                <PaddingBottom>2pt</PaddingBottom>
+              </Style>
+            </Textbox>
+          </ReportItems>
+          <Style>
+            <Border>
+              <Style>None</Style>
+            </Border>
+          </Style>
+        </PageHeader>
+        <PageFooter>
+          <Height>0.45155cm</Height>
+          <PrintOnFirstPage>true</PrintOnFirstPage>
+          <PrintOnLastPage>true</PrintOnLastPage>
+          <ReportItems>
+            <Textbox Name="Textbox18">
+              <CanGrow>true</CanGrow>
+              <KeepTogether>true</KeepTogether>
+              <Paragraphs>
+                <Paragraph>
+                  <TextRuns>
+                    <TextRun>
+                      <Value>=Globals!PageNumber &amp; " of " &amp; Globals!OverallTotalPages</Value>
+                      <Style>
+                        <FontFamily />
+                        <FontSize>6.5pt</FontSize>
+                        <FontWeight>Bold</FontWeight>
+                      </Style>
+                    </TextRun>
+                  </TextRuns>
+                  <Style>
+                    <TextAlign>Right</TextAlign>
+                  </Style>
+                </Paragraph>
+              </Paragraphs>
+              <rd:DefaultName>Textbox3</rd:DefaultName>
+              <Top>0.07055cm</Top>
+              <Left>11in</Left>
+              <Height>0.15in</Height>
+              <Width>1in</Width>
+              <Style>
+                <Border>
+                  <Style>None</Style>
+                </Border>
+                <VerticalAlign>Middle</VerticalAlign>
+              </Style>
+            </Textbox>
+          </ReportItems>
+          <Style>
+            <Border>
+              <Style>None</Style>
+            </Border>
+          </Style>
+        </PageFooter>
+        <PageHeight>8.75in</PageHeight>
+        <PageWidth>12.4in</PageWidth>
+        <LeftMargin>0.05in</LeftMargin>
+        <Style />
+      </Page>
+    </ReportSection>
+  </ReportSections>
+  <ReportParameters>
+    <ReportParameter Name="QY_Date">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>07/31/2018</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>QY Date</Prompt>
+      <ValidValues>
+        <ParameterValues>
+          <ParameterValue>
+            <Value>07/31/2018</Value>
+            <Label>07/31/2018</Label>
+          </ParameterValue>
+        </ParameterValues>
+      </ValidValues>
+    </ReportParameter>
+  </ReportParameters>
+  <ReportParametersLayout>
+    <GridLayoutDefinition>
+      <NumberOfColumns>4</NumberOfColumns>
+      <NumberOfRows>2</NumberOfRows>
+      <CellDefinitions>
+        <CellDefinition>
+          <ColumnIndex>0</ColumnIndex>
+          <RowIndex>0</RowIndex>
+          <ParameterName>QY_Date</ParameterName>
+        </CellDefinition>
+      </CellDefinitions>
+    </GridLayoutDefinition>
+  </ReportParametersLayout>
+  <Language>en-US</Language>
+  <ConsumeContainerWhitespace>true</ConsumeContainerWhitespace>
+  <rd:ReportUnitType>Inch</rd:ReportUnitType>
+  <rd:ReportID>c23ef319-ca4b-4b76-ab37-9598f116a846</rd:ReportID>
+</Report>

@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<SharedDataSet xmlns="http://schemas.microsoft.com/sqlserver/reporting/2010/01/shareddatasetdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
+  <DataSet Name="DataSet1">
+    <Query>
+      <DataSourceReference>DataSource_Sandbox2</DataSourceReference>
+      <DataSetParameters>
+        <DataSetParameter Name="@QY_Date">
+          <ReadOnly>false</ReadOnly>
+          <Nullable>false</Nullable>
+          <OmitFromQuery>false</OmitFromQuery>
+          <rd:DbType>Object</rd:DbType>
+        </DataSetParameter>
+      </DataSetParameters>
+      <CommandText>
+
+--DECLARE @QY_Date DATE= '07/31/2018';
+WITH Mort_Porformance_Funds
+     AS (SELECT
+
+Cast(QY_Date as Date) QY_Date,
+Fund_Type Fund_Type,
+Cast(Portfolio as Float) Portfolio,
+Cast(Benchmark as Float) Benchmark,
+Cast(Active as Float) Active,
+TargetExcess_Return TargetExcess_Return,
+Benchmark_Name Benchmark_Name
+
+
+         FROM  [Stg_Rpt].[Mort_Porformance_Funds] K WITH (nolock)
+         WHERE CAST(K.QY_Date AS DATE) = @QY_Date)
+     
+	SELECT * 
+     FROM Mort_Porformance_Funds K;</CommandText>
+    </Query>
+    <Fields>
+      <Field Name="QY_Date">
+        <DataField>QY_Date</DataField>
+        <rd:TypeName>System.DateTime</rd:TypeName>
+      </Field>
+      <Field Name="Fund_Type">
+        <DataField>Fund_Type</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="Portfolio">
+        <DataField>Portfolio</DataField>
+        <rd:TypeName>System.Double</rd:TypeName>
+      </Field>
+      <Field Name="Benchmark">
+        <DataField>Benchmark</DataField>
+        <rd:TypeName>System.Double</rd:TypeName>
+      </Field>
+      <Field Name="Active">
+        <DataField>Active</DataField>
+        <rd:TypeName>System.Double</rd:TypeName>
+      </Field>
+      <Field Name="TargetExcess_Return">
+        <DataField>TargetExcess_Return</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="Benchmark_Name">
+        <DataField>Benchmark_Name</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+    </Fields>
+  </DataSet>
+</SharedDataSet>

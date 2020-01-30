@@ -1,0 +1,262 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <Name>Database_Rpt</Name>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectVersion>4.1</ProjectVersion>
+    <ProjectGuid>{652784e0-fe18-4976-83e6-3f47b386684a}</ProjectGuid>
+    <DSP>Microsoft.Data.Tools.Schema.Sql.Sql130DatabaseSchemaProvider</DSP>
+    <OutputType>Database</OutputType>
+    <RootPath>
+    </RootPath>
+    <RootNamespace>Database_Rpt</RootNamespace>
+    <AssemblyName>Database_Rpt</AssemblyName>
+    <ModelCollation>1033, CI</ModelCollation>
+    <DefaultFileStructure>BySchemaAndSchemaType</DefaultFileStructure>
+    <DeployToDatabase>True</DeployToDatabase>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetLanguage>CS</TargetLanguage>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <SqlServerVerification>False</SqlServerVerification>
+    <IncludeCompositeObjects>True</IncludeCompositeObjects>
+    <TargetDatabaseSet>True</TargetDatabaseSet>
+    <Recovery>SIMPLE</Recovery>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <SqlTargetName>Risk.DataWarehouse.RiskDM.Database_Rpt</SqlTargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>.\bin\Output\</OutputPath>
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <SqlTargetName>Risk.DataWarehouse.RiskDM.Database_Rpt</SqlTargetName>
+  </PropertyGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">11.0</VisualStudioVersion>
+    <!-- Default to the v11.0 targets path if the targets file for the current VS version is not found -->
+    <SSDTExists Condition="Exists('$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets')">True</SSDTExists>
+    <VisualStudioVersion Condition="'$(SSDTExists)' == ''">11.0</VisualStudioVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'UAT|AnyCPU' ">
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <SqlTargetName>Risk.DataWarehouse.RiskDM.Database_Rpt</SqlTargetName>
+  </PropertyGroup>
+  <Import Condition="'$(SQLDBExtensionsRefPath)' != ''" Project="$(SQLDBExtensionsRefPath)\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
+  <Import Condition="'$(SQLDBExtensionsRefPath)' == ''" Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
+  <ItemGroup>
+    <Folder Include="Properties" />
+    <Folder Include="Scritps" />
+    <Folder Include="Security" />
+    <Folder Include="Rpt" />
+    <Folder Include="Rpt\Tables" />
+    <Folder Include="Rpt\Procedures" />
+    <Folder Include="Rpt\Views" />
+    <Folder Include="Stg_Rpt" />
+    <Folder Include="Stg_Rpt\Procedures" />
+    <Folder Include="Stg_Rpt\Tables" />
+    <Folder Include="Stg_Rpt\Views" />
+    <Folder Include="ODS_Rpt" />
+    <Folder Include="ODS_Rpt\Procedures" />
+  </ItemGroup>
+  <ItemGroup>
+    <Build Include="Security\RptRole.sql" />
+    <Build Include="Security\Rpt.sql" />
+    <Build Include="Rpt\Views\LKP_MarketsType.sql" />
+    <Build Include="Rpt\Tables\RiskOverView_DAX_Results.sql" />
+    <Build Include="Rpt\Procedures\GenerateRiskOverView.sql" />
+    <Build Include="Rpt\Procedures\GetRiskOverView.sql" />
+    <Build Include="Rpt\Tables\ChartBinary.sql" />
+    <Build Include="Rpt\Procedures\GetChartBinary.sql" />
+    <Build Include="Rpt\Procedures\GenerateChartBinary_ProvincialDebtInssuance.sql" />
+    <Build Include="Rpt\Tables\ProvincialExposures.sql" />
+    <Build Include="Security\Stg_Rpt.sql" />
+    <Build Include="Security\Stg_RptRole.sql" />
+    <Build Include="Stg_Rpt\Tables\Total_Fund_FX_Profile.sql" />
+    <Build Include="Stg_Rpt\Tables\Counterparty_Risk_Anlysis.sql" />
+    <Build Include="Stg_Rpt\Tables\Currency_Exposure_Hedges_Chart.sql" />
+    <Build Include="Stg_Rpt\Tables\Derivatives_Counterparty_Risk_Exposure.sql" />
+    <Build Include="Stg_Rpt\Tables\Liquidity_Risk_Indicators_Long_Term.sql" />
+    <Build Include="Stg_Rpt\Tables\Liquidity_Risk_Market_Indicators_Short_Term.sql" />
+    <Build Include="Stg_Rpt\Tables\OFR_Financial_Stress_Index_Line_Chart.sql" />
+    <Build Include="Stg_Rpt\Tables\Risk_Overview.sql" />
+    <Build Include="Stg_Rpt\Tables\SEC_Lending_Collateral.sql" />
+    <Build Include="Stg_Rpt\Tables\Stress_Impact_On_TF.sql" />
+    <Build Include="Stg_Rpt\Tables\Stressed_Liquidity_Coverage_Ratios.sql" />
+    <Build Include="Stg_Rpt\Tables\Stressed_Liquidity_Demand_Supply.sql" />
+    <Build Include="Stg_Rpt\Tables\TF_Market_Level_Asset_Class_Contribution.sql" />
+    <Build Include="Stg_Rpt\Tables\Top_Country_Exposure.sql" />
+    <Build Include="Stg_Rpt\Tables\Top_Currency_Fx_Fwd.sql" />
+    <Build Include="Stg_Rpt\Tables\Top_Private_External_Managers_Exposure.sql" />
+    <Build Include="Stg_Rpt\Tables\Top_Public_External_Managers_Exposure.sql" />
+    <Build Include="Stg_Rpt\Tables\Total_Derivatives.sql" />
+    <Build Include="Security\ODS_Rpt.sql" />
+    <Build Include="Security\ODS_RptRole.sql" />
+    <Build Include="Stg_Rpt\Tables\Top_Corporate_Exposure.sql" />
+    <Build Include="Stg_Rpt\Tables\Derivatives_Counterparty_Exposure_Summary_Institution.sql" />
+    <Build Include="Stg_Rpt\Tables\Derivatives_Counterparty_Exposure_Summary_Institution_Details.sql" />
+    <Build Include="Stg_Rpt\Tables\Derivatives_FX_Hedging_Program.sql" />
+    <Build Include="Stg_Rpt\Tables\FI_Active_Duration_Monthly_Variation.sql" />
+    <Build Include="Stg_Rpt\Tables\FI_Bench_Credit_Spread_Duration_Contribution.sql" />
+    <Build Include="Stg_Rpt\Tables\FI_Bench_Eff_Duration_Contribution.sql" />
+    <Build Include="Stg_Rpt\Tables\FI_Combined_Pension_Performance.sql" />
+    <Build Include="Stg_Rpt\Tables\FI_Corporate_Exposures.sql" />
+    <Build Include="Stg_Rpt\Tables\FI_Credit_Exposures_by_Rating.sql" />
+    <Build Include="Stg_Rpt\Tables\FI_Credit_Spread_Duration_Contribution.sql" />
+    <Build Include="Stg_Rpt\Tables\FI_Credit_Spread_Duration_Monthly_Variation.sql" />
+    <Build Include="Stg_Rpt\Tables\FI_Currency_Exposure.sql" />
+    <Build Include="Stg_Rpt\Tables\FI_Duration_by_Bucket_KRD.sql" />
+    <Build Include="Stg_Rpt\Tables\FI_Eff_Duration_Contribution.sql" />
+    <Build Include="Stg_Rpt\Tables\FI_Eff_Duration_Monthly_Variation.sql" />
+    <Build Include="Stg_Rpt\Tables\FI_Exposures_by_Rating.sql" />
+    <Build Include="Stg_Rpt\Tables\FI_Issuers_DV01_Exposures.sql" />
+    <Build Include="Stg_Rpt\Tables\FI_Per_Market_Value_by_Rating.sql" />
+    <Build Include="Stg_Rpt\Tables\FI_Pool_Annual_Return.sql" />
+    <Build Include="Stg_Rpt\Tables\FI_Provincial_Exposures.sql" />
+    <Build Include="Stg_Rpt\Tables\FI_Sector_Allocation_Breakdown.sql" />
+    <Build Include="Stg_Rpt\Tables\FI_Stress_Market_Values_and_DV01s_by_Pool.sql" />
+    <Build Include="Stg_Rpt\Tables\FI_Stress_Tests_Impact.sql" />
+    <Build Include="Stg_Rpt\Tables\FI_Stress_Tests_Sensitivity_Scenerio.sql" />
+    <Build Include="Stg_Rpt\Tables\FI_Total_Standalone_VaR.sql" />
+    <Build Include="Stg_Rpt\Tables\FI_Value_at_Risk_Tab.sql" />
+    <None Include="Scritps\Grant_EAES.sql" />
+    <Build Include="Stg_Rpt\Tables\PE_Credit_Rating.sql" />
+    <Build Include="Stg_Rpt\Tables\PE_Direct_Investment_Proportion.sql" />
+    <Build Include="Stg_Rpt\Tables\PE_Dry_Powder_Cumilative_Overhang.sql" />
+    <Build Include="Stg_Rpt\Tables\PE_Dry_Powder_Overhang_By_Vintage.sql" />
+    <Build Include="Stg_Rpt\Tables\PE_Leverage.sql" />
+    <Build Include="Stg_Rpt\Tables\PE_Private_Equity_Portfolio.sql" />
+    <Build Include="Stg_Rpt\Tables\PE_Private_Key_Investments.sql" />
+    <Build Include="Stg_Rpt\Tables\PE_Risk_Adjusted_Returns.sql" />
+    <Build Include="Stg_Rpt\Tables\PE_Risk_Contribution.sql" />
+    <Build Include="Stg_Rpt\Tables\PE_Risk_Contribution_To_Total_Fund.sql" />
+    <Build Include="Stg_Rpt\Tables\PE_Risk_KPI.sql" />
+    <Build Include="Stg_Rpt\Tables\PE_Total_Equity_MV_by_Mgmt_style.sql" />
+    <Build Include="Stg_Rpt\Tables\PE_US_Backed_Exits.sql" />
+    <Build Include="Stg_Rpt\Tables\PE_Valuation_Multiples.sql" />
+    <Build Include="Stg_Rpt\Tables\Infra_Direct_Investment_Proportion.sql" />
+    <Build Include="Stg_Rpt\Tables\Infra_Global_Quaterly_Infrastructure_Deals.sql" />
+    <Build Include="Stg_Rpt\Tables\Infra_Global_Quaterly_Unlisted_Fundraising.sql" />
+    <Build Include="Stg_Rpt\Tables\Infra_Interest_Rate_Sensitivity.sql" />
+    <Build Include="Stg_Rpt\Tables\Infra_Intrest_Rate_Sensivity.sql" />
+    <Build Include="Stg_Rpt\Tables\Infra_Key_Investments.sql" />
+    <Build Include="Stg_Rpt\Tables\Infra_Portfolio_Overview.sql" />
+    <Build Include="Stg_Rpt\Tables\Infra_Risk_Adjusted_Returns.sql" />
+    <Build Include="Stg_Rpt\Tables\Infra_Risk_Contribution.sql" />
+    <Build Include="Stg_Rpt\Tables\Infra_Risk_Contribution_To_Total_Fund.sql" />
+    <Build Include="Stg_Rpt\Tables\Infra_Risk_KPI.sql" />
+    <Build Include="Stg_Rpt\Tables\Infra_Risk_Rating.sql" />
+    <Build Include="Stg_Rpt\Tables\Infra_Unlisted_Infrastructure_by_Vintage_Year.sql" />
+    <Build Include="Stg_Rpt\Tables\Infra_Unlisted_Infrastructure_Dry_Powder_by_Fund_Size.sql" />
+    <Build Include="Stg_Rpt\Tables\RE_Fund_Details.sql" />
+    <Build Include="Stg_Rpt\Tables\RE_Key_Sensitivities.sql" />
+    <Build Include="Stg_Rpt\Tables\RE_Key_Statics_Tablix.sql" />
+    <Build Include="Stg_Rpt\Tables\RE_Key_Statistics_100_Stacked.sql" />
+    <Build Include="Stg_Rpt\Tables\RE_Leverage.sql" />
+    <Build Include="Stg_Rpt\Tables\RE_Portfolio_Diversification.sql" />
+    <Build Include="Stg_Rpt\Tables\RE_Return.sql" />
+    <Build Include="Stg_Rpt\Tables\RE_Risk_KPI.sql" />
+    <Build Include="Stg_Rpt\Tables\RE_Risk_Rating.sql" />
+    <Build Include="Stg_Rpt\Tables\RE_Stratergy_Risk_KPI.sql" />
+    <Build Include="Stg_Rpt\Tables\PUE_Active_Risk_Bubble_Chart.sql" />
+    <Build Include="Stg_Rpt\Tables\PUE_Active_Risk_Cintributor_Column_Chart.sql" />
+    <Build Include="Stg_Rpt\Tables\PUE_Active_Wieght_Tablix.sql" />
+    <Build Include="Stg_Rpt\Tables\PUE_Concentration_Risk_Tablix.sql" />
+    <Build Include="Stg_Rpt\Tables\PUE_Correlated_Sensitivities.sql" />
+    <Build Include="Stg_Rpt\Tables\PUE_External_Manager_Exposures.sql" />
+    <Build Include="Stg_Rpt\Tables\PUE_Performance.sql" />
+    <Build Include="Stg_Rpt\Tables\PUE_Policy_Wieght.sql" />
+    <Build Include="Stg_Rpt\Tables\PUE_Pool_Performance_Risk.sql" />
+    <Build Include="Stg_Rpt\Tables\PUE_Stress_Test_and_VaR_Contribution.sql" />
+    <Build Include="Stg_Rpt\Tables\PUE_Stress_Test_Loss_Line_Chart.sql" />
+    <Build Include="Stg_Rpt\Tables\PUE_Top_10_Country_Currency_Exposures.sql" />
+    <Build Include="Stg_Rpt\Tables\PUE_Total_Equity_MV_by_Mgmt_Style.sql" />
+    <Build Include="Stg_Rpt\Tables\PUE_Total_Equity_MV_by_Region.sql" />
+    <Build Include="Stg_Rpt\Tables\PUE_Total_Fund.sql" />
+    <Build Include="Stg_Rpt\Tables\PUE_VaR_Line_Chart.sql" />
+    <Build Include="Stg_Rpt\Tables\PUE_Wieght_Column_Chart.sql" />
+    <Build Include="Stg_Rpt\Tables\Liq_Asset_Quality_Monitoring_Tablix.sql" />
+    <Build Include="Stg_Rpt\Tables\Liq_BCI_Historical_Liquidity_Score_Illiquid_Exposure.sql" />
+    <Build Include="Stg_Rpt\Tables\Liq_Breakdown_of_Liquidity_Demand_Chart.sql" />
+    <Build Include="Stg_Rpt\Tables\Liq_Cash_Flow_Mismatch.sql" />
+    <Build Include="Stg_Rpt\Tables\Liq_Collateral_Coverage_by_the_Floating_Rate_Funds_Pool.sql" />
+    <Build Include="Stg_Rpt\Tables\Liq_Concentration_of_Floating_Rate_Funds_Pool_Tablix.sql" />
+    <Build Include="Stg_Rpt\Tables\Liq_Concentration_of_Liquidity_Supply_Tablix.sql" />
+    <Build Include="Stg_Rpt\Tables\Liq_CSA_Eligible_Assets_Breakdown_Tablix.sql" />
+    <Build Include="Stg_Rpt\Tables\Liq_Debt_Obligation_By_Maturity_Chart.sql" />
+    <Build Include="Stg_Rpt\Tables\Liq_Demand_Profile_Derivatives_by_Maturity_Bucket.sql" />
+    <Build Include="Stg_Rpt\Tables\Liq_Equity_Breakdown_Tablix.sql" />
+    <Build Include="Stg_Rpt\Tables\Liq_External_Market_Indicators_Tablix.sql" />
+    <Build Include="Stg_Rpt\Tables\Liq_Financial_Conditions_Normalized.sql" />
+    <Build Include="Stg_Rpt\Tables\Liq_Fixed_Income_Breakdown_Tablix.sql" />
+    <Build Include="Stg_Rpt\Tables\Liq_Floating_Rate_Funds_Pool_Double_Ring_Rchart.sql" />
+    <Build Include="Stg_Rpt\Tables\Liq_Floating_Rate_Funds_Pool_Double_Ring_Rchart_.sql" />
+    <Build Include="Stg_Rpt\Tables\Liq_Historical_DV01_Line_Chart.sql" />
+    <Build Include="Stg_Rpt\Tables\Liq_Historical_Market_Value_Area_Chart.sql" />
+    <Build Include="Stg_Rpt\Tables\Liq_KPI_Threshold.sql" />
+    <Build Include="Stg_Rpt\Tables\Liq_Liquidity_1_Month_Breakdown_Tablix.sql" />
+    <Build Include="Stg_Rpt\Tables\Liq_Liquidity_Coverage_Ratio_Line_Chart.sql" />
+    <Build Include="Stg_Rpt\Tables\Liq_Liquidity_Gap.sql" />
+    <Build Include="Stg_Rpt\Tables\Liq_Liquidity_Horizon.sql" />
+    <Build Include="Stg_Rpt\Tables\Liq_Maturity_Profile_of_Liquidity_Supply_Charts.sql" />
+    <Build Include="Stg_Rpt\Tables\Liq_Stressed_Debt_Obligation_Tablix.sql" />
+    <Build Include="Stg_Rpt\Tables\Liq_Stressed_FX_Obligation_CAD.sql" />
+    <Build Include="Stg_Rpt\Tables\Liq_Stressed_FX_Obligation_Tablix.sql" />
+    <Build Include="Stg_Rpt\Tables\Liq_Sunburst.sql" />
+    <Build Include="Stg_Rpt\Tables\Liq_Supply_Demand_Dates.sql" />
+    <Build Include="Stg_Rpt\Tables\Liq_Total_Fund_Liquidity_Score_Breakdown_Tablix.sql" />
+    <Build Include="Stg_Rpt\Tables\Liq_Total_Fund_Liquidity_Score_Tablix.sql" />
+    <Build Include="Stg_Rpt\Tables\Liq_Unfunded_Commitment_Stressed_Capital_Calls_Chart.sql" />
+    <Build Include="Stg_Rpt\Tables\Liq_Yearly_Stressed_Capital_Calls_by_Currency_Chart.sql" />
+    <Build Include="Stg_Rpt\Tables\Liq_Yearly_Stressed_FX_Obligation_Concentration_by_Asset_Class_Chart.sql" />
+    <Build Include="ODS_Rpt\Procedures\GenerateRChartBinary_Market_Value_By_Rating.sql" />
+    <Build Include="ODS_Rpt\Procedures\GenerateRChartBinary_Provincial_Debt_Issue.sql" />
+    <Build Include="ODS_Rpt\Procedures\GenerateRChartBinary_Provincial_Issue_Percentage.sql" />
+    <Build Include="ODS_Rpt\Procedures\GenerateRChartBinary_SEC_Lending_Collateral.sql" />
+    <Build Include="ODS_Rpt\Procedures\Liq_GenerateRChartBinary_Floating_Rate_Funds_Pool_Chart.sql" />
+    <None Include="Scritps\_GrantAuditPrivilegesServiceAccount.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <PostDeploy Include="Scritps\Script.PostDeployment.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scritps\GrantAuditPrivileges.sql" />
+    <None Include="Database.publish.xml" />
+    <None Include="Default.Database.publish.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ArtifactReference Include="..\packages\Risk.DataWarehouse.RiskDM.Database.dacpac">
+      <HintPath>..\packages\Risk.DataWarehouse.RiskDM.Database.dacpac</HintPath>
+      <SuppressMissingDependenciesErrors>False</SuppressMissingDependenciesErrors>
+    </ArtifactReference>
+    <ArtifactReference Include="$(DacPacRootPath)\Extensions\Microsoft\SQLDB\Extensions\SqlServer\130\SqlSchemas\master.dacpac">
+      <HintPath>$(DacPacRootPath)\Extensions\Microsoft\SQLDB\Extensions\SqlServer\130\SqlSchemas\master.dacpac</HintPath>
+      <SuppressMissingDependenciesErrors>False</SuppressMissingDependenciesErrors>
+      <DatabaseVariableLiteralValue>master</DatabaseVariableLiteralValue>
+    </ArtifactReference>
+  </ItemGroup>
+</Project>

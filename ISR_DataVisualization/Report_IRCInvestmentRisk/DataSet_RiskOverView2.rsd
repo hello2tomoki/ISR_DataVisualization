@@ -1,0 +1,130 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<SharedDataSet xmlns="http://schemas.microsoft.com/sqlserver/reporting/2010/01/shareddatasetdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
+  <Description />
+  <DataSet Name="DataSet_RiskOverView2">
+    <Query>
+      <DataSourceReference>DataSource_Sandbox</DataSourceReference>
+      <CommandText>DECLARE @SelectedDate AS DATE;
+DECLARE @OffsetPrevious AS INT;
+SET @SelectedDate = '2018-03-31';
+SET @OffsetPrevious = 1;
+DECLARE @CurrentQuarterStart DATE=
+(
+    SELECT DATEADD(quarter, DATEDIFF(quarter, 0, @SelectedDate), 0)
+);
+DECLARE @CurrentQuarterEnd DATE=
+(
+    SELECT DATEADD(quarter, DATEDIFF(quarter, 0, @SelectedDate) + 1, 0)
+);
+DECLARE @PreviousQuarterStart DATE=
+(
+    SELECT DATEADD(quarter, DATEDIFF(quarter, 0, @SelectedDate) - @OffsetPrevious, 0)
+);
+DECLARE @PreviousQuarterEnd DATE=
+(
+    SELECT DATEADD(quarter, DATEDIFF(quarter, 0, @SelectedDate), -@OffsetPrevious)
+);
+SELECT R.Risk_Overview_Key,
+       R.MarketsType,
+       R.Description,
+       R.RiskDate,
+       R.Shock,
+       R.Confidence_Interval,
+       R.Evaluate_By,
+       R.RptDateTime,
+       R.DateKey,
+       R.CalendarQuarter,
+       R.CalendarYear,
+       R.DateNo,
+       R.QY,
+       R.SortBy,
+       R.Metric_Name,
+       Case when Metric_Name = 'ABSOLUTE MARKET RISK Per' AND R.Metric_Value &lt;0  THEN R.Metric_Value*-1 ELSE R.Metric_Value END AS Metric_Value,
+       R.Metric_Sort,
+       R.Source,
+       R.ETL_Load_Date
+FROM [rpt].[Risk_Overview] R
+    Where RiskDate
+ BETWEEN @PreviousQuarterStart AND @CurrentQuarterEnd</CommandText>
+      <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
+    </Query>
+    <Fields>
+      <Field Name="Risk_Overview_Key">
+        <DataField>Risk_Overview_Key</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+      <Field Name="MarketsType">
+        <DataField>MarketsType</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="Description">
+        <DataField>Description</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="RiskDate">
+        <DataField>RiskDate</DataField>
+        <rd:TypeName>System.DateTime</rd:TypeName>
+      </Field>
+      <Field Name="Shock">
+        <DataField>Shock</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="Confidence_Interval">
+        <DataField>Confidence_Interval</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="Evaluate_By">
+        <DataField>Evaluate_By</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="RptDateTime">
+        <DataField>RptDateTime</DataField>
+        <rd:TypeName>System.DateTime</rd:TypeName>
+      </Field>
+      <Field Name="DateKey">
+        <DataField>DateKey</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+      <Field Name="CalendarQuarter">
+        <DataField>CalendarQuarter</DataField>
+        <rd:TypeName>System.Byte</rd:TypeName>
+      </Field>
+      <Field Name="CalendarYear">
+        <DataField>CalendarYear</DataField>
+        <rd:TypeName>System.Int16</rd:TypeName>
+      </Field>
+      <Field Name="DateNo">
+        <DataField>DateNo</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+      <Field Name="QY">
+        <DataField>QY</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="SortBy">
+        <DataField>SortBy</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+      <Field Name="Metric_Name">
+        <DataField>Metric_Name</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="Metric_Value">
+        <DataField>Metric_Value</DataField>
+        <rd:TypeName>System.Double</rd:TypeName>
+      </Field>
+      <Field Name="Metric_Sort">
+        <DataField>Metric_Sort</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+      <Field Name="Source">
+        <DataField>Source</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="ETL_Load_Date">
+        <DataField>ETL_Load_Date</DataField>
+        <rd:TypeName>System.DateTime</rd:TypeName>
+      </Field>
+    </Fields>
+  </DataSet>
+</SharedDataSet>

@@ -1,0 +1,6 @@
+Axis Name,Scale Direction,Min,Max
+Funding Ratio,Increasing,0.9,1.3
+Contribution Rate,Decreasing,0.15,0.25
+Annualized Return,Increasing,0.04,0.08
+Liquidity Supply (Mon),Increasing,10,25
+VaR,Decreasing,0,0.25

@@ -1,0 +1,1085 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Report MustUnderstand="df" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2016/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner" xmlns:df="http://schemas.microsoft.com/sqlserver/reporting/2016/01/reportdefinition/defaultfontfamily">
+  <df:DefaultFontFamily>Calibri</df:DefaultFontFamily>
+  <AutoRefresh>0</AutoRefresh>
+  <DataSources>
+    <DataSource Name="DataSource_Sandbox">
+      <Transaction>true</Transaction>
+      <DataSourceReference>DataSource_Sandbox</DataSourceReference>
+      <rd:SecurityType>None</rd:SecurityType>
+      <rd:DataSourceID>33c88d05-6197-4c10-920e-dd9b53ce469a</rd:DataSourceID>
+    </DataSource>
+  </DataSources>
+  <DataSets>
+    <DataSet Name="Derivatives_FX_Hedging_Program">
+      <Query>
+        <DataSourceName>DataSource_Sandbox</DataSourceName>
+        <CommandText>
+DECLARE @QY_Date DATE = '2018-06-29';
+
+
+SELECT A.QY_Date,
+       A.QY_Date_Label,
+       A.Hedge_Order,
+       A.Hedge_Type,
+       A.Currrency,
+       A.Currrency_Value,
+	  Dense_Rank() Over (Partition by Type Order by Currrency_Sum)  as  Rnk,
+      IIF(Dense_Rank() Over (Partition by Type Order by Currrency_Sum) % 2 =1, '#DCE6F1','White') as BG_Color,
+       A.Type,
+       A.Title,
+	  A.Title_Order
+FROM
+(
+    SELECT QY_Date,
+           CASE
+               WHEN Hedge_Type = 'Spot'
+               THEN DATEADD(d, 0, CAST(QY_Date AS DATE))
+               WHEN Hedge_Type = '01 Days'
+               THEN DATEADD(d, 1, CAST(QY_Date AS DATE))
+               WHEN Hedge_Type = '03 Days'
+               THEN DATEADD(d, 2, CAST(QY_Date AS DATE))
+               WHEN Hedge_Type = '04 Days'
+               THEN DATEADD(d, 3, CAST(QY_Date AS DATE))
+               WHEN Hedge_Type = '05 Days'
+               THEN DATEADD(d, 4, CAST(QY_Date AS DATE))
+               WHEN Hedge_Type = '06 Days'
+               THEN DATEADD(d, 5, CAST(QY_Date AS DATE))
+               WHEN Hedge_Type = '07 Days'
+               THEN DATEADD(d, 6, CAST(QY_Date AS DATE))
+               WHEN Hedge_Type = '10 Days'
+               THEN DATEADD(d, 7, CAST(QY_Date AS DATE))
+               WHEN Hedge_Type = '11 Days'
+               THEN DATEADD(d, 8, CAST(QY_Date AS DATE))
+               WHEN Hedge_Type = '12 Days'
+               THEN DATEADD(d, 9, CAST(QY_Date AS DATE))
+               WHEN Hedge_Type = '13 Days'
+               THEN DATEADD(d, 10, CAST(QY_Date AS DATE))
+               WHEN Hedge_Type = '14 Days'
+               THEN DATEADD(d, 11, CAST(QY_Date AS DATE))
+               ELSE ' '
+           END AS QY_Date_Label,
+           CASE
+               WHEN Hedge_Type = 'Spot'
+               THEN 1
+               WHEN Hedge_Type = '01 Days'
+               THEN 2
+               WHEN Hedge_Type = '03 Days'
+               THEN 3
+               WHEN Hedge_Type = '04 Days'
+               THEN 4
+               WHEN Hedge_Type = '05 Days'
+               THEN 5
+               WHEN Hedge_Type = '06 Days'
+               THEN 6
+               WHEN Hedge_Type = '07 Days'
+               THEN 7
+               WHEN Hedge_Type = '10 Days'
+               THEN 8
+               WHEN Hedge_Type = '11 Days'
+               THEN 9
+               WHEN Hedge_Type = '12 Days'
+               THEN 10
+               WHEN Hedge_Type = '13 Days'
+               THEN 11
+               WHEN Hedge_Type = '14 Days'
+               THEN 12
+               WHEN Hedge_Type = '14-30 Days'
+               THEN 13
+               WHEN Hedge_Type = '30-90 Days'
+               THEN 14
+               WHEN Hedge_Type = '90-180 Days'
+               THEN 15
+               WHEN Hedge_Type = '180-360 Days'
+               THEN 16
+               WHEN Hedge_Type = 'More than 360 Days'
+               THEN 17
+           END AS Hedge_Order,
+           F.Hedge_Type,
+           F.Currrency,
+           CAST(F.Currrency_Value AS FLOAT) Currrency_Value,
+           SUM(CAST(F.Currrency_Value AS FLOAT)) OVER(PARTITION BY Type,
+                                                                   F.Currrency) AS Currrency_Sum,
+           F.[Type],
+           CASE
+               WHEN F.[Type] = 'Client'
+               THEN 'Client FX Hedging Program'
+               WHEN F.[Type] = 'bcimc'
+               THEN 'bcimc FX Hedging Program'
+           END AS Title,
+
+		     CASE
+               WHEN F.[Type] = 'Client'
+               THEN 1
+               WHEN F.[Type] = 'bcimc'
+               THEN 2
+           END AS Title_Order
+
+    FROM [Stg_Rpt].[Derivatives_FX_Hedging_Program] F WITH (Nolock)
+
+    WHERE CAST(QY_Date AS DATE) = @QY_Date
+   
+   ----------And  [Type] = 'client'
+) AS A;
+
+
+
+</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="QY_Date">
+          <DataField>QY_Date</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="QY_Date_Label">
+          <DataField>QY_Date_Label</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="Hedge_Type">
+          <DataField>Hedge_Type</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Hedge_Order">
+          <DataField>Hedge_Order</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="Currrency">
+          <DataField>Currrency</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Currrency_Value">
+          <DataField>Currrency_Value</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="Rnk">
+          <DataField>Rnk</DataField>
+          <rd:TypeName>System.Int64</rd:TypeName>
+        </Field>
+        <Field Name="Type">
+          <DataField>Type</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="BG_Color">
+          <DataField>BG_Color</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Title">
+          <DataField>Title</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Title_Order">
+          <DataField>Title_Order</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+  </DataSets>
+  <ReportSections>
+    <ReportSection>
+      <Body>
+        <ReportItems>
+          <Textbox Name="Textbox125">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>FX Exposure - Term</Value>
+                    <Style>
+                      <FontStyle>Italic</FontStyle>
+                      <FontFamily>Arial</FontFamily>
+                      <FontSize>7pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Textbox125</rd:DefaultName>
+            <Height>0.18833in</Height>
+            <Width>11.69in</Width>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <VerticalAlign>Middle</VerticalAlign>
+            </Style>
+          </Textbox>
+          <Tablix Name="Tablix3">
+            <TablixBody>
+              <TablixColumns>
+                <TablixColumn>
+                  <Width>1.73125in</Width>
+                </TablixColumn>
+              </TablixColumns>
+              <TablixRows>
+                <TablixRow>
+                  <Height>0.26042in</Height>
+                  <TablixCells>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Title">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value xml:space="preserve"> </Value>
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                                <TextRun>
+                                  <Value>=Fields!Title.Value</Value>
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Title</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Style>None</Style>
+                            </Border>
+                            <TopBorder>
+                              <Color>Black</Color>
+                              <Style>Solid</Style>
+                              <Width>1pt</Width>
+                            </TopBorder>
+                            <LeftBorder>
+                              <Color>Black</Color>
+                              <Style>Solid</Style>
+                              <Width>1pt</Width>
+                            </LeftBorder>
+                            <RightBorder>
+                              <Color>Black</Color>
+                              <Style>Solid</Style>
+                              <Width>1pt</Width>
+                            </RightBorder>
+                            <VerticalAlign>Middle</VerticalAlign>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                  </TablixCells>
+                </TablixRow>
+                <TablixRow>
+                  <Height>0.56792in</Height>
+                  <TablixCells>
+                    <TablixCell>
+                      <CellContents>
+                        <Tablix Name="Tablix2">
+                          <TablixCorner>
+                            <TablixCornerRows>
+                              <TablixCornerRow>
+                                <TablixCornerCell>
+                                  <CellContents>
+                                    <Textbox Name="Textbox12">
+                                      <CanGrow>true</CanGrow>
+                                      <KeepTogether>true</KeepTogether>
+                                      <Paragraphs>
+                                        <Paragraph>
+                                          <TextRuns>
+                                            <TextRun>
+                                              <Value />
+                                              <Style>
+                                                <FontSize>7pt</FontSize>
+                                                <FontWeight>Bold</FontWeight>
+                                              </Style>
+                                            </TextRun>
+                                          </TextRuns>
+                                          <Style />
+                                        </Paragraph>
+                                      </Paragraphs>
+                                      <rd:DefaultName>Textbox12</rd:DefaultName>
+                                      <Style>
+                                        <Border>
+                                          <Style>None</Style>
+                                        </Border>
+                                        <TopBorder>
+                                          <Color>Black</Color>
+                                          <Style>Solid</Style>
+                                          <Width>0.5pt</Width>
+                                        </TopBorder>
+                                        <BottomBorder>
+                                          <Color>Black</Color>
+                                          <Style>Solid</Style>
+                                          <Width>0.5pt</Width>
+                                        </BottomBorder>
+                                        <LeftBorder>
+                                          <Color>Black</Color>
+                                          <Style>Solid</Style>
+                                          <Width>1pt</Width>
+                                        </LeftBorder>
+                                        <RightBorder>
+                                          <Color>Black</Color>
+                                          <Style>Solid</Style>
+                                          <Width>0.5pt</Width>
+                                        </RightBorder>
+                                      </Style>
+                                    </Textbox>
+                                  </CellContents>
+                                </TablixCornerCell>
+                              </TablixCornerRow>
+                              <TablixCornerRow>
+                                <TablixCornerCell>
+                                  <CellContents>
+                                    <Textbox Name="Textbox11">
+                                      <KeepTogether>true</KeepTogether>
+                                      <Paragraphs>
+                                        <Paragraph>
+                                          <TextRuns>
+                                            <TextRun>
+                                              <Value>Currrency</Value>
+                                              <Style>
+                                                <FontSize>7pt</FontSize>
+                                                <FontWeight>Bold</FontWeight>
+                                              </Style>
+                                            </TextRun>
+                                          </TextRuns>
+                                          <Style />
+                                        </Paragraph>
+                                      </Paragraphs>
+                                      <rd:DefaultName>Textbox11</rd:DefaultName>
+                                      <Style>
+                                        <Border>
+                                          <Style>None</Style>
+                                        </Border>
+                                        <BottomBorder>
+                                          <Color>Black</Color>
+                                          <Style>Solid</Style>
+                                          <Width>0.5pt</Width>
+                                        </BottomBorder>
+                                        <LeftBorder>
+                                          <Color>Black</Color>
+                                          <Style>Solid</Style>
+                                          <Width>1pt</Width>
+                                        </LeftBorder>
+                                        <RightBorder>
+                                          <Color>Black</Color>
+                                          <Style>Solid</Style>
+                                          <Width>0.5pt</Width>
+                                        </RightBorder>
+                                      </Style>
+                                    </Textbox>
+                                  </CellContents>
+                                </TablixCornerCell>
+                              </TablixCornerRow>
+                            </TablixCornerRows>
+                          </TablixCorner>
+                          <TablixBody>
+                            <TablixColumns>
+                              <TablixColumn>
+                                <Width>0.575in</Width>
+                              </TablixColumn>
+                              <TablixColumn>
+                                <Width>0.75in</Width>
+                              </TablixColumn>
+                            </TablixColumns>
+                            <TablixRows>
+                              <TablixRow>
+                                <Height>0.13698in</Height>
+                                <TablixCells>
+                                  <TablixCell>
+                                    <CellContents>
+                                      <Textbox Name="Textbox91">
+                                        <KeepTogether>true</KeepTogether>
+                                        <Paragraphs>
+                                          <Paragraph>
+                                            <TextRuns>
+                                              <TextRun>
+                                                <Value>=IIF(Sum(Fields!Currrency_Value.Value)=0,"-",Sum(Fields!Currrency_Value.Value))</Value>
+                                                <Style>
+                                                  <FontStyle>Italic</FontStyle>
+                                                  <FontSize>7pt</FontSize>
+                                                  <FontWeight>Bold</FontWeight>
+                                                  <Format>#,0</Format>
+                                                  <TextDecoration>None</TextDecoration>
+                                                </Style>
+                                              </TextRun>
+                                              <TextRun>
+                                                <Value xml:space="preserve"> </Value>
+                                                <Style>
+                                                  <FontStyle>Italic</FontStyle>
+                                                  <FontSize>7pt</FontSize>
+                                                  <FontWeight>Bold</FontWeight>
+                                                  <TextDecoration>None</TextDecoration>
+                                                </Style>
+                                              </TextRun>
+                                            </TextRuns>
+                                            <Style>
+                                              <TextAlign>Right</TextAlign>
+                                            </Style>
+                                          </Paragraph>
+                                        </Paragraphs>
+                                        <rd:DefaultName>Textbox91</rd:DefaultName>
+                                        <Style>
+                                          <Border>
+                                            <Style>None</Style>
+                                          </Border>
+                                          <BottomBorder>
+                                            <Color>Black</Color>
+                                            <Style>Solid</Style>
+                                            <Width>0.5pt</Width>
+                                          </BottomBorder>
+                                          <RightBorder>
+                                            <Color>Black</Color>
+                                            <Style>Solid</Style>
+                                            <Width>0.5pt</Width>
+                                          </RightBorder>
+                                        </Style>
+                                      </Textbox>
+                                    </CellContents>
+                                  </TablixCell>
+                                  <TablixCell>
+                                    <CellContents>
+                                      <Textbox Name="Textbox104">
+                                        <KeepTogether>true</KeepTogether>
+                                        <Paragraphs>
+                                          <Paragraph>
+                                            <TextRuns>
+                                              <TextRun>
+                                                <Value>=Sum(Fields!Currrency_Value.Value)</Value>
+                                                <Style>
+                                                  <FontStyle>Italic</FontStyle>
+                                                  <FontSize>7pt</FontSize>
+                                                  <FontWeight>Bold</FontWeight>
+                                                  <Format>#,0</Format>
+                                                </Style>
+                                              </TextRun>
+                                              <TextRun>
+                                                <Value xml:space="preserve"> </Value>
+                                                <Style>
+                                                  <FontStyle>Italic</FontStyle>
+                                                  <FontSize>7pt</FontSize>
+                                                  <FontWeight>Bold</FontWeight>
+                                                </Style>
+                                              </TextRun>
+                                            </TextRuns>
+                                            <Style>
+                                              <TextAlign>Right</TextAlign>
+                                            </Style>
+                                          </Paragraph>
+                                        </Paragraphs>
+                                        <rd:DefaultName>Textbox104</rd:DefaultName>
+                                        <Style>
+                                          <Border>
+                                            <Style>None</Style>
+                                          </Border>
+                                          <BottomBorder>
+                                            <Color>Black</Color>
+                                            <Style>Solid</Style>
+                                            <Width>0.5pt</Width>
+                                          </BottomBorder>
+                                          <RightBorder>
+                                            <Color>Black</Color>
+                                            <Style>Solid</Style>
+                                            <Width>1pt</Width>
+                                          </RightBorder>
+                                        </Style>
+                                      </Textbox>
+                                    </CellContents>
+                                  </TablixCell>
+                                </TablixCells>
+                              </TablixRow>
+                              <TablixRow>
+                                <Height>0.10698in</Height>
+                                <TablixCells>
+                                  <TablixCell>
+                                    <CellContents>
+                                      <Textbox Name="Currrency_Value">
+                                        <KeepTogether>true</KeepTogether>
+                                        <Paragraphs>
+                                          <Paragraph>
+                                            <TextRuns>
+                                              <TextRun>
+                                                <Value>=IIF(Fields!Currrency_Value.Value=0,"",Fields!Currrency_Value.Value)</Value>
+                                                <Style>
+                                                  <FontSize>7pt</FontSize>
+                                                  <Format>#,0</Format>
+                                                </Style>
+                                              </TextRun>
+                                              <TextRun>
+                                                <Value xml:space="preserve"> </Value>
+                                                <Style>
+                                                  <FontSize>7pt</FontSize>
+                                                </Style>
+                                              </TextRun>
+                                            </TextRuns>
+                                            <Style>
+                                              <TextAlign>Right</TextAlign>
+                                            </Style>
+                                          </Paragraph>
+                                        </Paragraphs>
+                                        <rd:DefaultName>Currrency_Value</rd:DefaultName>
+                                        <Style>
+                                          <Border>
+                                            <Style>None</Style>
+                                          </Border>
+                                          <RightBorder>
+                                            <Color>Black</Color>
+                                            <Style>Solid</Style>
+                                            <Width>0.5pt</Width>
+                                          </RightBorder>
+                                          <BackgroundColor>=Fields!BG_Color.Value</BackgroundColor>
+                                        </Style>
+                                      </Textbox>
+                                    </CellContents>
+                                  </TablixCell>
+                                  <TablixCell>
+                                    <CellContents>
+                                      <Textbox Name="Textbox122">
+                                        <KeepTogether>true</KeepTogether>
+                                        <Paragraphs>
+                                          <Paragraph>
+                                            <TextRuns>
+                                              <TextRun>
+                                                <Value>=Sum(Fields!Currrency_Value.Value)</Value>
+                                                <Style>
+                                                  <FontSize>7pt</FontSize>
+                                                  <Format>#,0</Format>
+                                                </Style>
+                                              </TextRun>
+                                              <TextRun>
+                                                <Value xml:space="preserve"> </Value>
+                                                <Style>
+                                                  <FontSize>7pt</FontSize>
+                                                </Style>
+                                              </TextRun>
+                                            </TextRuns>
+                                            <Style>
+                                              <TextAlign>Right</TextAlign>
+                                            </Style>
+                                          </Paragraph>
+                                        </Paragraphs>
+                                        <rd:DefaultName>Textbox122</rd:DefaultName>
+                                        <Style>
+                                          <Border>
+                                            <Style>None</Style>
+                                          </Border>
+                                          <RightBorder>
+                                            <Color>Black</Color>
+                                            <Style>Solid</Style>
+                                            <Width>0.5pt</Width>
+                                          </RightBorder>
+                                          <BackgroundColor>=Fields!BG_Color.Value</BackgroundColor>
+                                        </Style>
+                                      </Textbox>
+                                    </CellContents>
+                                  </TablixCell>
+                                </TablixCells>
+                              </TablixRow>
+                            </TablixRows>
+                          </TablixBody>
+                          <TablixColumnHierarchy>
+                            <TablixMembers>
+                              <TablixMember>
+                                <Group Name="QY_Date">
+                                  <GroupExpressions>
+                                    <GroupExpression>=Fields!QY_Date_Label.Value</GroupExpression>
+                                  </GroupExpressions>
+                                </Group>
+                                <SortExpressions>
+                                  <SortExpression>
+                                    <Value>=Fields!Hedge_Order.Value</Value>
+                                  </SortExpression>
+                                </SortExpressions>
+                                <TablixHeader>
+                                  <Size>0.18698in</Size>
+                                  <CellContents>
+                                    <Textbox Name="QY_Date_Label">
+                                      <CanGrow>true</CanGrow>
+                                      <KeepTogether>true</KeepTogether>
+                                      <Paragraphs>
+                                        <Paragraph>
+                                          <TextRuns>
+                                            <TextRun>
+                                              <Value>=IIF(Fields!QY_Date_Label.Value="1900-01-01","",Fields!QY_Date_Label.Value)</Value>
+                                              <Style>
+                                                <FontSize>7pt</FontSize>
+                                                <FontWeight>Bold</FontWeight>
+                                                <Format>dd-MMM-yy</Format>
+                                              </Style>
+                                            </TextRun>
+                                          </TextRuns>
+                                          <Style>
+                                            <TextAlign>Center</TextAlign>
+                                          </Style>
+                                        </Paragraph>
+                                      </Paragraphs>
+                                      <rd:DefaultName>QY_Date_Label</rd:DefaultName>
+                                      <Style>
+                                        <Border>
+                                          <Style>None</Style>
+                                        </Border>
+                                        <TopBorder>
+                                          <Color>Black</Color>
+                                          <Style>Solid</Style>
+                                          <Width>0.5pt</Width>
+                                        </TopBorder>
+                                        <BottomBorder>
+                                          <Color>Black</Color>
+                                          <Style>Solid</Style>
+                                          <Width>0.5pt</Width>
+                                        </BottomBorder>
+                                        <RightBorder>
+                                          <Color>Black</Color>
+                                          <Style>Solid</Style>
+                                          <Width>0.5pt</Width>
+                                        </RightBorder>
+                                      </Style>
+                                    </Textbox>
+                                  </CellContents>
+                                </TablixHeader>
+                                <TablixMembers>
+                                  <TablixMember>
+                                    <Group Name="Hedge_Type">
+                                      <GroupExpressions>
+                                        <GroupExpression>=Fields!Hedge_Type.Value</GroupExpression>
+                                      </GroupExpressions>
+                                    </Group>
+                                    <SortExpressions>
+                                      <SortExpression>
+                                        <Value>=Fields!Hedge_Order.Value</Value>
+                                      </SortExpression>
+                                    </SortExpressions>
+                                    <TablixHeader>
+                                      <Size>0.13698in</Size>
+                                      <CellContents>
+                                        <Textbox Name="Hedge_Type">
+                                          <CanGrow>true</CanGrow>
+                                          <KeepTogether>true</KeepTogether>
+                                          <Paragraphs>
+                                            <Paragraph>
+                                              <TextRuns>
+                                                <TextRun>
+                                                  <Value>=Fields!Hedge_Type.Value</Value>
+                                                  <Style>
+                                                    <FontSize>7pt</FontSize>
+                                                    <FontWeight>Bold</FontWeight>
+                                                    <Format>0</Format>
+                                                  </Style>
+                                                </TextRun>
+                                              </TextRuns>
+                                              <Style>
+                                                <TextAlign>Center</TextAlign>
+                                              </Style>
+                                            </Paragraph>
+                                          </Paragraphs>
+                                          <rd:DefaultName>Hedge_Type</rd:DefaultName>
+                                          <Style>
+                                            <Border>
+                                              <Style>None</Style>
+                                            </Border>
+                                            <BottomBorder>
+                                              <Color>Black</Color>
+                                              <Style>Solid</Style>
+                                              <Width>0.5pt</Width>
+                                            </BottomBorder>
+                                            <RightBorder>
+                                              <Color>Black</Color>
+                                              <Style>Solid</Style>
+                                              <Width>0.5pt</Width>
+                                            </RightBorder>
+                                          </Style>
+                                        </Textbox>
+                                      </CellContents>
+                                    </TablixHeader>
+                                    <TablixMembers>
+                                      <TablixMember />
+                                    </TablixMembers>
+                                  </TablixMember>
+                                </TablixMembers>
+                              </TablixMember>
+                              <TablixMember>
+                                <TablixHeader>
+                                  <Size>0.18698in</Size>
+                                  <CellContents>
+                                    <Textbox Name="Textbox101">
+                                      <CanGrow>true</CanGrow>
+                                      <KeepTogether>true</KeepTogether>
+                                      <Paragraphs>
+                                        <Paragraph>
+                                          <TextRuns>
+                                            <TextRun>
+                                              <Value />
+                                              <Style>
+                                                <FontSize>7pt</FontSize>
+                                                <FontWeight>Bold</FontWeight>
+                                              </Style>
+                                            </TextRun>
+                                          </TextRuns>
+                                          <Style>
+                                            <TextAlign>Center</TextAlign>
+                                          </Style>
+                                        </Paragraph>
+                                      </Paragraphs>
+                                      <rd:DefaultName>Textbox101</rd:DefaultName>
+                                      <Style>
+                                        <Border>
+                                          <Style>None</Style>
+                                        </Border>
+                                        <TopBorder>
+                                          <Color>Black</Color>
+                                          <Style>Solid</Style>
+                                          <Width>0.5pt</Width>
+                                        </TopBorder>
+                                        <BottomBorder>
+                                          <Color>Black</Color>
+                                          <Style>Solid</Style>
+                                          <Width>0.5pt</Width>
+                                        </BottomBorder>
+                                        <RightBorder>
+                                          <Color>Black</Color>
+                                          <Style>Solid</Style>
+                                          <Width>1pt</Width>
+                                        </RightBorder>
+                                      </Style>
+                                    </Textbox>
+                                  </CellContents>
+                                </TablixHeader>
+                                <TablixMembers>
+                                  <TablixMember>
+                                    <TablixHeader>
+                                      <Size>0.13698in</Size>
+                                      <CellContents>
+                                        <Textbox Name="Textbox102">
+                                          <KeepTogether>true</KeepTogether>
+                                          <Paragraphs>
+                                            <Paragraph>
+                                              <TextRuns>
+                                                <TextRun>
+                                                  <Value>Grand Total</Value>
+                                                  <Style>
+                                                    <FontSize>7pt</FontSize>
+                                                    <FontWeight>Bold</FontWeight>
+                                                  </Style>
+                                                </TextRun>
+                                              </TextRuns>
+                                              <Style>
+                                                <TextAlign>Center</TextAlign>
+                                              </Style>
+                                            </Paragraph>
+                                          </Paragraphs>
+                                          <rd:DefaultName>Textbox102</rd:DefaultName>
+                                          <Style>
+                                            <Border>
+                                              <Style>None</Style>
+                                            </Border>
+                                            <BottomBorder>
+                                              <Color>Black</Color>
+                                              <Style>Solid</Style>
+                                              <Width>0.5pt</Width>
+                                            </BottomBorder>
+                                            <RightBorder>
+                                              <Color>Black</Color>
+                                              <Style>Solid</Style>
+                                              <Width>1pt</Width>
+                                            </RightBorder>
+                                          </Style>
+                                        </Textbox>
+                                      </CellContents>
+                                    </TablixHeader>
+                                  </TablixMember>
+                                </TablixMembers>
+                              </TablixMember>
+                            </TablixMembers>
+                          </TablixColumnHierarchy>
+                          <TablixRowHierarchy>
+                            <TablixMembers>
+                              <TablixMember>
+                                <TablixHeader>
+                                  <Size>0.40625in</Size>
+                                  <CellContents>
+                                    <Textbox Name="Textbox90">
+                                      <KeepTogether>true</KeepTogether>
+                                      <Paragraphs>
+                                        <Paragraph>
+                                          <TextRuns>
+                                            <TextRun>
+                                              <Value>Total</Value>
+                                              <Style>
+                                                <FontStyle>Italic</FontStyle>
+                                                <FontSize>7pt</FontSize>
+                                                <FontWeight>Bold</FontWeight>
+                                              </Style>
+                                            </TextRun>
+                                          </TextRuns>
+                                          <Style />
+                                        </Paragraph>
+                                      </Paragraphs>
+                                      <rd:DefaultName>Textbox90</rd:DefaultName>
+                                      <Style>
+                                        <Border>
+                                          <Style>None</Style>
+                                        </Border>
+                                        <BottomBorder>
+                                          <Color>Black</Color>
+                                          <Style>Solid</Style>
+                                          <Width>0.5pt</Width>
+                                        </BottomBorder>
+                                        <LeftBorder>
+                                          <Color>Black</Color>
+                                          <Style>Solid</Style>
+                                          <Width>1pt</Width>
+                                        </LeftBorder>
+                                        <RightBorder>
+                                          <Color>Black</Color>
+                                          <Style>Solid</Style>
+                                          <Width>0.5pt</Width>
+                                        </RightBorder>
+                                      </Style>
+                                    </Textbox>
+                                  </CellContents>
+                                </TablixHeader>
+                                <KeepWithGroup>After</KeepWithGroup>
+                              </TablixMember>
+                              <TablixMember>
+                                <Group Name="Currrency">
+                                  <GroupExpressions>
+                                    <GroupExpression>=Fields!Currrency.Value</GroupExpression>
+                                  </GroupExpressions>
+                                </Group>
+                                <SortExpressions>
+                                  <SortExpression>
+                                    <Value>=Fields!Rnk.Value</Value>
+                                  </SortExpression>
+                                </SortExpressions>
+                                <TablixHeader>
+                                  <Size>0.40625in</Size>
+                                  <CellContents>
+                                    <Textbox Name="Currrency">
+                                      <KeepTogether>true</KeepTogether>
+                                      <Paragraphs>
+                                        <Paragraph>
+                                          <TextRuns>
+                                            <TextRun>
+                                              <Value xml:space="preserve"> </Value>
+                                              <Style>
+                                                <FontSize>7pt</FontSize>
+                                              </Style>
+                                            </TextRun>
+                                            <TextRun>
+                                              <Value>=Fields!Currrency.Value</Value>
+                                              <Style>
+                                                <FontSize>7pt</FontSize>
+                                              </Style>
+                                            </TextRun>
+                                          </TextRuns>
+                                          <Style />
+                                        </Paragraph>
+                                      </Paragraphs>
+                                      <rd:DefaultName>Currrency</rd:DefaultName>
+                                      <Style>
+                                        <Border>
+                                          <Style>None</Style>
+                                        </Border>
+                                        <LeftBorder>
+                                          <Color>Black</Color>
+                                          <Style>Solid</Style>
+                                          <Width>1pt</Width>
+                                        </LeftBorder>
+                                        <RightBorder>
+                                          <Color>Black</Color>
+                                          <Style>Solid</Style>
+                                          <Width>0.5pt</Width>
+                                        </RightBorder>
+                                        <BackgroundColor>=Fields!BG_Color.Value</BackgroundColor>
+                                      </Style>
+                                    </Textbox>
+                                  </CellContents>
+                                </TablixHeader>
+                              </TablixMember>
+                            </TablixMembers>
+                          </TablixRowHierarchy>
+                          <DataSetName>Derivatives_FX_Hedging_Program</DataSetName>
+                          <Style>
+                            <Border>
+                              <Style>None</Style>
+                            </Border>
+                          </Style>
+                        </Tablix>
+                      </CellContents>
+                    </TablixCell>
+                  </TablixCells>
+                </TablixRow>
+              </TablixRows>
+            </TablixBody>
+            <TablixColumnHierarchy>
+              <TablixMembers>
+                <TablixMember />
+              </TablixMembers>
+            </TablixColumnHierarchy>
+            <TablixRowHierarchy>
+              <TablixMembers>
+                <TablixMember>
+                  <Group Name="Type1">
+                    <GroupExpressions>
+                      <GroupExpression>=Fields!Type.Value</GroupExpression>
+                    </GroupExpressions>
+                  </Group>
+                  <SortExpressions>
+                    <SortExpression>
+                      <Value>=Fields!Title_Order.Value</Value>
+                    </SortExpression>
+                  </SortExpressions>
+                  <TablixMembers>
+                    <TablixMember />
+                    <TablixMember />
+                  </TablixMembers>
+                </TablixMember>
+              </TablixMembers>
+            </TablixRowHierarchy>
+            <DataSetName>Derivatives_FX_Hedging_Program</DataSetName>
+            <Top>0.23in</Top>
+            <Height>0.82834in</Height>
+            <Width>1.73125in</Width>
+            <ZIndex>1</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <BottomBorder>
+                <Color>Black</Color>
+                <Style>Solid</Style>
+                <Width>0.5pt</Width>
+              </BottomBorder>
+            </Style>
+          </Tablix>
+        </ReportItems>
+        <Height>1.05834in</Height>
+        <Style />
+      </Body>
+      <Width>11.69in</Width>
+      <Page>
+        <PageHeader>
+          <Height>0.45139in</Height>
+          <PrintOnFirstPage>true</PrintOnFirstPage>
+          <PrintOnLastPage>true</PrintOnLastPage>
+          <ReportItems>
+            <Textbox Name="Textbox2">
+              <CanGrow>true</CanGrow>
+              <KeepTogether>true</KeepTogether>
+              <Paragraphs>
+                <Paragraph>
+                  <TextRuns>
+                    <TextRun>
+                      <Value>Derivatives Report </Value>
+                      <Style>
+                        <FontStyle>Normal</FontStyle>
+                        <FontFamily>Arial</FontFamily>
+                        <FontSize>7pt</FontSize>
+                        <FontWeight>Bold</FontWeight>
+                        <TextDecoration>None</TextDecoration>
+                      </Style>
+                    </TextRun>
+                  </TextRuns>
+                  <Style />
+                </Paragraph>
+              </Paragraphs>
+              <rd:DefaultName>Textbox1</rd:DefaultName>
+              <Height>0.21875in</Height>
+              <Width>1.44792in</Width>
+              <Style>
+                <Border>
+                  <Style>None</Style>
+                </Border>
+                <VerticalAlign>Middle</VerticalAlign>
+              </Style>
+            </Textbox>
+            <Textbox Name="Textbox6">
+              <CanGrow>true</CanGrow>
+              <KeepTogether>true</KeepTogether>
+              <Paragraphs>
+                <Paragraph>
+                  <TextRuns>
+                    <TextRun>
+                      <Value>=Parameters!QY_Date.Value</Value>
+                      <Style>
+                        <FontStyle>Normal</FontStyle>
+                        <FontFamily>Arial</FontFamily>
+                        <FontSize>7pt</FontSize>
+                        <FontWeight>Bold</FontWeight>
+                        <Format>MMMM d, yyyy</Format>
+                        <TextDecoration>None</TextDecoration>
+                      </Style>
+                    </TextRun>
+                  </TextRuns>
+                  <Style>
+                    <TextAlign>Left</TextAlign>
+                  </Style>
+                </Paragraph>
+              </Paragraphs>
+              <rd:DefaultName>Textbox1</rd:DefaultName>
+              <Top>0.5909cm</Top>
+              <Height>0.21875in</Height>
+              <Width>1.44792in</Width>
+              <ZIndex>1</ZIndex>
+              <Style>
+                <Border>
+                  <Style>None</Style>
+                </Border>
+              </Style>
+            </Textbox>
+          </ReportItems>
+          <Style>
+            <Border>
+              <Style>None</Style>
+            </Border>
+          </Style>
+        </PageHeader>
+        <PageHeight>8.27in</PageHeight>
+        <PageWidth>11.69in</PageWidth>
+        <LeftMargin>0.25in</LeftMargin>
+        <RightMargin>0.25in</RightMargin>
+        <TopMargin>0.2in</TopMargin>
+        <BottomMargin>0.25in</BottomMargin>
+        <ColumnSpacing>0.05118in</ColumnSpacing>
+        <Style />
+      </Page>
+    </ReportSection>
+  </ReportSections>
+  <ReportParameters>
+    <ReportParameter Name="QY_Date">
+      <DataType>DateTime</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>06/29/2018 12:00:00 AM</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>QY Date</Prompt>
+      <ValidValues>
+        <ParameterValues>
+          <ParameterValue>
+            <Value>06/29/2018 12:00:00 AM</Value>
+            <Label>2018/06/29</Label>
+          </ParameterValue>
+        </ParameterValues>
+      </ValidValues>
+    </ReportParameter>
+  </ReportParameters>
+  <ReportParametersLayout>
+    <GridLayoutDefinition>
+      <NumberOfColumns>4</NumberOfColumns>
+      <NumberOfRows>2</NumberOfRows>
+      <CellDefinitions>
+        <CellDefinition>
+          <ColumnIndex>0</ColumnIndex>
+          <RowIndex>0</RowIndex>
+          <ParameterName>QY_Date</ParameterName>
+        </CellDefinition>
+      </CellDefinitions>
+    </GridLayoutDefinition>
+  </ReportParametersLayout>
+  <rd:ReportUnitType>Inch</rd:ReportUnitType>
+  <rd:ReportID>69f99d4a-2bbe-4629-b71b-e9a9ee6c4728</rd:ReportID>
+</Report>

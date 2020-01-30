@@ -1,0 +1,3488 @@
+﻿<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="4/19/2018 9:14:15 AM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="W0353342"
+  DTS:CreatorName="pdosanjh"
+  DTS:DelayValidation="True"
+  DTS:DTSID="{AA706788-AD5E-47DE-B7FC-6BE1ADB747A1}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="13.0.4561.14"
+  DTS:LocaleID="4105"
+  DTS:ObjectName="Weekly_Active_Report_Purge_Entity_Data"
+  DTS:ProtectionLevel="0"
+  DTS:VersionBuild="344"
+  DTS:VersionGUID="{FCC0D09E-B3DA-4809-BD2D-7C205767283A}"
+  DTS:VersionMajor="0">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:PackageParameters>
+    <DTS:PackageParameter
+      DTS:CreationName=""
+      DTS:DataType="11"
+      DTS:DTSID="{650BEE64-AD7A-4BE7-98CA-B2AD1DBC5A66}"
+      DTS:ObjectName="Disable_MDSBatch">
+      <DTS:Property
+        DTS:DataType="11"
+        DTS:Name="ParameterValue">-1</DTS:Property>
+    </DTS:PackageParameter>
+    <DTS:PackageParameter
+      DTS:CreationName=""
+      DTS:DataType="11"
+      DTS:DTSID="{1C7398D0-CEFB-44B3-AA2E-FBF7580938A4}"
+      DTS:ObjectName="Disable_MDSClearUnexecutedBatch">
+      <DTS:Property
+        DTS:DataType="11"
+        DTS:Name="ParameterValue">0</DTS:Property>
+    </DTS:PackageParameter>
+    <DTS:PackageParameter
+      DTS:CreationName=""
+      DTS:DataType="11"
+      DTS:DTSID="{B33D5809-2927-4DAD-934C-EC8EA0B8B5E7}"
+      DTS:ObjectName="Disable_RunBatch">
+      <DTS:Property
+        DTS:DataType="11"
+        DTS:Name="ParameterValue">0</DTS:Property>
+    </DTS:PackageParameter>
+    <DTS:PackageParameter
+      DTS:CreationName=""
+      DTS:DataType="3"
+      DTS:DTSID="{B2867B57-F48B-4648-B10A-BCEA48628CCD}"
+      DTS:ObjectName="Parameter">
+      <DTS:Property
+        DTS:DataType="3"
+        DTS:Name="ParameterValue">0</DTS:Property>
+    </DTS:PackageParameter>
+    <DTS:PackageParameter
+      DTS:CreationName=""
+      DTS:DataType="3"
+      DTS:DTSID="{67BABE8C-C243-4C70-8629-88FD1D7C9D68}"
+      DTS:ObjectName="Param_BatchID">
+      <DTS:Property
+        DTS:DataType="3"
+        DTS:Name="ParameterValue">0</DTS:Property>
+    </DTS:PackageParameter>
+    <DTS:PackageParameter
+      DTS:CreationName=""
+      DTS:DataType="3"
+      DTS:Description="0=MergeOptimistic, 1=Insert, 2=MergeOverwrite, 3=Delete, 4=Purge,5=DeleteOverwrite,6=PurgeOverwrite"
+      DTS:DTSID="{7C862243-9A1C-4F0A-9E52-A9B434BB3F56}"
+      DTS:ObjectName="Param_MDSImportType">
+      <DTS:Property
+        DTS:DataType="3"
+        DTS:Name="ParameterValue">6</DTS:Property>
+    </DTS:PackageParameter>
+    <DTS:PackageParameter
+      DTS:CreationName=""
+      DTS:DataType="8"
+      DTS:DTSID="{7905FB42-9C2A-4A90-AB9E-3F3486CE008A}"
+      DTS:ObjectName="Param_MDS_Entity_Name">
+      <DTS:Property
+        DTS:DataType="8"
+        DTS:Name="ParameterValue">RM_Weekly_Active_Risk_MDS_Version</DTS:Property>
+    </DTS:PackageParameter>
+  </DTS:PackageParameters>
+  <DTS:Variables>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{51052183-5F5D-449D-B3C6-BF6B8806EB52}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="Current_Date">
+      <DTS:VariableValue
+        DTS:DataType="8">20190628</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:Description="Do Not Edit"
+      DTS:DTSID="{570689A9-E5B1-4254-BC03-F19BA44CF77F}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="LastRunDT">
+      <DTS:VariableValue
+        DTS:DataType="7">6/1/2016 3:29:00 PM</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:Description="Do Not Edit"
+      DTS:DTSID="{38E6A8D8-634F-4181-BE72-3C9E3AC7C055}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="LastRunTMST">
+      <DTS:VariableValue
+        DTS:DataType="7">6/1/2016 3:29:00 PM</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:Description="Do Not Edit"
+      DTS:DTSID="{41FEBE36-58B1-4B0D-9CBE-A6E2A2920396}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="LineageID">
+      <DTS:VariableValue
+        DTS:DataType="3">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:Description="Do Not Edit"
+      DTS:DTSID="{068EB0AE-9318-4D24-AC40-A00ED20AA8EB}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="LineageString">
+      <DTS:VariableValue
+        DTS:DataType="8">naaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:Description="Do Not Edit"
+      DTS:DTSID="{A410A839-EF16-41C6-B195-FFF65D1EE016}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="@[System::StartTime]"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="LineageTMST">
+      <DTS:VariableValue
+        DTS:DataType="7">11/6/2019 4:36:04 PM</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:Description="Do Not Edit"
+      DTS:DTSID="{DFECC30C-82DC-412B-BACE-BC93610A0DE2}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="Replace (@[User::MDS_TableName] ,&quot;_Leaf&quot;,&quot;_Batch&quot;)"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="MDS_BatchName">
+      <DTS:VariableValue
+        DTS:DataType="8">RM_Weekly_Active_Risk_MDS_Version_Batch</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:Description="Do Not Edit"
+      DTS:DTSID="{552DED6B-8ACB-43C4-9FF0-60CFC929ABEE}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="MDS_BatchTag">
+      <DTS:VariableValue
+        DTS:DataType="8">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:Description="Do Not Edit"
+      DTS:DTSID="{9412F0F9-CBCE-49F1-95FF-47BE2DCFDD9A}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="&quot;DELETE FROM &quot; + @[User::MDS_StgTableName]"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="MDS_ClearUnExecutedBatchCommand">
+      <DTS:VariableValue
+        DTS:DataType="8">DELETE FROM stg.RM_Weekly_Active_Risk_MDS_Version_Leaf</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{26B4E9A4-EDDF-459E-93CC-8D1E5254C6E5}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="MDS_ImportType_Delete">
+      <DTS:VariableValue
+        DTS:DataType="3">6</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:Description="0=NoTransactionLogs, 1=LogTransactions"
+      DTS:DTSID="{9A96B702-E30C-41EC-8CF6-BD250272C5C2}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="MDS_LogFlag">
+      <DTS:VariableValue
+        DTS:DataType="3">1</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{8AD80AED-9EC1-429B-9E96-D428D826F7C4}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="&quot;Execute &quot; +  @[User::MDS_ProcedureName] +&#xA;&quot; @VersionName=N'&quot; +  @[User::MDS_VersionName] + &#xA;&quot;',@LogFlag=&quot; +  (DT_WSTR, 10) @[User::MDS_LogFlag] +&#xA;&quot;,@BatchTag=N'&quot; +  @[User::MDS_BatchTag] + &quot;'&quot;"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="MDS_ProcedureCommandDelete">
+      <DTS:VariableValue
+        DTS:DataType="8">Execute stg.udp_RM_Weekly_Active_Risk_MDS_Version_Leaf @VersionName=N'Version_yyyyMMdd',@LogFlag=1,@BatchTag=N'0'</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:Description="Do Not Edit"
+      DTS:DTSID="{4DC2A5D6-F27F-4AFC-A1A2-E4D9933CDA08}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="@[User::MDS_stgSchemaName] + &quot;.udp_&quot; +  @[User::MDS_TableName]"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="MDS_ProcedureName">
+      <DTS:VariableValue
+        DTS:DataType="8">stg.udp_RM_Weekly_Active_Risk_MDS_Version_Leaf</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{91420137-42F4-4560-8B18-6DA32B0CBCB3}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="&quot;mdm.&quot; +@[$Package::Param_MDS_Entity_Name]+&quot;_Members&quot;"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="MDS_SourceView">
+      <DTS:VariableValue
+        DTS:DataType="8">mdm.RM_Weekly_Active_Risk_MDS_Version_Members</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:Description="Do Not Edit"
+      DTS:DTSID="{46E02B90-A66F-44F5-8EDC-17F457362457}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="MDS_stgSchemaName">
+      <DTS:VariableValue
+        DTS:DataType="8">stg</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:Description="Do Not Edit"
+      DTS:DTSID="{CBE72255-30B0-4462-BAC9-7EAD2BBF2079}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="@[User::MDS_stgSchemaName] + &quot;.&quot; +    @[User::MDS_TableName]"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="MDS_StgTableName">
+      <DTS:VariableValue
+        DTS:DataType="8">stg.RM_Weekly_Active_Risk_MDS_Version_Leaf</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{3D80C588-0686-4DDF-90CC-2C3398318F10}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="@[$Package::Param_MDS_Entity_Name]+&quot;_Leaf&quot;"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="MDS_TableName">
+      <DTS:VariableValue
+        DTS:DataType="8">RM_Weekly_Active_Risk_MDS_Version_Leaf</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{A8A0C34A-E779-4093-AE77-446B9EB4AFA0}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="MDS_TargetEntity_RecordCount">
+      <DTS:VariableValue
+        DTS:DataType="3">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{078BDEC2-771B-48EE-B103-46AD33C0E3F5}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="MDS_VersionName">
+      <DTS:VariableValue
+        DTS:DataType="8">Version_yyyyMMdd</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:Description="Do Not Edit (Use Package Parameter)"
+      DTS:DTSID="{055C5179-7E53-45D1-8C8A-D36392590EB4}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="&#x9;&#x9;&#x9; &quot;SELECT TOP 1 [VersionName]&#xA;FROM [MDS_ISR].[mdm].[RM_Weekly_Active_Risk_MDS_Version_Members]&quot;"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="MDS_VersionName_Source">
+      <DTS:VariableValue
+        DTS:DataType="8">SELECT TOP 1 [VersionName]
+FROM [MDS_ISR].[mdm].[RM_Weekly_Active_Risk_MDS_Version_Members]</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{B61ABA95-A070-46C9-9215-565F976DE310}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="MDS_Version_Number">
+      <DTS:VariableValue
+        DTS:DataType="3">-99</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{A371440D-975A-47BE-8D15-8023E51751BF}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="&quot;SELECT TOP 1 [VersionNbr]&#xA;FROM [MDS_ISR].[mdm].[viw_SYSTEM_SCHEMA_VERSION]&#xA;WHERE Model_Name = 'RM_Weekly_Active_Risk'&#xA;      AND Status_ID = 1&#xA;      AND Name = '&quot;+ @[User::MDS_VersionName]+&quot;' &#xA;ORDER BY LastChgUser_DTM DESC;&quot;&#xA;&#xA;&#xA;"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="MDS_Version_Number_Source">
+      <DTS:VariableValue
+        DTS:DataType="8">SELECT TOP 1 [VersionNbr]
+FROM [MDS_ISR].[mdm].[viw_SYSTEM_SCHEMA_VERSION]
+WHERE Model_Name = 'RM_Weekly_Active_Risk'
+      AND Status_ID = 1
+      AND Name = 'Version_yyyyMMdd' 
+ORDER BY LastChgUser_DTM DESC;</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:Description="Do Not Edit"
+      DTS:DTSID="{42CC3945-9373-4613-B4C0-6AB36BA3C945}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="&quot;Process FAILED - &quot;  + @[User::MDS_StgTableName]  + &quot; - &quot; +  (DT_STR, 10, 1252) @[User::RecordCount_Total] + &quot; records processed.&quot;"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="Message_Failure">
+      <DTS:VariableValue
+        DTS:DataType="8">Process FAILED - stg.RM_Weekly_Active_Risk_MDS_Version_Leaf - 0 records processed.</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:Description="Do Not Edit"
+      DTS:DTSID="{2E9FA761-77F2-4145-88F5-93A4C3843D96}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="&quot;Process Succeeded - &quot; +  @[User::MDS_StgTableName]  + &quot; - &quot; +  (DT_STR, 10, 1252) @[User::RecordCount_Total] + &quot; records processed.&quot;"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="Message_Success">
+      <DTS:VariableValue
+        DTS:DataType="8">Process Succeeded - stg.RM_Weekly_Active_Risk_MDS_Version_Leaf - 0 records processed.</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{A5866958-F9A5-4236-B049-A4F0857277BB}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="Previous_Date">
+      <DTS:VariableValue
+        DTS:DataType="8">11111</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:Description="Do Not Edit"
+      DTS:DTSID="{D16D9822-0EFA-43A9-95DD-029BAF52F66A}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="RecordCount">
+      <DTS:VariableValue
+        DTS:DataType="3">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:Description="Do Not Edit"
+      DTS:DTSID="{8CD14D2E-8BEF-4002-B95B-A0F0C290342D}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="RecordCount_Error">
+      <DTS:VariableValue
+        DTS:DataType="3">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:Description="Do Not Edit"
+      DTS:DTSID="{BB588ECD-E01B-4DFF-B41F-AFDE4EA8277D}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="@[User::RecordCount]- @[User::RecordCount_Error]"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="RecordCount_Total">
+      <DTS:VariableValue
+        DTS:DataType="3">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:Description="Do Not Edit"
+      DTS:DTSID="{23667DDA-B4B4-4EA5-A0CA-C3200258F08A}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="Results">
+      <DTS:VariableValue
+        DTS:DataSubType="ManagedSerializable"
+        DTS:DataType="13">
+        <SOAP-ENV:Envelope xmlns:clr="http://schemas.microsoft.com/soap/encoding/clr/1.0" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+          <SOAP-ENV:Body>
+            <xsd:anyType
+              id="ref-1"></xsd:anyType>
+          </SOAP-ENV:Body>
+        </SOAP-ENV:Envelope>
+      </DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{368866ED-2D56-4DC2-AC15-7290F03872D6}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="Risk_Version">
+      <DTS:VariableValue
+        DTS:DataType="8">19990101_v3</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{47FA0EFC-3FF4-4CD5-B6A7-7473B0AC46CA}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="&quot;Select Code  from &quot; +   @[User::MDS_SourceView]"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="Source">
+      <DTS:VariableValue
+        DTS:DataType="8">Select Code  from mdm.RM_Weekly_Active_Risk_MDS_Version_Members</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{0B669E82-768F-4C2B-B1BB-BC3356324828}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="StrQuote">
+      <DTS:VariableValue
+        DTS:DataType="8">"</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{CA512C83-554B-45AB-BACB-E59D34B61621}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="Use_Risk_Version">
+      <DTS:VariableValue
+        DTS:DataType="3">0</DTS:VariableValue>
+    </DTS:Variable>
+  </DTS:Variables>
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\Deletes Existing Data"
+      DTS:CreationName="STOCK:SEQUENCE"
+      DTS:Description="Sequence Container"
+      DTS:DTSID="{090EAABD-A31F-4015-AB2B-07A502D9C518}"
+      DTS:ExecutableType="STOCK:SEQUENCE"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Deletes Existing Data">
+      <DTS:Variables />
+      <DTS:Executables>
+        <DTS:Executable
+          DTS:refId="Package\Deletes Existing Data\Import Data into Stg"
+          DTS:CreationName="Microsoft.Pipeline"
+          DTS:DelayValidation="True"
+          DTS:DTSID="{3E5CDF02-68B0-466C-9AF2-F6886B7139F8}"
+          DTS:ExecutableType="Microsoft.Pipeline"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Import Data into Stg"
+          DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <pipeline
+              BLOBTempStoragePath=""
+              bufferTempStoragePath=""
+              version="1">
+              <components>
+                <component
+                  refId="Package\Deletes Existing Data\Import Data into Stg\Add Batch"
+                  componentClassID="Microsoft.DerivedColumn"
+                  contactInfo="Derived Column;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+                  description="Creates new column values by applying expressions to transformation input columns. Create new columns or overwrite existing ones. For example, concatenate the values from the 'first name' and 'last name' column to make a 'full name' column."
+                  name="Add Batch"
+                  usesDispositions="true">
+                  <inputs>
+                    <input
+                      refId="Package\Deletes Existing Data\Import Data into Stg\Add Batch.Inputs[Derived Column Input]"
+                      description="Input to the Derived Column Transformation"
+                      name="Derived Column Input">
+                      <externalMetadataColumns />
+                    </input>
+                  </inputs>
+                  <outputs>
+                    <output
+                      refId="Package\Deletes Existing Data\Import Data into Stg\Add Batch.Outputs[Derived Column Output]"
+                      description="Default Output of the Derived Column Transformation"
+                      exclusionGroup="1"
+                      name="Derived Column Output"
+                      synchronousInputId="Package\Deletes Existing Data\Import Data into Stg\Add Batch.Inputs[Derived Column Input]">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Deletes Existing Data\Import Data into Stg\Add Batch.Outputs[Derived Column Output].Columns[BatchTag]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Computation"
+                          errorRowDisposition="FailComponent"
+                          length="50"
+                          lineageId="Package\Deletes Existing Data\Import Data into Stg\Add Batch.Outputs[Derived Column Output].Columns[BatchTag]"
+                          name="BatchTag"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Expression"
+                              name="Expression">(DT_WSTR,50)@[User::MDS_BatchTag]</property>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Friendly Expression"
+                              expressionType="Notify"
+                              name="FriendlyExpression">(DT_WSTR,50)@[User::MDS_BatchTag]</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Deletes Existing Data\Import Data into Stg\Add Batch.Outputs[Derived Column Output].Columns[ImportType]"
+                          dataType="i4"
+                          errorOrTruncationOperation="Computation"
+                          errorRowDisposition="FailComponent"
+                          lineageId="Package\Deletes Existing Data\Import Data into Stg\Add Batch.Outputs[Derived Column Output].Columns[ImportType]"
+                          name="ImportType"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Expression"
+                              name="Expression">@[User::MDS_ImportType_Delete]</property>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Friendly Expression"
+                              expressionType="Notify"
+                              name="FriendlyExpression">@[User::MDS_ImportType_Delete]</property>
+                          </properties>
+                        </outputColumn>
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                    <output
+                      refId="Package\Deletes Existing Data\Import Data into Stg\Add Batch.Outputs[Derived Column Error Output]"
+                      description="Error Output of the Derived Column Transformation"
+                      exclusionGroup="1"
+                      isErrorOut="true"
+                      name="Derived Column Error Output"
+                      synchronousInputId="Package\Deletes Existing Data\Import Data into Stg\Add Batch.Inputs[Derived Column Input]">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Deletes Existing Data\Import Data into Stg\Add Batch.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                          dataType="i4"
+                          lineageId="Package\Deletes Existing Data\Import Data into Stg\Add Batch.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                          name="ErrorCode"
+                          specialFlags="1" />
+                        <outputColumn
+                          refId="Package\Deletes Existing Data\Import Data into Stg\Add Batch.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                          dataType="i4"
+                          lineageId="Package\Deletes Existing Data\Import Data into Stg\Add Batch.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                          name="ErrorColumn"
+                          specialFlags="2" />
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+                <component
+                  refId="Package\Deletes Existing Data\Import Data into Stg\Data Conversion Transformation"
+                  componentClassID="Microsoft.DataConvert"
+                  contactInfo="Data Conversion;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+                  name="Data Conversion Transformation"
+                  usesDispositions="true">
+                  <inputs>
+                    <input
+                      refId="Package\Deletes Existing Data\Import Data into Stg\Data Conversion Transformation.Inputs[Trim_Output_Data Conversion Transformation]"
+                      name="Trim_Output_Data Conversion Transformation">
+                      <externalMetadataColumns />
+                    </input>
+                  </inputs>
+                  <outputs>
+                    <output
+                      refId="Package\Deletes Existing Data\Import Data into Stg\Data Conversion Transformation.Outputs[Output]"
+                      exclusionGroup="1"
+                      name="Output"
+                      synchronousInputId="Package\Deletes Existing Data\Import Data into Stg\Data Conversion Transformation.Inputs[Trim_Output_Data Conversion Transformation]">
+                      <externalMetadataColumns />
+                    </output>
+                    <output
+                      refId="Package\Deletes Existing Data\Import Data into Stg\Data Conversion Transformation.Outputs[Error]"
+                      exclusionGroup="1"
+                      isErrorOut="true"
+                      name="Error"
+                      synchronousInputId="Package\Deletes Existing Data\Import Data into Stg\Data Conversion Transformation.Inputs[Trim_Output_Data Conversion Transformation]">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Deletes Existing Data\Import Data into Stg\Data Conversion Transformation.Outputs[Error].Columns[ErrorCode]"
+                          dataType="i4"
+                          lineageId="Package\Deletes Existing Data\Import Data into Stg\Data Conversion Transformation.Outputs[Error].Columns[ErrorCode]"
+                          name="ErrorCode"
+                          specialFlags="1" />
+                        <outputColumn
+                          refId="Package\Deletes Existing Data\Import Data into Stg\Data Conversion Transformation.Outputs[Error].Columns[ErrorColumn]"
+                          dataType="i4"
+                          lineageId="Package\Deletes Existing Data\Import Data into Stg\Data Conversion Transformation.Outputs[Error].Columns[ErrorColumn]"
+                          name="ErrorColumn"
+                          specialFlags="2" />
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+                <component
+                  refId="Package\Deletes Existing Data\Import Data into Stg\Derived Column"
+                  componentClassID="Microsoft.DerivedColumn"
+                  contactInfo="Derived Column;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+                  description="Creates new column values by applying expressions to transformation input columns. Create new columns or overwrite existing ones. For example, concatenate the values from the 'first name' and 'last name' column to make a 'full name' column."
+                  name="Derived Column"
+                  usesDispositions="true">
+                  <inputs>
+                    <input
+                      refId="Package\Deletes Existing Data\Import Data into Stg\Derived Column.Inputs[Derived Column Input]"
+                      description="Input to the Derived Column Transformation"
+                      name="Derived Column Input">
+                      <externalMetadataColumns />
+                    </input>
+                  </inputs>
+                  <outputs>
+                    <output
+                      refId="Package\Deletes Existing Data\Import Data into Stg\Derived Column.Outputs[Derived Column Output]"
+                      description="Default Output of the Derived Column Transformation"
+                      exclusionGroup="1"
+                      name="Derived Column Output"
+                      synchronousInputId="Package\Deletes Existing Data\Import Data into Stg\Derived Column.Inputs[Derived Column Input]">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Deletes Existing Data\Import Data into Stg\Derived Column.Outputs[Derived Column Output].Columns[LineageTMST]"
+                          dataType="date"
+                          errorOrTruncationOperation="Computation"
+                          errorRowDisposition="FailComponent"
+                          lineageId="Package\Deletes Existing Data\Import Data into Stg\Derived Column.Outputs[Derived Column Output].Columns[LineageTMST]"
+                          name="LineageTMST"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Expression"
+                              name="Expression">@[User::LineageTMST]</property>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Friendly Expression"
+                              expressionType="Notify"
+                              name="FriendlyExpression">@[User::LineageTMST]</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Deletes Existing Data\Import Data into Stg\Derived Column.Outputs[Derived Column Output].Columns[LineageID]"
+                          dataType="i4"
+                          errorOrTruncationOperation="Computation"
+                          errorRowDisposition="FailComponent"
+                          lineageId="Package\Deletes Existing Data\Import Data into Stg\Derived Column.Outputs[Derived Column Output].Columns[LineageID]"
+                          name="LineageID"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Expression"
+                              name="Expression">@[User::LineageID]</property>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Friendly Expression"
+                              expressionType="Notify"
+                              name="FriendlyExpression">@[User::LineageID]</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Deletes Existing Data\Import Data into Stg\Derived Column.Outputs[Derived Column Output].Columns[Version_Name]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Computation"
+                          errorRowDisposition="FailComponent"
+                          length="16"
+                          lineageId="Package\Deletes Existing Data\Import Data into Stg\Derived Column.Outputs[Derived Column Output].Columns[Version_Name]"
+                          name="Version_Name"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Expression"
+                              name="Expression">@[User::MDS_VersionName]</property>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Friendly Expression"
+                              expressionType="Notify"
+                              name="FriendlyExpression">@[User::MDS_VersionName]</property>
+                          </properties>
+                        </outputColumn>
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                    <output
+                      refId="Package\Deletes Existing Data\Import Data into Stg\Derived Column.Outputs[Derived Column Error Output]"
+                      description="Error Output of the Derived Column Transformation"
+                      exclusionGroup="1"
+                      isErrorOut="true"
+                      name="Derived Column Error Output"
+                      synchronousInputId="Package\Deletes Existing Data\Import Data into Stg\Derived Column.Inputs[Derived Column Input]">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Deletes Existing Data\Import Data into Stg\Derived Column.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                          dataType="i4"
+                          lineageId="Package\Deletes Existing Data\Import Data into Stg\Derived Column.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                          name="ErrorCode"
+                          specialFlags="1" />
+                        <outputColumn
+                          refId="Package\Deletes Existing Data\Import Data into Stg\Derived Column.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                          dataType="i4"
+                          lineageId="Package\Deletes Existing Data\Import Data into Stg\Derived Column.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                          name="ErrorColumn"
+                          specialFlags="2" />
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+                <component
+                  refId="Package\Deletes Existing Data\Import Data into Stg\OLE DB Destination"
+                  componentClassID="Microsoft.OLEDBDestination"
+                  contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+                  description="OLE DB Destination"
+                  name="OLE DB Destination"
+                  usesDispositions="true"
+                  version="4">
+                  <properties>
+                    <property
+                      dataType="System.Int32"
+                      description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                      name="CommandTimeout">0</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the name of the database object used to open a rowset."
+                      name="OpenRowset"></property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the variable that contains the name of the database object used to open a rowset."
+                      name="OpenRowsetVariable">User::MDS_StgTableName</property>
+                    <property
+                      dataType="System.String"
+                      description="The SQL command to be executed."
+                      name="SqlCommand"
+                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the column code page to use when code page information is unavailable from the data source."
+                      name="DefaultCodePage">1252</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Forces the use of the DefaultCodePage property value when describing character data."
+                      name="AlwaysUseDefaultCodePage">false</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the mode used to access the database."
+                      name="AccessMode"
+                      typeConverter="AccessMode">4</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                      name="FastLoadKeepIdentity">false</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                      name="FastLoadKeepNulls">false</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                      name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                      name="FastLoadMaxInsertCommitSize">2147483647</property>
+                  </properties>
+                  <connections>
+                    <connection
+                      refId="Package\Deletes Existing Data\Import Data into Stg\OLE DB Destination.Connections[OleDbConnection]"
+                      connectionManagerID="{87323F27-D30B-4DBD-B723-02E2B4F94F0B}:external"
+                      connectionManagerRefId="Project.ConnectionManagers[MDS]"
+                      description="The OLE DB runtime connection used to access the database."
+                      name="OleDbConnection" />
+                  </connections>
+                  <inputs>
+                    <input
+                      refId="Package\Deletes Existing Data\Import Data into Stg\OLE DB Destination.Inputs[OLE DB Destination Input]"
+                      errorOrTruncationOperation="Insert"
+                      errorRowDisposition="FailComponent"
+                      hasSideEffects="true"
+                      name="OLE DB Destination Input">
+                      <inputColumns>
+                        <inputColumn
+                          refId="Package\Deletes Existing Data\Import Data into Stg\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Code]"
+                          cachedDataType="wstr"
+                          cachedLength="250"
+                          cachedName="Code"
+                          externalMetadataColumnId="Package\Deletes Existing Data\Import Data into Stg\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Code]"
+                          lineageId="Package\Deletes Existing Data\Import Data into Stg\OLE DB Source.Outputs[OLE DB Source Output].Columns[Code]" />
+                        <inputColumn
+                          refId="Package\Deletes Existing Data\Import Data into Stg\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[BatchTag]"
+                          cachedDataType="wstr"
+                          cachedLength="50"
+                          cachedName="BatchTag"
+                          externalMetadataColumnId="Package\Deletes Existing Data\Import Data into Stg\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[BatchTag]"
+                          lineageId="Package\Deletes Existing Data\Import Data into Stg\Add Batch.Outputs[Derived Column Output].Columns[BatchTag]" />
+                        <inputColumn
+                          refId="Package\Deletes Existing Data\Import Data into Stg\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[ImportType]"
+                          cachedDataType="i4"
+                          cachedName="ImportType"
+                          externalMetadataColumnId="Package\Deletes Existing Data\Import Data into Stg\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[ImportType]"
+                          lineageId="Package\Deletes Existing Data\Import Data into Stg\Add Batch.Outputs[Derived Column Output].Columns[ImportType]" />
+                      </inputColumns>
+                      <externalMetadataColumns
+                        isUsed="True">
+                        <externalMetadataColumn
+                          refId="Package\Deletes Existing Data\Import Data into Stg\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[ID]"
+                          dataType="i4"
+                          name="ID" />
+                        <externalMetadataColumn
+                          refId="Package\Deletes Existing Data\Import Data into Stg\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[ImportType]"
+                          dataType="ui1"
+                          name="ImportType" />
+                        <externalMetadataColumn
+                          refId="Package\Deletes Existing Data\Import Data into Stg\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[ImportStatus_ID]"
+                          dataType="ui1"
+                          name="ImportStatus_ID" />
+                        <externalMetadataColumn
+                          refId="Package\Deletes Existing Data\Import Data into Stg\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Batch_ID]"
+                          dataType="i4"
+                          name="Batch_ID" />
+                        <externalMetadataColumn
+                          refId="Package\Deletes Existing Data\Import Data into Stg\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[BatchTag]"
+                          dataType="wstr"
+                          length="50"
+                          name="BatchTag" />
+                        <externalMetadataColumn
+                          refId="Package\Deletes Existing Data\Import Data into Stg\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[ErrorCode]"
+                          dataType="i4"
+                          name="ErrorCode" />
+                        <externalMetadataColumn
+                          refId="Package\Deletes Existing Data\Import Data into Stg\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Code]"
+                          dataType="wstr"
+                          length="250"
+                          name="Code" />
+                        <externalMetadataColumn
+                          refId="Package\Deletes Existing Data\Import Data into Stg\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Name]"
+                          dataType="wstr"
+                          length="250"
+                          name="Name" />
+                        <externalMetadataColumn
+                          refId="Package\Deletes Existing Data\Import Data into Stg\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[NewCode]"
+                          dataType="wstr"
+                          length="250"
+                          name="NewCode" />
+                        <externalMetadataColumn
+                          refId="Package\Deletes Existing Data\Import Data into Stg\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Version_Name]"
+                          dataType="wstr"
+                          length="250"
+                          name="Version_Name" />
+                      </externalMetadataColumns>
+                    </input>
+                  </inputs>
+                  <outputs>
+                    <output
+                      refId="Package\Deletes Existing Data\Import Data into Stg\OLE DB Destination.Outputs[OLE DB Destination Error Output]"
+                      exclusionGroup="1"
+                      isErrorOut="true"
+                      name="OLE DB Destination Error Output"
+                      synchronousInputId="Package\Deletes Existing Data\Import Data into Stg\OLE DB Destination.Inputs[OLE DB Destination Input]">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Deletes Existing Data\Import Data into Stg\OLE DB Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                          dataType="i4"
+                          lineageId="Package\Deletes Existing Data\Import Data into Stg\OLE DB Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                          name="ErrorCode"
+                          specialFlags="1" />
+                        <outputColumn
+                          refId="Package\Deletes Existing Data\Import Data into Stg\OLE DB Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                          dataType="i4"
+                          lineageId="Package\Deletes Existing Data\Import Data into Stg\OLE DB Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                          name="ErrorColumn"
+                          specialFlags="2" />
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+                <component
+                  refId="Package\Deletes Existing Data\Import Data into Stg\OLE DB Source"
+                  componentClassID="Microsoft.OLEDBSource"
+                  contactInfo="OLE DB Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;7"
+                  description="OLE DB Source"
+                  name="OLE DB Source"
+                  usesDispositions="true"
+                  version="7">
+                  <properties>
+                    <property
+                      dataType="System.Int32"
+                      description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                      name="CommandTimeout">0</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the name of the database object used to open a rowset."
+                      name="OpenRowset"></property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the variable that contains the name of the database object used to open a rowset."
+                      name="OpenRowsetVariable"></property>
+                    <property
+                      dataType="System.String"
+                      description="The SQL command to be executed."
+                      name="SqlCommand"
+                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                    <property
+                      dataType="System.String"
+                      description="The variable that contains the SQL command to be executed."
+                      name="SqlCommandVariable">User::Source</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the column code page to use when code page information is unavailable from the data source."
+                      name="DefaultCodePage">1252</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Forces the use of the DefaultCodePage property value when describing character data."
+                      name="AlwaysUseDefaultCodePage">false</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the mode used to access the database."
+                      name="AccessMode"
+                      typeConverter="AccessMode">3</property>
+                    <property
+                      dataType="System.String"
+                      description="The mappings between the parameters in the SQL command and variables."
+                      name="ParameterMapping"></property>
+                  </properties>
+                  <connections>
+                    <connection
+                      refId="Package\Deletes Existing Data\Import Data into Stg\OLE DB Source.Connections[OleDbConnection]"
+                      connectionManagerID="{87323F27-D30B-4DBD-B723-02E2B4F94F0B}:external"
+                      connectionManagerRefId="Project.ConnectionManagers[MDS]"
+                      description="The OLE DB runtime connection used to access the database."
+                      name="OleDbConnection" />
+                  </connections>
+                  <outputs>
+                    <output
+                      refId="Package\Deletes Existing Data\Import Data into Stg\OLE DB Source.Outputs[OLE DB Source Output]"
+                      name="OLE DB Source Output">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Deletes Existing Data\Import Data into Stg\OLE DB Source.Outputs[OLE DB Source Output].Columns[Code]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Deletes Existing Data\Import Data into Stg\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[Code]"
+                          length="250"
+                          lineageId="Package\Deletes Existing Data\Import Data into Stg\OLE DB Source.Outputs[OLE DB Source Output].Columns[Code]"
+                          name="Code"
+                          truncationRowDisposition="FailComponent" />
+                      </outputColumns>
+                      <externalMetadataColumns
+                        isUsed="True">
+                        <externalMetadataColumn
+                          refId="Package\Deletes Existing Data\Import Data into Stg\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[Code]"
+                          dataType="wstr"
+                          length="250"
+                          name="Code" />
+                      </externalMetadataColumns>
+                    </output>
+                    <output
+                      refId="Package\Deletes Existing Data\Import Data into Stg\OLE DB Source.Outputs[OLE DB Source Error Output]"
+                      isErrorOut="true"
+                      name="OLE DB Source Error Output">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Deletes Existing Data\Import Data into Stg\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[Code]"
+                          dataType="wstr"
+                          length="250"
+                          lineageId="Package\Deletes Existing Data\Import Data into Stg\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[Code]"
+                          name="Code" />
+                        <outputColumn
+                          refId="Package\Deletes Existing Data\Import Data into Stg\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                          dataType="i4"
+                          lineageId="Package\Deletes Existing Data\Import Data into Stg\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                          name="ErrorCode"
+                          specialFlags="1" />
+                        <outputColumn
+                          refId="Package\Deletes Existing Data\Import Data into Stg\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                          dataType="i4"
+                          lineageId="Package\Deletes Existing Data\Import Data into Stg\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                          name="ErrorColumn"
+                          specialFlags="2" />
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+                <component
+                  refId="Package\Deletes Existing Data\Import Data into Stg\Row Count"
+                  componentClassID="Microsoft.RowCount"
+                  contactInfo="Row Count;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+                  name="Row Count">
+                  <properties>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the variable to hold the row count."
+                      name="VariableName">User::RecordCount</property>
+                  </properties>
+                  <inputs>
+                    <input
+                      refId="Package\Deletes Existing Data\Import Data into Stg\Row Count.Inputs[Row_Number_Output0_Row Count]"
+                      hasSideEffects="true"
+                      name="Row_Number_Output0_Row Count">
+                      <externalMetadataColumns />
+                    </input>
+                  </inputs>
+                  <outputs>
+                    <output
+                      refId="Package\Deletes Existing Data\Import Data into Stg\Row Count.Outputs[Output]"
+                      name="Output"
+                      synchronousInputId="Package\Deletes Existing Data\Import Data into Stg\Row Count.Inputs[Row_Number_Output0_Row Count]">
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+                <component
+                  refId="Package\Deletes Existing Data\Import Data into Stg\Row_Number"
+                  componentClassID="Microsoft.ManagedComponentHost"
+                  contactInfo="Includes and runs custom script code. For example, apply a business rule that limits the range of valid values in an &amp;quot;income&amp;quot; column or add values in two columns and calculate the average of the sum.;Microsoft Corporation; Microsoft SQL Server; Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;9"
+                  name="Row_Number"
+                  version="10">
+                  <properties>
+                    <property
+                      dataType="System.String"
+                      description="Stores the source code of the component"
+                      isArray="true"
+                      name="SourceCode">
+                      <arrayElements
+                        arrayElementCount="30">
+                        <arrayElement
+                          dataType="System.String">Properties\Settings.settings</arrayElement>
+                        <arrayElement
+                          dataType="System.String">UTF8</arrayElement>
+                        <arrayElement
+                          dataType="System.String">&lt;?xml version="1.0" encoding="iso-8859-1"?&gt;
+&lt;SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)"  &gt;
+    &lt;Profiles&gt;
+        &lt;Profile Name="(Default)" /&gt;
+    &lt;/Profiles&gt;
+    &lt;Settings /&gt;&lt;/SettingsFile&gt;
+</arrayElement>
+                        <arrayElement
+                          dataType="System.String">Properties\Settings.Designer.cs</arrayElement>
+                        <arrayElement
+                          dataType="System.String">UTF8</arrayElement>
+                        <arrayElement
+                          dataType="System.String">//------------------------------------------------------------------------------
+// &lt;auto-generated&gt;
+//     This code was generated by a tool.
+//
+//     Changes to this file may cause incorrect behavior and will be lost if
+//     the code is regenerated.
+// &lt;/auto-generated&gt;
+//------------------------------------------------------------------------------
+
+[assembly: global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Scope = "member", Target = "sp_4ef296458d7d4e32a8e13dfa1bc4f508.csproj.Properties.Settings.get_Default():sp_4ef296458d7d4e32a8e13dfa1bc4f508.csproj.Properties.Settings")]
+
+namespace sp_4ef296458d7d4e32a8e13dfa1bc4f508.csproj.Properties
+{
+
+    internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase
+    {
+
+        [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
+        private static Settings defaultInstance = new Settings();
+
+        public static Settings Default
+        {
+            get
+            {
+                return defaultInstance;
+            }
+        }
+
+    }
+}</arrayElement>
+                        <arrayElement
+                          dataType="System.String">Project</arrayElement>
+                        <arrayElement
+                          dataType="System.String">UTF16LE</arrayElement>
+                        <arrayElement
+                          dataType="System.String">&lt;?xml version="1.0" encoding="UTF-16" standalone="yes"?&gt;
+&lt;c:Project xmlns:c="http://schemas.microsoft.com/codeprojectml/2010/08/main" xmlns:msb="http://schemas.microsoft.com/developer/msbuild/2003" runtimeVersion="4.0" schemaVersion="1.0"&gt;
+	&lt;msb:PropertyGroup&gt;
+		&lt;msb:ProjectId&gt;{d84767bb-f716-428c-8cb6-d7e08349ae9a}&lt;/msb:ProjectId&gt;
+		&lt;msb:NoContent&gt;Reference;Import;Folder&lt;/msb:NoContent&gt;
+		&lt;msb:Language&gt;msBuild&lt;/msb:Language&gt;
+		&lt;msb:DisplayName&gt;sp_4ef296458d7d4e32a8e13dfa1bc4f508&lt;/msb:DisplayName&gt;
+		&lt;msb:CodeName&gt;sp_4ef296458d7d4e32a8e13dfa1bc4f508&lt;/msb:CodeName&gt;
+	&lt;/msb:PropertyGroup&gt;
+	&lt;msb:ItemGroup&gt;
+				&lt;msb:File Include="ComponentWrapper.cs"/&gt;
+				&lt;msb:File Include="Properties\Resources.resx"/&gt;
+		&lt;msb:File Include="Properties\Settings.Designer.cs"/&gt;
+				&lt;msb:File Include="BufferWrapper.cs"/&gt;
+				&lt;msb:File Include="Properties\Resources.Designer.cs"/&gt;
+				&lt;msb:File Include="AssemblyInfo.cs"/&gt;
+				&lt;msb:File Include="main.cs"/&gt;
+								&lt;msb:File Include="Properties\Settings.settings"/&gt;
+						&lt;msb:Project Include="sp_4ef296458d7d4e32a8e13dfa1bc4f508.csproj"/&gt;
+	&lt;/msb:ItemGroup&gt;
+&lt;/c:Project&gt;</arrayElement>
+                        <arrayElement
+                          dataType="System.String">Properties\Resources.resx</arrayElement>
+                        <arrayElement
+                          dataType="System.String">UTF8</arrayElement>
+                        <arrayElement
+                          dataType="System.String">&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;root&gt;
+    &lt;!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers &amp; schema ...
+    &lt;resheader name="resmimetype"&gt;text/microsoft-resx&lt;/resheader&gt;
+    &lt;resheader name="version"&gt;2.0&lt;/resheader&gt;
+    &lt;resheader name="reader"&gt;System.Resources.ResXResourceReader, System.Windows.Forms, ...&lt;/resheader&gt;
+    &lt;resheader name="writer"&gt;System.Resources.ResXResourceWriter, System.Windows.Forms, ...&lt;/resheader&gt;
+    &lt;data name="Name1"&gt;&lt;value&gt;this is my long string&lt;/value&gt;&lt;comment&gt;this is a comment&lt;/comment&gt;&lt;/data&gt;
+    &lt;data name="Color1" type="System.Drawing.Color, System.Drawing"&gt;Blue&lt;/data&gt;
+    &lt;data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64"&gt;
+        &lt;value&gt;[base64 mime encoded serialized .NET Framework object]&lt;/value&gt;
+    &lt;/data&gt;
+    &lt;data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64"&gt;
+        &lt;value&gt;[base64 mime encoded string representing a byte array form of the .NET Framework object]&lt;/value&gt;
+        &lt;comment&gt;This is a comment&lt;/comment&gt;
+    &lt;/data&gt;
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    --&gt;
+    &lt;xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata"&gt;
+        &lt;xsd:import namespace="http://www.w3.org/XML/1998/namespace" /&gt;
+        &lt;xsd:element name="root" msdata:IsDataSet="true"&gt;
+            &lt;xsd:complexType&gt;
+                &lt;xsd:choice maxOccurs="unbounded"&gt;
+                    &lt;xsd:element name="metadata"&gt;
+                        &lt;xsd:complexType&gt;
+                            &lt;xsd:sequence&gt;
+                                &lt;xsd:element name="value" type="xsd:string" minOccurs="0" /&gt;
+                            &lt;/xsd:sequence&gt;
+                            &lt;xsd:attribute name="name" use="required" type="xsd:string" /&gt;
+                            &lt;xsd:attribute name="type" type="xsd:string" /&gt;
+                            &lt;xsd:attribute name="mimetype" type="xsd:string" /&gt;
+                            &lt;xsd:attribute ref="xml:space" /&gt;
+                        &lt;/xsd:complexType&gt;
+                    &lt;/xsd:element&gt;
+                    &lt;xsd:element name="assembly"&gt;
+                        &lt;xsd:complexType&gt;
+                            &lt;xsd:attribute name="alias" type="xsd:string" /&gt;
+                            &lt;xsd:attribute name="name" type="xsd:string" /&gt;
+                        &lt;/xsd:complexType&gt;
+                    &lt;/xsd:element&gt;
+                    &lt;xsd:element name="data"&gt;
+                        &lt;xsd:complexType&gt;
+                            &lt;xsd:sequence&gt;
+                                &lt;xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" /&gt;
+                                &lt;xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" /&gt;
+                            &lt;/xsd:sequence&gt;
+                            &lt;xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" /&gt;
+                            &lt;xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" /&gt;
+                            &lt;xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" /&gt;
+                            &lt;xsd:attribute ref="xml:space" /&gt;
+                        &lt;/xsd:complexType&gt;
+                    &lt;/xsd:element&gt;
+                    &lt;xsd:element name="resheader"&gt;
+                        &lt;xsd:complexType&gt;
+                            &lt;xsd:sequence&gt;
+                                &lt;xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" /&gt;
+                            &lt;/xsd:sequence&gt;
+                            &lt;xsd:attribute name="name" type="xsd:string" use="required" /&gt;
+                        &lt;/xsd:complexType&gt;
+                    &lt;/xsd:element&gt;
+                &lt;/xsd:choice&gt;
+            &lt;/xsd:complexType&gt;
+        &lt;/xsd:element&gt;
+    &lt;/xsd:schema&gt;
+    &lt;resheader name="resmimetype"&gt;
+        &lt;value&gt;text/microsoft-resx&lt;/value&gt;
+    &lt;/resheader&gt;
+    &lt;resheader name="version"&gt;
+        &lt;value&gt;2.0&lt;/value&gt;
+    &lt;/resheader&gt;
+    &lt;resheader name="reader"&gt;
+        &lt;value&gt;System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089&lt;/value&gt;
+    &lt;/resheader&gt;
+    &lt;resheader name="writer"&gt;
+        &lt;value&gt;System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089&lt;/value&gt;
+    &lt;/resheader&gt;
+    &lt;/root&gt;
+</arrayElement>
+                        <arrayElement
+                          dataType="System.String">ComponentWrapper.cs</arrayElement>
+                        <arrayElement
+                          dataType="System.String">UTF8</arrayElement>
+                        <arrayElement
+                          dataType="System.String">/* THIS IS AUTO-GENERATED CODE THAT WILL BE OVERWRITTEN! DO NOT EDIT!
+*  Microsoft SQL Server Integration Services component wrapper
+*  This module defines the base class for your component
+*  THIS IS AUTO-GENERATED CODE THAT WILL BE OVERWRITTEN! DO NOT EDIT! */
+
+using System;
+using System.Data;
+using Microsoft.SqlServer.Dts.Pipeline;
+using Microsoft.SqlServer.Dts.Pipeline.Wrapper;
+using Microsoft.SqlServer.Dts.Runtime.Wrapper;
+
+public class UserComponent: ScriptComponent
+{
+    public Connections Connections;
+    public Variables Variables;
+    
+    public UserComponent()
+    {
+        Connections = new Connections(this);
+        Variables = new Variables(this);
+    }
+
+
+
+    public override void ProcessInput(int InputID, string InputName, PipelineBuffer Buffer, OutputNameMap OutputMap)
+    {
+                if (InputName.Equals(@"Input0", StringComparison.Ordinal))
+        {
+            Input0_ProcessInput(new Input0Buffer(Buffer, GetColumnIndexes(InputID), OutputMap));
+        }
+        
+    }
+
+    
+    public virtual void Input0_ProcessInput(Input0Buffer Buffer)
+    {
+        while (Buffer.NextRow())
+        {
+            Input0_ProcessInputRow(Buffer);
+        }
+    }
+
+    public virtual void Input0_ProcessInputRow(Input0Buffer Row)
+    {
+    }
+
+}
+
+public class Connections
+{
+    ScriptComponent ParentComponent;
+
+    public Connections(ScriptComponent Component)
+    {
+        ParentComponent = Component;
+    }
+
+}
+
+public class Variables
+{
+    ScriptComponent ParentComponent;
+
+    public Variables(ScriptComponent Component)
+    {
+        ParentComponent = Component;
+    }
+
+}
+</arrayElement>
+                        <arrayElement
+                          dataType="System.String">AssemblyInfo.cs</arrayElement>
+                        <arrayElement
+                          dataType="System.String">UTF8</arrayElement>
+                        <arrayElement
+                          dataType="System.String">
+using System.Reflection;
+using System.Runtime.CompilerServices;
+  
+//
+// General Information about an assembly is controlled through the following 
+// set of attributes. Change these attribute values to modify the information
+// associated with an assembly.
+//
+[assembly: AssemblyTitle("SC_977e21e288ea4faaaa4e6b2ad2cd125d")]
+[assembly: AssemblyDescription("")]
+[assembly: AssemblyConfiguration("")]
+[assembly: AssemblyCompany("SSISJoost")]
+[assembly: AssemblyProduct("SC_977e21e288ea4faaaa4e6b2ad2cd125d")]
+[assembly: AssemblyCopyright("Copyright @ SSISJoost 2015")]
+[assembly: AssemblyTrademark("")]
+[assembly: AssemblyCulture("")]
+//
+// Version information for an assembly consists of the following four values:
+//
+//      Major Version
+//      Minor Version 
+//      Build Number
+//      Revision
+//
+// You can specify all the values or you can default the Revision and Build Numbers 
+// by using the '*' as shown below:
+  
+[assembly: AssemblyVersion("1.0.*")]
+                           </arrayElement>
+                        <arrayElement
+                          dataType="System.String">main.cs</arrayElement>
+                        <arrayElement
+                          dataType="System.String">UTF8</arrayElement>
+                        <arrayElement
+                          dataType="System.String">#region Namespaces
+using System;
+using System.Data;
+using Microsoft.SqlServer.Dts.Pipeline.Wrapper;
+using Microsoft.SqlServer.Dts.Runtime.Wrapper;
+#endregion
+  
+/// &lt;summary&gt;
+/// Rownumber transformation to create an identity column
+/// &lt;/summary&gt;
+[Microsoft.SqlServer.Dts.Pipeline.SSISScriptComponentEntryPointAttribute]
+public class ScriptMain : UserComponent
+{
+
+ private int m_rowNumber;
+  
+ /// &lt;summary&gt;
+ /// Get max rownumber from variable
+ /// &lt;/summary&gt;
+ public override void PreExecute()
+ {
+  m_rowNumber = 0;
+ }
+   
+public override void PostExecute()
+{
+base.PostExecute();
+}   
+ /// &lt;summary&gt;
+ /// Increase rownumber and fill rownumber column
+ /// &lt;/summary&gt;
+ /// &lt;param name="Row"&gt;The row that is currently passing through the component&lt;/param&gt;
+ public override void Input0_ProcessInputRow(Input0Buffer Row)
+ {
+    m_rowNumber++;
+    Row.TransactionID = m_rowNumber;
+ }
+}
+                           </arrayElement>
+                        <arrayElement
+                          dataType="System.String">sp_4ef296458d7d4e32a8e13dfa1bc4f508.csproj</arrayElement>
+                        <arrayElement
+                          dataType="System.String">UTF16LE</arrayElement>
+                        <arrayElement
+                          dataType="System.String">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003"&gt;
+    &lt;PropertyGroup&gt;
+	    &lt;Configuration Condition=" '$(Configuration)' == '' "&gt;Debug&lt;/Configuration&gt;
+        &lt;Platform Condition=" '$(Platform)' == '' "&gt;AnyCPU&lt;/Platform&gt;
+        &lt;OutputType&gt;Library&lt;/OutputType&gt;
+        &lt;RootNamespace&gt;sp_4ef296458d7d4e32a8e13dfa1bc4f508.csproj&lt;/RootNamespace&gt;
+        &lt;AssemblyName&gt;sp_4ef296458d7d4e32a8e13dfa1bc4f508.csproj&lt;/AssemblyName&gt;
+        &lt;ProjectGuid&gt;{C792B577-3187-41B4-A778-35BF1292DEDE}&lt;/ProjectGuid&gt;
+		        &lt;ProjectTypeGuids&gt;{30D016F9-3734-4E33-A861-5E7D899E18F3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}&lt;/ProjectTypeGuids&gt;
+        &lt;NoStandardLibraries&gt;false&lt;/NoStandardLibraries&gt;
+		    &lt;/PropertyGroup&gt;
+    &lt;PropertyGroup Condition=" '$(Configuration)' == 'Debug' "&gt;
+		        &lt;DebugSymbols&gt;true&lt;/DebugSymbols&gt;
+        &lt;Optimize&gt;false&lt;/Optimize&gt;
+        &lt;OutputPath&gt;.\bin\Debug\&lt;/OutputPath&gt;
+        &lt;EnableUnmanagedDebugging&gt;false&lt;/EnableUnmanagedDebugging&gt;
+        &lt;DefineConstants&gt;DEBUG;TRACE&lt;/DefineConstants&gt;
+        &lt;WarningLevel&gt;4&lt;/WarningLevel&gt;
+		    &lt;/PropertyGroup&gt;
+    &lt;PropertyGroup Condition=" '$(Configuration)' == 'Release' "&gt;
+		        &lt;DebugSymbols&gt;false&lt;/DebugSymbols&gt;
+        &lt;Optimize&gt;true&lt;/Optimize&gt;
+        &lt;OutputPath&gt;.\bin\Release\&lt;/OutputPath&gt;
+        &lt;EnableUnmanagedDebugging&gt;false&lt;/EnableUnmanagedDebugging&gt;
+        &lt;DefineConstants&gt;TRACE&lt;/DefineConstants&gt;
+        &lt;WarningLevel&gt;4&lt;/WarningLevel&gt;
+		    &lt;/PropertyGroup&gt;
+    &lt;PropertyGroup&gt;
+        &lt;PreBuildEvent&gt;
+        &lt;/PreBuildEvent&gt;
+        &lt;PostBuildEvent&gt;
+        &lt;/PostBuildEvent&gt;
+    &lt;/PropertyGroup&gt;
+    &lt;ItemGroup&gt;
+                &lt;Reference Include="Microsoft.SqlServer.DTSPipelineWrap, Version=13.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91" /&gt;
+                &lt;Reference Include="Microsoft.SqlServer.DTSRuntimeWrap, Version=13.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91" /&gt;
+                &lt;Reference Include="Microsoft.SqlServer.PipelineHost, Version=13.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91" /&gt;
+                &lt;Reference Include="Microsoft.SqlServer.TxScript, Version=13.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91" /&gt;
+                &lt;Reference Include="System.dll" /&gt;
+                &lt;Reference Include="System.AddIn.dll" /&gt;
+                &lt;Reference Include="System.Data.dll" /&gt;
+                &lt;Reference Include="System.Xml.dll" /&gt;
+            &lt;/ItemGroup&gt;
+	    &lt;ItemGroup&gt;
+        &lt;Folder Include="Resources\" /&gt;
+        &lt;AppDesigner Include="Properties\" /&gt;
+        &lt;EmbeddedResource Include="Properties\Resources.resx"&gt;
+						&lt;Generator&gt;ResXFileCodeGenerator&lt;/Generator&gt;
+            &lt;LastGenOutput&gt;Resources.Designer.cs&lt;/LastGenOutput&gt;
+			        &lt;/EmbeddedResource&gt;
+        &lt;Compile Include="Properties\Resources.Designer.cs"&gt;
+            &lt;AutoGen&gt;True&lt;/AutoGen&gt;
+            &lt;DependentUpon&gt;Resources.resx&lt;/DependentUpon&gt;
+            &lt;DesignTime&gt;True&lt;/DesignTime&gt;
+        &lt;/Compile&gt;
+		        &lt;None Include="Properties\Settings.settings"&gt;
+            &lt;Generator&gt;SettingsSingleFileGenerator&lt;/Generator&gt;
+            &lt;LastGenOutput&gt;Settings.Designer.cs&lt;/LastGenOutput&gt;
+        &lt;/None&gt;
+        &lt;Compile Include="Properties\Settings.Designer.cs"&gt;
+            &lt;AutoGen&gt;True&lt;/AutoGen&gt;
+            &lt;DependentUpon&gt;Settings.settings&lt;/DependentUpon&gt;
+            &lt;DesignTimeSharedInput&gt;True&lt;/DesignTimeSharedInput&gt;
+        &lt;/Compile&gt;
+
+				&lt;Compile Include="AssemblyInfo.cs"&gt;
+			&lt;SubType&gt;Code&lt;/SubType&gt;
+		&lt;/Compile&gt;
+				&lt;Compile Include="main.cs"&gt;
+			&lt;SubType&gt;Code&lt;/SubType&gt;
+		&lt;/Compile&gt;
+		
+				&lt;Compile Include="BufferWrapper.cs"&gt;
+			&lt;SubType&gt;Code&lt;/SubType&gt;
+		&lt;/Compile&gt;
+		&lt;Compile Include="ComponentWrapper.cs"&gt;
+			&lt;SubType&gt;Code&lt;/SubType&gt;
+		&lt;/Compile&gt;
+		
+		
+		
+		    &lt;/ItemGroup&gt;
+		&lt;!-- Include the build rules for a C# project.--&gt;
+    &lt;Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" /&gt;
+		&lt;!-- This section defines VSTA properties that describe the host-changable project properties. --&gt;
+    &lt;ProjectExtensions&gt;
+        &lt;VisualStudio&gt;
+            &lt;FlavorProperties GUID="{30D016F9-3734-4E33-A861-5E7D899E18F3}"&gt;
+                &lt;ProjectProperties HostName="VSTAHostName" HostPackage="{B3A685AA-7EAF-4BC6-9940-57959FA5AC07}" ApplicationType="usd" Language="cs" TemplatesPath="" DebugInfoExeName="#HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\9.0\InstallDir#\devenv.exe" /&gt;
+                &lt;Host Name="SSIS_ScriptComponent" IconIndex="0" /&gt;
+                &lt;ProjectClient&gt;
+                    &lt;HostIdentifier&gt;SSIS_SC130&lt;/HostIdentifier&gt;
+                &lt;/ProjectClient&gt;
+            &lt;/FlavorProperties&gt;
+        &lt;/VisualStudio&gt;
+    &lt;/ProjectExtensions&gt;
+    &lt;PropertyGroup&gt;
+        &lt;TargetFrameworkVersion&gt;v4.5&lt;/TargetFrameworkVersion&gt;
+    &lt;/PropertyGroup&gt;
+    &lt;PropertyGroup&gt;
+        &lt;TargetFrameworkProfile&gt;&lt;/TargetFrameworkProfile&gt;
+    &lt;/PropertyGroup&gt;&lt;/Project&gt;
+</arrayElement>
+                        <arrayElement
+                          dataType="System.String">Properties\Resources.Designer.cs</arrayElement>
+                        <arrayElement
+                          dataType="System.String">UTF8</arrayElement>
+                        <arrayElement
+                          dataType="System.String">//------------------------------------------------------------------------------
+// &lt;auto-generated&gt;
+//     This code was generated by a tool.
+//
+//     Changes to this file may cause incorrect behavior and will be lost if
+//     the code is regenerated.
+// &lt;/auto-generated&gt;
+//------------------------------------------------------------------------------
+
+[assembly: global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Scope = "member", Target = "sp_4ef296458d7d4e32a8e13dfa1bc4f508.csproj.Properties.Resources.get_ResourceManager():System.Resources.ResourceManager")]
+[assembly: global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Scope = "member", Target = "sp_4ef296458d7d4e32a8e13dfa1bc4f508.csproj.Properties.Resources.get_Culture():System.Globalization.CultureInfo")]
+[assembly: global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Scope = "member", Target = "sp_4ef296458d7d4e32a8e13dfa1bc4f508.csproj.Properties.Resources.set_Culture(System.Globalization.CultureInfo):Void")]
+
+namespace sp_4ef296458d7d4e32a8e13dfa1bc4f508.csproj.Properties {
+    using System;
+
+
+    /// &lt;summary&gt;
+    ///   A strongly-typed resource class, for looking up localized strings, etc.
+    /// &lt;/summary&gt;
+    // This class was auto-generated by the StronglyTypedResourceBuilder
+    // class via a tool like ResGen or Visual Studio.
+    // To add or remove a member, edit your .ResX file then rerun ResGen
+    // with the /str option, or rebuild your VS project.
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "2.0.0.0")]
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+    [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
+    internal class Resources
+    {
+
+        private static global::System.Resources.ResourceManager resourceMan;
+
+        private static global::System.Globalization.CultureInfo resourceCulture;
+
+        [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+        internal Resources() {
+        }
+
+        /// &lt;summary&gt;
+        ///   Returns the cached ResourceManager instance used by this class.
+        /// &lt;/summary&gt;
+        [global::System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        internal static global::System.Resources.ResourceManager ResourceManager
+        {
+            get {
+                if ((resourceMan == null))
+                {
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("sp_4ef296458d7d4e32a8e13dfa1bc4f508.csproj.Properties.Resources", typeof(Resources).Assembly);
+                    resourceMan = temp;
+                }
+                return resourceMan;
+            }
+        }
+
+        /// &lt;summary&gt;
+        ///   Overrides the current thread's CurrentUICulture property for all
+        ///   resource lookups using this strongly typed resource class.
+        /// &lt;/summary&gt;
+        [global::System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        internal static global::System.Globalization.CultureInfo Culture
+        {
+            get {
+                return resourceCulture;
+            }
+            set {
+                resourceCulture = value;
+            }
+        }
+
+    }
+}</arrayElement>
+                        <arrayElement
+                          dataType="System.String">BufferWrapper.cs</arrayElement>
+                        <arrayElement
+                          dataType="System.String">UTF8</arrayElement>
+                        <arrayElement
+                          dataType="System.String">
+/* THIS IS AUTO-GENERATED CODE THAT WILL BE OVERWRITTEN! DO NOT EDIT!
+*  Microsoft SQL Server Integration Services buffer wrappers
+*  This module defines classes for accessing data flow buffers
+*  THIS IS AUTO-GENERATED CODE THAT WILL BE OVERWRITTEN! DO NOT EDIT! */
+
+
+
+using System;
+using System.Data;
+using Microsoft.SqlServer.Dts.Pipeline;
+using Microsoft.SqlServer.Dts.Pipeline.Wrapper;
+
+public class Input0Buffer: ScriptBuffer
+
+{
+    public Input0Buffer(PipelineBuffer Buffer, int[] BufferColumnIndexes, OutputNameMap OutputMap)
+        : base(Buffer, BufferColumnIndexes, OutputMap)
+    {
+    }
+
+    public Int32 TransactionID
+    {
+        set
+        {
+            this[0] = value;
+        }
+    }
+    public bool TransactionID_IsNull
+    {
+        set
+        {
+            if (value)
+            {
+                SetNull(0);
+            }
+            else
+            {
+                throw new InvalidOperationException("IsNull property cannot be set to False. Assign a value to the column instead.");
+            }
+        }
+    }
+
+
+    new public bool NextRow()
+    {
+        return base.NextRow();
+    }
+
+    new public bool EndOfRowset()
+    {
+        return base.EndOfRowset();
+    }
+
+}
+
+</arrayElement>
+                      </arrayElements>
+                    </property>
+                    <property
+                      dataType="System.String"
+                      description="Stores the binary representation of the component"
+                      isArray="true"
+                      name="BinaryCode">
+                      <arrayElements
+                        arrayElementCount="2">
+                        <arrayElement
+                          dataType="System.String">sp_4ef296458d7d4e32a8e13dfa1bc4f508.csproj.dll</arrayElement>
+                        <arrayElement
+                          dataType="System.String">TVqQAAMAAAAEAAAA//8AALgAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAA4fug4AtAnNIbgBTM0hVGhpcyBwcm9ncmFtIGNhbm5vdCBiZSBydW4gaW4gRE9TIG1vZGUuDQ0KJAAAAAAAAABQRQAATAEDAFjA2FoAAAAAAAAAAOAAAiELAQsAABIAAAAIAAAAAAAA7jAAAAAgAAAAQAAAAAAAEAAgAAAAAgAABAAAAAAAAAAEAAAAAAAAAACAAAAAAgAAAAAAAAMAQIUAABAAABAAAAAAEAAAEAAAAAAAABAAAAAAAAAAAAAAAJgwAABTAAAAAEAAAHAEAAAAAAAAAAAAAAAAAAAAAAAAAGAAAAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAACAAAAAAAAAAAAAAACCAAAEgAAAAAAAAAAAAAAC50ZXh0AAAA9BAAAAAgAAAAEgAAAAIAAAAAAAAAAAAAAAAAACAAAGAucnNyYwAAAHAEAAAAQAAAAAYAAAAUAAAAAAAAAAAAAAAAAABAAABALnJlbG9jAAAMAAAAAGAAAAACAAAAGgAAAAAAAAAAAAAAAAAAQAAAQgAAAAAAAAAAAAAAAAAAAADQMAAAAAAAAEgAAAACAAUArCEAAOwOAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAH4CKAwAAAoCAnMVAAAGfQEAAAQCAnMWAAAGfQIAAAQqkgRyAQAAcBpvDQAACiwVAgUCAygOAAAKDgRzEAAABm8DAAAGKkorBwIDbwQAAAYDbxMAAAYt8SoGKiICFn0DAAAEKh4CKBAAAAoqbgIlewMAAAQXWH0DAAAEAwJ7AwAABG8RAAAGKh4CKAEAAAYqGn4EAAAEKi5zCgAABoAEAAAEKh4CKBIAAAoqHgIoFQAACioAABMwAgAtAAAAAQAAEX4FAAAELSByDwAAcNAFAAACKBYAAApvFwAACnMYAAAKCgaABQAABH4FAAAEKhp+BgAABCoeAoAGAAAEKioCAwQFKBoAAAoqOgIWA4wfAAABKBsAAAoqWgMsCAIWKBwAAAoqco8AAHBzHQAACnoeAigeAAAKKh4CKB8AAAoqOgIoFQAACgIDfQcAAAQqOgIoFQAACgIDfQgAAAQqAEJTSkIBAAEAAAAAAAwAAAB2NC4wLjMwMzE5AAAAAAUAbAAAABwFAAAjfgAAiAUAAIQGAAAjU3RyaW5ncwAAAAAMDAAALAEAACNVUwA4DQAAEAAAACNHVUlEAAAASA0AAKQBAAAjQmxvYgAAAAAAAAACAAABVxWiAQkAAAAA+iUzABYAAAEAAAAgAAAACAAAAAgAAAAWAAAADwAAAB8AAAAQAAAAAQAAAAMAAAAFAAAABgAAAAEAAAAEAAAAAAAKAAEAAAAAAAYA/ADbAAoAKAETAQ4ASQEMAQYAUAHbABIAhAHbAAYAkwHbAA4AMQIgAg4AYgJNAg4AgQNvAw4AmANvAw4AtQNvAw4A1ANvAw4A7QNvAw4ABgRvAw4AIQRvAw4APARvAw4AVQRvAw4AjgRuBA4ArgRuBA4A9wQMAQ4A/gQMAQYAJwXbAA4ATgVuBAoAiAVwBQ4AsgWfBQ4AzwUMAQ4A1AUMAQ4A+AVvAwoAJAYOBgoAPQYOBg4AUgYMAQ4AaQYMAQAAAAABAAAAAAABAAEAAQAQADkAAAAFAAEAAQABABAARwAAAAgAAwAFAAABEABSAFsACQAEAAkAAAAQAJEAWwANAAUADAABABAAmwAAABEABwAQAAEAEACoAAAADQAHABUAAQAQALQAAAANAAgAFgAGAKgAEwAGALQAFwABANkBLwARAPwBMgARAEECQAARAG4CRAABABQDggABABQDggBQIAAAAACGGF0BGwABAHAgAAAAAMYAoQEfAAEAlSAAAAAAxgGuASkABQCoIAAAAADGAcIBKQAGAKogAAAAAMYA5QEbAAcAsyAAAAAAxgDwARsABwC7IAAAAADGAMIBKQAHANcgAAAAAIYYXQEbAAgA3yAAAAAAlggMAjYACADyIAAAAACGGF0BGwAIAOYgAAAAAJEYaQWjAAgA+iAAAAAAgxhdARsACAAEIQAAAACTCH4CSAAIAD0hAAAAAJMIkgJNAAgARCEAAAAAkwieAlIACABMIQAAAACGGF0BYgAJAFchAAAAAIYIsgJsAAwAZiEAAAAAhgjEAnEADQB9IQAAAACGAN0CdgAOAIUhAAAAAIYA5QJ2AA4AjSEAAAAAhhhdAYYADgCcIQAAAACGGF0BhgAPAAAAAQAkAwAAAgAsAwAAAwA2AwAABAA9AwAAAQA2AwAAAQBHAwAAAQBHAwAAAQBLAwAAAQA2AwAAAgBRAwAAAwA9AwAAAQBLAwAAAQBLAwAAAQBlAwAAAQBlA0kAXQGMAFEAXQGMAFkAXQGMAGEAXQGMAGkAXQGMAHEAXQGMAHkAXQGMAIEAXQGMAIkAXQGMAJEAXQFsAJkAXQEbAAkAXQEbAKEADwWRAAkAFgWYALEAXQEbAAkA8AEbALkAXQEbABEAXQEbAMEAXQGnAMkAXQEbABkAXQEbANEA5gXuANEAAQb1ADkAXQH6AOkAXQEGASEAXQFiACEAWAYVASEAYQZsAAEBXQGMACEA3QJ2ACEA5QJ2AC4ACwAbAS4AEwBEAS4AWwCCAS4AIwBKAS4AUwB5AS4AGwBEAS4AKwAbAS4AMwBZAS4AOwBEAUkAywAMAWMAewCeAGkAywAMAYEAiwCeAKMAowCeAKMAmwCtAKMAiwCeAAEBBAABAAUAAgAGAAQAAAAYAjsAAAAxAlgAAACqAl0AAADxAnoAAAD/An4AAgAJAAMAAgANAAUAAgAOAAcAAQAPAAcAAQARAAkAAQASAAsABIAAAAEAAAAbGuw5AAAAAAAAzAQAAA0AAAAAAAAAAAAAAAEAvgAAAAAABAAAAAAAAAAAAAAACgAMAQAAAAAEAAAAAAAAAAAAAAAKAEABAAAAAA0AAAAAAAAAAAAAAAEAYwEAAAAAAAAAAAA8TW9kdWxlPgBzcF80ZWYyOTY0NThkN2Q0ZTMyYThlMTNkZmExYmM0ZjUwOC5jc3Byb2ouZGxsAFVzZXJDb21wb25lbnQAU2NyaXB0TWFpbgBTZXR0aW5ncwBzcF80ZWYyOTY0NThkN2Q0ZTMyYThlMTNkZmExYmM0ZjUwOC5jc3Byb2ouUHJvcGVydGllcwBSZXNvdXJjZXMASW5wdXQwQnVmZmVyAENvbm5lY3Rpb25zAFZhcmlhYmxlcwBNaWNyb3NvZnQuU3FsU2VydmVyLlR4U2NyaXB0AE1pY3Jvc29mdC5TcWxTZXJ2ZXIuRHRzLlBpcGVsaW5lAFNjcmlwdENvbXBvbmVudABTeXN0ZW0AU3lzdGVtLkNvbmZpZ3VyYXRpb24AQXBwbGljYXRpb25TZXR0aW5nc0Jhc2UAbXNjb3JsaWIAT2JqZWN0AFNjcmlwdEJ1ZmZlcgAuY3RvcgBNaWNyb3NvZnQuU3FsU2VydmVyLlBpcGVsaW5lSG9zdABQaXBlbGluZUJ1ZmZlcgBPdXRwdXROYW1lTWFwAFByb2Nlc3NJbnB1dABJbnB1dDBfUHJvY2Vzc0lucHV0AElucHV0MF9Qcm9jZXNzSW5wdXRSb3cAbV9yb3dOdW1iZXIAUHJlRXhlY3V0ZQBQb3N0RXhlY3V0ZQBkZWZhdWx0SW5zdGFuY2UAZ2V0X0RlZmF1bHQARGVmYXVsdABTeXN0ZW0uUmVzb3VyY2VzAFJlc291cmNlTWFuYWdlcgByZXNvdXJjZU1hbgBTeXN0ZW0uR2xvYmFsaXphdGlvbgBDdWx0dXJlSW5mbwByZXNvdXJjZUN1bHR1cmUAZ2V0X1Jlc291cmNlTWFuYWdlcgBnZXRfQ3VsdHVyZQBzZXRfQ3VsdHVyZQBDdWx0dXJlAHNldF9UcmFuc2FjdGlvbklEAHNldF9UcmFuc2FjdGlvbklEX0lzTnVsbABOZXh0Um93AEVuZE9mUm93c2V0AFRyYW5zYWN0aW9uSUQAVHJhbnNhY3Rpb25JRF9Jc051bGwAUGFyZW50Q29tcG9uZW50AElucHV0SUQASW5wdXROYW1lAEJ1ZmZlcgBPdXRwdXRNYXAAUm93AHZhbHVlAEJ1ZmZlckNvbHVtbkluZGV4ZXMAQ29tcG9uZW50AFN5c3RlbS5SZWZsZWN0aW9uAEFzc2VtYmx5VGl0bGVBdHRyaWJ1dGUAQXNzZW1ibHlEZXNjcmlwdGlvbkF0dHJpYnV0ZQBBc3NlbWJseUNvbmZpZ3VyYXRpb25BdHRyaWJ1dGUAQXNzZW1ibHlDb21wYW55QXR0cmlidXRlAEFzc2VtYmx5UHJvZHVjdEF0dHJpYnV0ZQBBc3NlbWJseUNvcHlyaWdodEF0dHJpYnV0ZQBBc3NlbWJseVRyYWRlbWFya0F0dHJpYnV0ZQBBc3NlbWJseUN1bHR1cmVBdHRyaWJ1dGUAQXNzZW1ibHlWZXJzaW9uQXR0cmlidXRlAFN5c3RlbS5SdW50aW1lLkNvbXBpbGVyU2VydmljZXMAQ29tcGlsYXRpb25SZWxheGF0aW9uc0F0dHJpYnV0ZQBSdW50aW1lQ29tcGF0aWJpbGl0eUF0dHJpYnV0ZQBzcF80ZWYyOTY0NThkN2Q0ZTMyYThlMTNkZmExYmM0ZjUwOC5jc3Byb2oAU3RyaW5nAFN0cmluZ0NvbXBhcmlzb24ARXF1YWxzAEdldENvbHVtbkluZGV4ZXMAU1NJU1NjcmlwdENvbXBvbmVudEVudHJ5UG9pbnRBdHRyaWJ1dGUAQ29tcGlsZXJHZW5lcmF0ZWRBdHRyaWJ1dGUALmNjdG9yAFN5c3RlbS5Db2RlRG9tLkNvbXBpbGVyAEdlbmVyYXRlZENvZGVBdHRyaWJ1dGUAU3lzdGVtLkRpYWdub3N0aWNzAERlYnVnZ2VyTm9uVXNlckNvZGVBdHRyaWJ1dGUAVHlwZQBSdW50aW1lVHlwZUhhbmRsZQBHZXRUeXBlRnJvbUhhbmRsZQBBc3NlbWJseQBnZXRfQXNzZW1ibHkAU3lzdGVtLkNvbXBvbmVudE1vZGVsAEVkaXRvckJyb3dzYWJsZUF0dHJpYnV0ZQBFZGl0b3JCcm93c2FibGVTdGF0ZQBJbnQzMgBzZXRfSXRlbQBTZXROdWxsAEludmFsaWRPcGVyYXRpb25FeGNlcHRpb24AAAANSQBuAHAAdQB0ADAAAH9zAHAAXwA0AGUAZgAyADkANgA0ADUAOABkADcAZAA0AGUAMwAyAGEAOABlADEAMwBkAGYAYQAxAGIAYwA0AGYANQAwADgALgBjAHMAcAByAG8AagAuAFAAcgBvAHAAZQByAHQAaQBlAHMALgBSAGUAcwBvAHUAcgBjAGUAcwAAgJtJAHMATgB1AGwAbAAgAHAAcgBvAHAAZQByAHQAeQAgAGMAYQBuAG4AbwB0ACAAYgBlACAAcwBlAHQAIAB0AG8AIABGAGEAbABzAGUALgAgAEEAcwBzAGkAZwBuACAAYQAgAHYAYQBsAHUAZQAgAHQAbwAgAHQAaABlACAAYwBvAGwAdQBtAG4AIABpAG4AcwB0AGUAYQBkAC4AAIj3PYbtWUFEkwm2UslVEUsACImEXc2AgMyRCLd6XFYZNOCJAwYSHAMGEiADIAABCSAEAQgOEhUSGQUgAQESGAIGCAMGEhAEAAASEAQIABIQAwYSHQMGEiEEAAASHQQAABIhBQABARIhBAgAEh0ECAASIQkgAwESFR0IEhkEIAEBCAQgAQECAyAAAgMoAAgDKAACAwYSBQUgAQESBQQgAQEOBiACAg4RVQUgAR0ICAQBAAAAAwAAAQUgAgEODkABADNTeXN0ZW0uUmVzb3VyY2VzLlRvb2xzLlN0cm9uZ2x5VHlwZWRSZXNvdXJjZUJ1aWxkZXIHMi4wLjAuMAAABgABEmkRbQQgABJxBiACAQ4ScQQHARIdBSABARF5CAEAAgAAAAAABSACAQgcKAEAI1NDXzk3N2UyMWUyODhlYTRmYWFhYTRlNmIyYWQyY2QxMjVkAAAFAQAAAAAOAQAJU1NJU0pvb3N0AAAfAQAaQ29weXJpZ2h0IEAgU1NJU0pvb3N0IDIwMTUAAAgBAAgAAAAAAB4BAAEAVAIWV3JhcE5vbkV4Y2VwdGlvblRocm93cwEAAADAMAAAAAAAAAAAAADeMAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA0DAAAAAAAAAAAAAAAAAAAAAAX0NvckRsbE1haW4AbXNjb3JlZS5kbGwAAAAAAP8lACAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAEAAAABgAAIAAAAAAAAAAAAAAAAAAAAEAAQAAADAAAIAAAAAAAAAAAAAAAAAAAAEAAAAAAEgAAABYQAAAGAQAAAAAAAAAAAAAGAQ0AAAAVgBTAF8AVgBFAFIAUwBJAE8ATgBfAEkATgBGAE8AAAAAAL0E7/4AAAEAAAABAOw5GxoAAAEA7DkbGj8AAAAAAAAABAAAAAIAAAAAAAAAAAAAAAAAAABEAAAAAQBWAGEAcgBGAGkAbABlAEkAbgBmAG8AAAAAACQABAAAAFQAcgBhAG4AcwBsAGEAdABpAG8AbgAAAAAAAACwBHgDAAABAFMAdAByAGkAbgBnAEYAaQBsAGUASQBuAGYAbwAAAFQDAAABADAAMAAwADAAMAA0AGIAMAAAADQACgABAEMAbwBtAHAAYQBuAHkATgBhAG0AZQAAAAAAUwBTAEkAUwBKAG8AbwBzAHQAAABwACQAAQBGAGkAbABlAEQAZQBzAGMAcgBpAHAAdABpAG8AbgAAAAAAUwBDAF8AOQA3ADcAZQAyADEAZQAyADgAOABlAGEANABmAGEAYQBhAGEANABlADYAYgAyAGEAZAAyAGMAZAAxADIANQBkAAAAQAAPAAEARgBpAGwAZQBWAGUAcgBzAGkAbwBuAAAAAAAxAC4AMAAuADYANgA4ADMALgAxADQAOAAyADgAAAAAAIAALwABAEkAbgB0AGUAcgBuAGEAbABOAGEAbQBlAAAAcwBwAF8ANABlAGYAMgA5ADYANAA1ADgAZAA3AGQANABlADMAMgBhADgAZQAxADMAZABmAGEAMQBiAGMANABmADUAMAA4AC4AYwBzAHAAcgBvAGoALgBkAGwAbAAAAAAAXAAbAAEATABlAGcAYQBsAEMAbwBwAHkAcgBpAGcAaAB0AAAAQwBvAHAAeQByAGkAZwBoAHQAIABAACAAUwBTAEkAUwBKAG8AbwBzAHQAIAAyADAAMQA1AAAAAACIAC8AAQBPAHIAaQBnAGkAbgBhAGwARgBpAGwAZQBuAGEAbQBlAAAAcwBwAF8ANABlAGYAMgA5ADYANAA1ADgAZAA3AGQANABlADMAMgBhADgAZQAxADMAZABmAGEAMQBiAGMANABmADUAMAA4AC4AYwBzAHAAcgBvAGoALgBkAGwAbAAAAAAAaAAkAAEAUAByAG8AZAB1AGMAdABOAGEAbQBlAAAAAABTAEMAXwA5ADcANwBlADIAMQBlADIAOAA4AGUAYQA0AGYAYQBhAGEAYQA0AGUANgBiADIAYQBkADIAYwBkADEAMgA1AGQAAABEAA8AAQBQAHIAbwBkAHUAYwB0AFYAZQByAHMAaQBvAG4AAAAxAC4AMAAuADYANgA4ADMALgAxADQAOAAyADgAAAAAAEgADwABAEEAcwBzAGUAbQBiAGwAeQAgAFYAZQByAHMAaQBvAG4AAAAxAC4AMAAuADYANgA4ADMALgAxADQAOAAyADgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMAAADAAAAPAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==</arrayElement>
+                      </arrayElements>
+                    </property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the name of the Microsoft Visual Studio Tools for Applications project. Project names must be unique within a package."
+                      name="VSTAProjectName"
+                      typeConverter="NOTBROWSABLE">sp_4ef296458d7d4e32a8e13dfa1bc4f508</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the programming language used by the script."
+                      name="ScriptLanguage"
+                      typeConverter="Microsoft.SqlServer.VSTAHosting.ScriptingLanguages">CSharp</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies a comma-separated list of read-only variables."
+                      name="ReadOnlyVariables"
+                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ScriptUIVariablePickerDlg"></property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies a comma-separated list of read/write variables."
+                      name="ReadWriteVariables"
+                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ScriptUIWriteableVariablePickerDlg"></property>
+                    <property
+                      dataType="System.String"
+                      description="List of breakpoints present on the script."
+                      isArray="true"
+                      name="BreakpointCollection"
+                      typeConverter="NOTBROWSABLE">
+                      <arrayElements
+                        arrayElementCount="0" />
+                    </property>
+                    <property
+                      dataType="System.String"
+                      name="UserComponentTypeName">Microsoft.ScriptComponentHost</property>
+                    <property
+                      dataType="System.String"
+                      description="Checksum to match component metedata against compiled codes."
+                      name="MetadataChecksum"
+                      typeConverter="NOTBROWSABLE">8616691f1fba46388ca66b1a08fde144</property>
+                  </properties>
+                  <inputs>
+                    <input
+                      refId="Package\Deletes Existing Data\Import Data into Stg\Row_Number.Inputs[Input0]"
+                      hasSideEffects="true"
+                      name="Input0">
+                      <externalMetadataColumns />
+                    </input>
+                  </inputs>
+                  <outputs>
+                    <output
+                      refId="Package\Deletes Existing Data\Import Data into Stg\Row_Number.Outputs[Output0]"
+                      name="Output0"
+                      synchronousInputId="Package\Deletes Existing Data\Import Data into Stg\Row_Number.Inputs[Input0]">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Deletes Existing Data\Import Data into Stg\Row_Number.Outputs[Output0].Columns[TransactionID]"
+                          dataType="i4"
+                          lineageId="Package\Deletes Existing Data\Import Data into Stg\Row_Number.Outputs[Output0].Columns[TransactionID]"
+                          name="TransactionID" />
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+                <component
+                  refId="Package\Deletes Existing Data\Import Data into Stg\Trim"
+                  componentClassID="Microsoft.DerivedColumn"
+                  contactInfo="Derived Column;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+                  name="Trim"
+                  usesDispositions="true">
+                  <inputs>
+                    <input
+                      refId="Package\Deletes Existing Data\Import Data into Stg\Trim.Inputs[Add Metadata_Output_Trim]"
+                      name="Add Metadata_Output_Trim">
+                      <externalMetadataColumns />
+                    </input>
+                  </inputs>
+                  <outputs>
+                    <output
+                      refId="Package\Deletes Existing Data\Import Data into Stg\Trim.Outputs[Output]"
+                      exclusionGroup="1"
+                      name="Output"
+                      synchronousInputId="Package\Deletes Existing Data\Import Data into Stg\Trim.Inputs[Add Metadata_Output_Trim]">
+                      <externalMetadataColumns />
+                    </output>
+                    <output
+                      refId="Package\Deletes Existing Data\Import Data into Stg\Trim.Outputs[Error]"
+                      exclusionGroup="1"
+                      isErrorOut="true"
+                      name="Error"
+                      synchronousInputId="Package\Deletes Existing Data\Import Data into Stg\Trim.Inputs[Add Metadata_Output_Trim]">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Deletes Existing Data\Import Data into Stg\Trim.Outputs[Error].Columns[ErrorCode]"
+                          dataType="i4"
+                          lineageId="Package\Deletes Existing Data\Import Data into Stg\Trim.Outputs[Error].Columns[ErrorCode]"
+                          name="ErrorCode"
+                          specialFlags="1" />
+                        <outputColumn
+                          refId="Package\Deletes Existing Data\Import Data into Stg\Trim.Outputs[Error].Columns[ErrorColumn]"
+                          dataType="i4"
+                          lineageId="Package\Deletes Existing Data\Import Data into Stg\Trim.Outputs[Error].Columns[ErrorColumn]"
+                          name="ErrorColumn"
+                          specialFlags="2" />
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+              </components>
+              <paths>
+                <path
+                  refId="Package\Deletes Existing Data\Import Data into Stg.Paths[Data Conversion Transformation_Output_Row_Number]"
+                  endId="Package\Deletes Existing Data\Import Data into Stg\Row_Number.Inputs[Input0]"
+                  name="Data Conversion Transformation_Output_Row_Number"
+                  startId="Package\Deletes Existing Data\Import Data into Stg\Data Conversion Transformation.Outputs[Output]" />
+                <path
+                  refId="Package\Deletes Existing Data\Import Data into Stg.Paths[Derived Column Output]"
+                  endId="Package\Deletes Existing Data\Import Data into Stg\Trim.Inputs[Add Metadata_Output_Trim]"
+                  name="Derived Column Output"
+                  startId="Package\Deletes Existing Data\Import Data into Stg\Add Batch.Outputs[Derived Column Output]" />
+                <path
+                  refId="Package\Deletes Existing Data\Import Data into Stg.Paths[Derived Column Output1]"
+                  endId="Package\Deletes Existing Data\Import Data into Stg\Add Batch.Inputs[Derived Column Input]"
+                  name="Derived Column Output"
+                  startId="Package\Deletes Existing Data\Import Data into Stg\Derived Column.Outputs[Derived Column Output]" />
+                <path
+                  refId="Package\Deletes Existing Data\Import Data into Stg.Paths[OLE DB Source Output]"
+                  endId="Package\Deletes Existing Data\Import Data into Stg\Derived Column.Inputs[Derived Column Input]"
+                  name="OLE DB Source Output"
+                  startId="Package\Deletes Existing Data\Import Data into Stg\OLE DB Source.Outputs[OLE DB Source Output]" />
+                <path
+                  refId="Package\Deletes Existing Data\Import Data into Stg.Paths[Output]"
+                  endId="Package\Deletes Existing Data\Import Data into Stg\OLE DB Destination.Inputs[OLE DB Destination Input]"
+                  name="Output"
+                  startId="Package\Deletes Existing Data\Import Data into Stg\Row Count.Outputs[Output]" />
+                <path
+                  refId="Package\Deletes Existing Data\Import Data into Stg.Paths[Row_Number_Output0_Row Count]"
+                  endId="Package\Deletes Existing Data\Import Data into Stg\Row Count.Inputs[Row_Number_Output0_Row Count]"
+                  name="Row_Number_Output0_Row Count"
+                  startId="Package\Deletes Existing Data\Import Data into Stg\Row_Number.Outputs[Output0]" />
+                <path
+                  refId="Package\Deletes Existing Data\Import Data into Stg.Paths[Trim_Output_Data Conversion Transformation]"
+                  endId="Package\Deletes Existing Data\Import Data into Stg\Data Conversion Transformation.Inputs[Trim_Output_Data Conversion Transformation]"
+                  name="Trim_Output_Data Conversion Transformation"
+                  startId="Package\Deletes Existing Data\Import Data into Stg\Trim.Outputs[Output]" />
+              </paths>
+            </pipeline>
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\Deletes Existing Data\MDSClearUnexecutedBatch"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{20ACFFCE-19B9-4F6F-9508-64A270B7CAD2}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="MDSClearUnexecutedBatch"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{87323F27-D30B-4DBD-B723-02E2B4F94F0B}"
+              SQLTask:SqlStmtSourceType="Variable"
+              SQLTask:SqlStatementSource="User::MDS_ClearUnExecutedBatchCommand" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\Deletes Existing Data\Merge Staging Data"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{86FE9C00-85C1-4E56-B2A0-9024F0783581}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Merge Staging Data"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{87323F27-D30B-4DBD-B723-02E2B4F94F0B}"
+              SQLTask:SqlStmtSourceType="Variable"
+              SQLTask:SqlStatementSource="User::MDS_ProcedureCommandDelete" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\Deletes Existing Data\Set Batch Tag"
+          DTS:CreationName="Microsoft.ExpressionTask"
+          DTS:Description="Expression Task"
+          DTS:DTSID="{5766F550-6A1B-4528-A6E4-1EB4A96087B1}"
+          DTS:ExecutableType="Microsoft.ExpressionTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Set Batch Tag"
+          DTS:TaskContact="Expression Task;Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <ExpressionTask
+              Expression="@[User::MDS_BatchTag]= @[User::MDS_BatchName] + &quot;_&quot; + &#xA;(DT_STR,4,1252)DATEPART( &quot;yyyy&quot; , getdate() ) +&#xA;RIGHT(&quot;0&quot; + (DT_STR,4,1252)DATEPART( &quot;mm&quot; , getdate() ), 2) + &#xA;RIGHT(&quot;0&quot; + (DT_STR,4,1252)DATEPART( &quot;dd&quot; , getdate() ), 2) +&#xA;RIGHT(&quot;0&quot; + (DT_STR,4,1252)DATEPART( &quot;hh&quot; , getdate() ), 2) + &#xA;RIGHT(&quot;0&quot; + (DT_STR,4,1252)DATEPART( &quot;mi&quot; , getdate() ), 2) + &quot;_&quot; + (DT_WSTR,1) @[User::MDS_ImportType_Delete]" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+      </DTS:Executables>
+      <DTS:PrecedenceConstraints>
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\Deletes Existing Data.PrecedenceConstraints[Constraint]"
+          DTS:CreationName=""
+          DTS:DTSID="{33BAC875-37E1-44D4-98D3-384FE6B8521E}"
+          DTS:From="Package\Deletes Existing Data\Set Batch Tag"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint"
+          DTS:To="Package\Deletes Existing Data\Import Data into Stg" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\Deletes Existing Data.PrecedenceConstraints[Constraint 1]"
+          DTS:CreationName=""
+          DTS:DTSID="{46264427-2ADE-4B01-8FC8-FC5AA667F90B}"
+          DTS:From="Package\Deletes Existing Data\Import Data into Stg"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 1"
+          DTS:To="Package\Deletes Existing Data\Merge Staging Data" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\Deletes Existing Data.PrecedenceConstraints[Constraint 2]"
+          DTS:CreationName=""
+          DTS:DTSID="{AABAEF7C-86BE-43D1-B5ED-D4F3B457972C}"
+          DTS:From="Package\Deletes Existing Data\MDSClearUnexecutedBatch"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 2"
+          DTS:To="Package\Deletes Existing Data\Set Batch Tag" />
+      </DTS:PrecedenceConstraints>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Failure Loading Closeout"
+      DTS:CreationName="STOCK:SEQUENCE"
+      DTS:DTSID="{3653C8BD-6C66-48CA-9C23-557FF8FF90A5}"
+      DTS:ExecutableType="STOCK:SEQUENCE"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Failure Loading Closeout">
+      <DTS:Variables />
+      <DTS:Executables>
+        <DTS:Executable
+          DTS:refId="Package\Failure Loading Closeout\Set RecordCount Error"
+          DTS:CreationName="Microsoft.ExpressionTask"
+          DTS:Description="Expression Task"
+          DTS:DTSID="{4CBEDDA6-50AA-4E3D-A402-5656C17CA89E}"
+          DTS:ExecutableType="Microsoft.ExpressionTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Set RecordCount Error"
+          DTS:TaskContact="Expression Task;Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <ExpressionTask
+              Expression="@[User::RecordCount_Error]= @[User::RecordCount]" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\Failure Loading Closeout\Write Failure Record"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:DTSID="{788D1B3D-47D5-4359-BB1F-C0CFAE004669}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Write Failure Record"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2014; © 2014 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{1A8664F3-BE3D-46FF-AEB7-5A71CAFC73DE}"
+              SQLTask:SqlStatementSource="UPDATE log.[SSISAudit_MDSDQS]&#xA;  SET&#xA;      [BatchID] = ?,&#xA;      [PackageName] = ?,&#xA;      [CompleteTMST] = GETDATE(),&#xA;      [CompletionMessage] = ?,&#xA;      [ExecutionInstanceGUID] = ?,&#xA;      [MDSImportType] = ?,&#xA;      [MDSBatchTag] = ?, &#xA;      [MDSVersionName] = ?,&#xA;      [MDSLogFlag] = ?,&#xA;      [MDSDisableRunBatch] = ?,&#xA;      [RowCountProcessedTotal] = ?&#xA;      &#xA;FROM [log].[SSISAudit_MDSDQS]&#xA;WHERE [SSISAuditKey] = ?;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="0"
+                SQLTask:DtsVariableName="$Package::Param_BatchID"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="1"
+                SQLTask:DtsVariableName="System::PackageName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="2"
+                SQLTask:DtsVariableName="User::Message_Failure"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="3"
+                SQLTask:DtsVariableName="System::VersionGUID"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="4"
+                SQLTask:DtsVariableName="User::MDS_ImportType_Delete"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="5"
+                SQLTask:DtsVariableName="User::MDS_BatchTag"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="7"
+                SQLTask:DtsVariableName="User::MDS_LogFlag"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="8"
+                SQLTask:DtsVariableName="$Package::Disable_RunBatch"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="9"
+                SQLTask:DtsVariableName="User::RecordCount_Total"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="10"
+                SQLTask:DtsVariableName="User::LineageID"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="6"
+                SQLTask:DtsVariableName="User::MDS_VersionName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+            </SQLTask:SqlTaskData>
+          </DTS:ObjectData>
+        </DTS:Executable>
+      </DTS:Executables>
+      <DTS:PrecedenceConstraints>
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\Failure Loading Closeout.PrecedenceConstraints[Constraint]"
+          DTS:CreationName=""
+          DTS:DTSID="{1EEAB3C2-F340-4E3B-9A58-E0653D619AC8}"
+          DTS:From="Package\Failure Loading Closeout\Set RecordCount Error"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint"
+          DTS:To="Package\Failure Loading Closeout\Write Failure Record" />
+      </DTS:PrecedenceConstraints>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Get MDS Version Name"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{E7994C6F-63BE-4E97-812E-FE63C611EE84}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Get MDS Version Name"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{87323F27-D30B-4DBD-B723-02E2B4F94F0B}"
+          SQLTask:SqlStmtSourceType="Variable"
+          SQLTask:SqlStatementSource="User::MDS_VersionName_Source"
+          SQLTask:ResultType="ResultSetType_SingleRow" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ResultBinding
+            SQLTask:ResultName="0"
+            SQLTask:DtsVariableName="User::MDS_VersionName" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Get MDS Version Number"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{94A32435-7ABB-4960-B2B6-C8C94DEC6AC5}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Get MDS Version Number"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{87323F27-D30B-4DBD-B723-02E2B4F94F0B}"
+          SQLTask:SqlStmtSourceType="Variable"
+          SQLTask:SqlStatementSource="User::MDS_Version_Number_Source"
+          SQLTask:ResultType="ResultSetType_SingleRow" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ResultBinding
+            SQLTask:ResultName="0"
+            SQLTask:DtsVariableName="User::MDS_Version_Number" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SetUp"
+      DTS:CreationName="STOCK:SEQUENCE"
+      DTS:DTSID="{88B73B81-FCA8-4D89-AA08-6D6D0613EF95}"
+      DTS:ExecutableType="STOCK:SEQUENCE"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SetUp">
+      <DTS:Variables />
+      <DTS:Executables>
+        <DTS:Executable
+          DTS:refId="Package\SetUp\Check for Incremental Record"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:DTSID="{1597401C-C054-4E7A-8887-6D08E5670828}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Check for Incremental Record"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2014; © 2014 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{1A8664F3-BE3D-46FF-AEB7-5A71CAFC73DE}"
+              SQLTask:SqlStatementSource="&#xA;IF NOT EXISTS (SELECT * FROM log.SSISIncrementalTracking WHERE PackageName = ?)&#xA;BEGIN&#xA;    INSERT INTO log.SSISIncrementalTracking (PackageName, LastRunTMST, LastRunDT, UpdateBy, LastUpdateTMST) VALUES (?, CAST('1/1/1900' AS datetime), CAST('1/1/1900' AS date), SUSER_SNAME(), GETDATE())&#xA;END&#xA;                            " xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="0"
+                SQLTask:DtsVariableName="System::PackageName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="130"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="1"
+                SQLTask:DtsVariableName="System::PackageName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="130"
+                SQLTask:ParameterSize="-1" />
+            </SQLTask:SqlTaskData>
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\SetUp\Get Last Incremental Update"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:DTSID="{306F6588-6302-4991-9BD9-B61036D68252}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Get Last Incremental Update"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2014; © 2014 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{1A8664F3-BE3D-46FF-AEB7-5A71CAFC73DE}"
+              SQLTask:SqlStatementSource="SELECT LastRunTMST, CAST(LastRunDT AS datetime) LastRunDT FROM log.SSISIncrementalTracking WHERE PackageName = ?&#xA;                            "
+              SQLTask:ResultType="ResultSetType_SingleRow" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+              <SQLTask:ResultBinding
+                SQLTask:ResultName="LastRunTMST"
+                SQLTask:DtsVariableName="User::LastRunTMST" />
+              <SQLTask:ResultBinding
+                SQLTask:ResultName="LastRunDT"
+                SQLTask:DtsVariableName="User::LastRunDT" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="0"
+                SQLTask:DtsVariableName="System::PackageName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="130"
+                SQLTask:ParameterSize="-1" />
+            </SQLTask:SqlTaskData>
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\SetUp\Get Lineage - Insert Audit Record"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:DTSID="{688F78DD-CB5B-45BD-BF43-89E6A2806268}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Get Lineage - Insert Audit Record"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2014; © 2014 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{1A8664F3-BE3D-46FF-AEB7-5A71CAFC73DE}"
+              SQLTask:SqlStatementSource="&#xA;INSERT INTO log.SSISAudit_MDSDQS (PackageName, LineageTMST) VALUES (?, ?);&#xA;SELECT ? = SCOPE_IDENTITY();&#xA;                                                &#xA;        " xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="0"
+                SQLTask:DtsVariableName="System::PackageName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="130"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="1"
+                SQLTask:DtsVariableName="System::StartTime"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="7"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="2"
+                SQLTask:DtsVariableName="User::LineageID"
+                SQLTask:ParameterDirection="Output"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+            </SQLTask:SqlTaskData>
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\SetUp\Set Lineage String"
+          DTS:CreationName="Microsoft.ScriptTask"
+          DTS:DTSID="{9D4A4FEC-EE28-4CFE-BAA6-4247ACB87DC1}"
+          DTS:ExecutableType="Microsoft.ScriptTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Set Lineage String"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <ScriptProject
+              Name="sp_6fae8e87eabc4d31a640433cfe108beb"
+              VSTAMajorVersion="14"
+              VSTAMinorVersion="0"
+              Language="CSharp"
+              ReadOnlyVariables="User::LineageID"
+              ReadWriteVariables="User::LineageString">
+              <ProjectItem
+                Name="sp_6fae8e87eabc4d31a640433cfe108beb.csproj"
+                Encoding="UTF16LE"><![CDATA[<?xml version="1.0" encoding="utf-16"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+	    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+        <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+        <OutputType>Library</OutputType>
+        <RootNamespace>sp_6fae8e87eabc4d31a640433cfe108beb.csproj</RootNamespace>
+        <AssemblyName>sp_6fae8e87eabc4d31a640433cfe108beb.csproj</AssemblyName>
+        <ProjectGuid>{C792B577-3187-41B4-A778-35BF1292DEDE}</ProjectGuid>
+		        <ProjectTypeGuids>{30D016F9-3734-4E33-A861-5E7D899E18F3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+        <NoStandardLibraries>false</NoStandardLibraries>
+		    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+		        <DebugSymbols>true</DebugSymbols>
+        <Optimize>false</Optimize>
+        <OutputPath>.\bin\Debug\</OutputPath>
+        <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+        <DefineConstants>DEBUG;TRACE</DefineConstants>
+        <WarningLevel>4</WarningLevel>
+		    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+		        <DebugSymbols>false</DebugSymbols>
+        <Optimize>true</Optimize>
+        <OutputPath>.\bin\Release\</OutputPath>
+        <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+        <DefineConstants>TRACE</DefineConstants>
+        <WarningLevel>4</WarningLevel>
+		    </PropertyGroup>
+    <PropertyGroup>
+        <PreBuildEvent>
+        </PreBuildEvent>
+        <PostBuildEvent>
+        </PostBuildEvent>
+    </PropertyGroup>
+    <ItemGroup>
+                <Reference Include="Microsoft.SqlServer.ManagedDTS, Version=13.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91" />
+                <Reference Include="Microsoft.SqlServer.ScriptTask, Version=13.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91" />
+                <Reference Include="System.dll" />
+            </ItemGroup>
+	    <ItemGroup>
+        <Folder Include="Resources\" />
+        <AppDesigner Include="Properties\" />
+        <EmbeddedResource Include="Properties\Resources.resx">
+						<Generator>ResXFileCodeGenerator</Generator>
+            <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+			        </EmbeddedResource>
+        <Compile Include="Properties\Resources.Designer.cs">
+            <AutoGen>True</AutoGen>
+            <DependentUpon>Resources.resx</DependentUpon>
+            <DesignTime>True</DesignTime>
+        </Compile>
+		        <None Include="Properties\Settings.settings">
+            <Generator>SettingsSingleFileGenerator</Generator>
+            <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+        </None>
+        <Compile Include="Properties\Settings.Designer.cs">
+            <AutoGen>True</AutoGen>
+            <DependentUpon>Settings.settings</DependentUpon>
+            <DesignTimeSharedInput>True</DesignTimeSharedInput>
+        </Compile>
+
+				<Compile Include="ScriptMain.cs">
+			<SubType>Code</SubType>
+		</Compile>
+		
+		
+		
+		
+		    </ItemGroup>
+		<!-- Include the build rules for a C# project.-->
+    <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+		<!-- This section defines VSTA properties that describe the host-changable project properties. -->
+    <ProjectExtensions>
+        <VisualStudio>
+            <FlavorProperties GUID="{30D016F9-3734-4E33-A861-5E7D899E18F3}">
+                <ProjectProperties HostName="VSTAHostName" HostPackage="{B3A685AA-7EAF-4BC6-9940-57959FA5AC07}" ApplicationType="usd" Language="cs" TemplatesPath="" DebugInfoExeName="#HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\9.0\InstallDir#\devenv.exe" />
+                <Host Name="SSIS_ScriptTask" />
+                <ProjectClient>
+                    <HostIdentifier>SSIS_ST130</HostIdentifier>
+                </ProjectClient>
+            </FlavorProperties>
+        </VisualStudio>
+    </ProjectExtensions>
+    <PropertyGroup>
+        <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    </PropertyGroup>
+    <PropertyGroup>
+        <TargetFrameworkProfile></TargetFrameworkProfile>
+    </PropertyGroup></Project>]]></ProjectItem>
+              <ProjectItem
+                Name="Properties\resources.resx"
+                Encoding="UTF8"><![CDATA[<?xml version="1.0" encoding="utf-8"?>
+<root>
+    <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+        <xsd:element name="root" msdata:IsDataSet="true">
+            <xsd:complexType>
+                <xsd:choice maxOccurs="unbounded">
+                    <xsd:element name="metadata">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+                            </xsd:sequence>
+                            <xsd:attribute name="name" use="required" type="xsd:string" />
+                            <xsd:attribute name="type" type="xsd:string" />
+                            <xsd:attribute name="mimetype" type="xsd:string" />
+                            <xsd:attribute ref="xml:space" />
+                        </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element name="assembly">
+                        <xsd:complexType>
+                            <xsd:attribute name="alias" type="xsd:string" />
+                            <xsd:attribute name="name" type="xsd:string" />
+                        </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element name="data">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+                            </xsd:sequence>
+                            <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+                            <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+                            <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+                            <xsd:attribute ref="xml:space" />
+                        </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element name="resheader">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                            </xsd:sequence>
+                            <xsd:attribute name="name" type="xsd:string" use="required" />
+                        </xsd:complexType>
+                    </xsd:element>
+                </xsd:choice>
+            </xsd:complexType>
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>2.0</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    </root>]]></ProjectItem>
+              <ProjectItem
+                Name="ScriptMain.cs"
+                Encoding="UTF8"><![CDATA[
+                    [Microsoft.SqlServer.Dts.Tasks.ScriptTask.SSISScriptTaskEntryPointAttribute]
+                    public partial class ScriptMain : Microsoft.SqlServer.Dts.Tasks.ScriptTask.VSTARTScriptObjectModelBase
+                    {
+                        #region VSTA generated code
+                        enum ScriptResults
+                        {
+                            Success = Microsoft.SqlServer.Dts.Runtime.DTSExecResult.Success,
+                            Failure = Microsoft.SqlServer.Dts.Runtime.DTSExecResult.Failure
+                        };
+                        #endregion
+                        
+                        public void Main()
+                        {
+                            try
+                            {
+                                Dts.Variables["LineageString"].Value = Dts.Variables["LineageString"].Value + Dts.Variables["LineageID"].Value.ToString().Trim();
+                                Dts.TaskResult = (int)ScriptResults.Success;
+                            }
+                            catch
+                            {
+                                Dts.TaskResult = (int)ScriptResults.Failure;
+                            }
+                        }
+                    }
+                ]]></ProjectItem>
+              <ProjectItem
+                Name="Project"
+                Encoding="UTF16LE"><![CDATA[<?xml version="1.0" encoding="UTF-16" standalone="yes"?>
+<c:Project xmlns:c="http://schemas.microsoft.com/codeprojectml/2010/08/main" xmlns:msb="http://schemas.microsoft.com/developer/msbuild/2003" runtimeVersion="4.0" schemaVersion="1.0">
+	<msb:PropertyGroup>
+		<msb:ProjectId>{24c72bdf-1fe5-4fdb-9a22-a852d60de700}</msb:ProjectId>
+		<msb:NoContent>Reference;Import;Folder</msb:NoContent>
+		<msb:Language>msBuild</msb:Language>
+		<msb:DisplayName>sp_6fae8e87eabc4d31a640433cfe108beb</msb:DisplayName>
+		<msb:CodeName>sp_6fae8e87eabc4d31a640433cfe108beb</msb:CodeName>
+	</msb:PropertyGroup>
+	<msb:ItemGroup>
+				<msb:File Include="Properties\Resources.resx"/>
+		<msb:File Include="Properties\Settings.Designer.cs"/>
+				<msb:File Include="Properties\Resources.Designer.cs"/>
+				<msb:File Include="ScriptMain.cs"/>
+								<msb:File Include="Properties\Settings.settings"/>
+						<msb:Project Include="sp_6fae8e87eabc4d31a640433cfe108beb.csproj"/>
+	</msb:ItemGroup>
+</c:Project>]]></ProjectItem>
+              <ProjectItem
+                Name="Properties\settings.designer.cs"
+                Encoding="UTF8"><![CDATA[//------------------------------------------------------------------------------
+// <auto-generated>
+//     This code was generated by a tool.
+//
+//     Changes to this file may cause incorrect behavior and will be lost if
+//     the code is regenerated.
+// </auto-generated>
+//------------------------------------------------------------------------------
+
+[assembly: global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Scope = "member", Target = "sp_6fae8e87eabc4d31a640433cfe108beb.csproj.Properties.Settings.get_Default():sp_6fae8e87eabc4d31a640433cfe108beb.csproj.Properties.Settings")]
+
+namespace sp_6fae8e87eabc4d31a640433cfe108beb.csproj.Properties
+{
+
+    internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase
+    {
+
+        [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
+        private static Settings defaultInstance = new Settings();
+
+        public static Settings Default
+        {
+            get
+            {
+                return defaultInstance;
+            }
+        }
+
+    }
+}]]></ProjectItem>
+              <ProjectItem
+                Name="Properties\settings.settings"
+                Encoding="UTF8"><![CDATA[<?xml version="1.0" encoding="iso-8859-1"?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)"  >
+    <Profiles>
+        <Profile Name="(Default)" />
+    </Profiles>
+    <Settings /></SettingsFile>]]></ProjectItem>
+              <ProjectItem
+                Name="Properties\resources.designer.cs"
+                Encoding="UTF8"><![CDATA[//------------------------------------------------------------------------------
+// <auto-generated>
+//     This code was generated by a tool.
+//
+//     Changes to this file may cause incorrect behavior and will be lost if
+//     the code is regenerated.
+// </auto-generated>
+//------------------------------------------------------------------------------
+
+[assembly: global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Scope = "member", Target = "sp_6fae8e87eabc4d31a640433cfe108beb.csproj.Properties.Resources.get_ResourceManager():System.Resources.ResourceManager")]
+[assembly: global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Scope = "member", Target = "sp_6fae8e87eabc4d31a640433cfe108beb.csproj.Properties.Resources.get_Culture():System.Globalization.CultureInfo")]
+[assembly: global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Scope = "member", Target = "sp_6fae8e87eabc4d31a640433cfe108beb.csproj.Properties.Resources.set_Culture(System.Globalization.CultureInfo):Void")]
+
+namespace sp_6fae8e87eabc4d31a640433cfe108beb.csproj.Properties {
+    using System;
+
+
+    /// <summary>
+    ///   A strongly-typed resource class, for looking up localized strings, etc.
+    /// </summary>
+    // This class was auto-generated by the StronglyTypedResourceBuilder
+    // class via a tool like ResGen or Visual Studio.
+    // To add or remove a member, edit your .ResX file then rerun ResGen
+    // with the /str option, or rebuild your VS project.
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "2.0.0.0")]
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+    [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
+    internal class Resources
+    {
+
+        private static global::System.Resources.ResourceManager resourceMan;
+
+        private static global::System.Globalization.CultureInfo resourceCulture;
+
+        [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+        internal Resources() {
+        }
+
+        /// <summary>
+        ///   Returns the cached ResourceManager instance used by this class.
+        /// </summary>
+        [global::System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        internal static global::System.Resources.ResourceManager ResourceManager
+        {
+            get {
+                if ((resourceMan == null))
+                {
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("sp_6fae8e87eabc4d31a640433cfe108beb.csproj.Properties.Resources", typeof(Resources).Assembly);
+                    resourceMan = temp;
+                }
+                return resourceMan;
+            }
+        }
+
+        /// <summary>
+        ///   Overrides the current thread's CurrentUICulture property for all
+        ///   resource lookups using this strongly typed resource class.
+        /// </summary>
+        [global::System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        internal static global::System.Globalization.CultureInfo Culture
+        {
+            get {
+                return resourceCulture;
+            }
+            set {
+                resourceCulture = value;
+            }
+        }
+
+    }
+}]]></ProjectItem>
+              <BinaryItem
+                Name="\bin\release\sp_6fae8e87eabc4d31a640433cfe108beb.csproj.dll">TVqQAAMAAAAEAAAA//8AALgAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAgAAAAA4fug4AtAnNIbgBTM0hVGhpcyBwcm9ncmFtIGNhbm5vdCBiZSBydW4gaW4gRE9TIG1v
+ZGUuDQ0KJAAAAAAAAABQRQAATAEDAFjA2FoAAAAAAAAAAOAAAiELAQsAAAwAAAAGAAAAAAAA3isA
+AAAgAAAAQAAAAAAAEAAgAAAAAgAABAAAAAAAAAAEAAAAAAAAAACAAAAAAgAAAAAAAAMAQIUAABAA
+ABAAAAAAEAAAEAAAAAAAABAAAAAAAAAAAAAAAIgrAABTAAAAAEAAADADAAAAAAAAAAAAAAAAAAAA
+AAAAAGAAAAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAIAAACAAAAAAAAAAAAAAACCAAAEgAAAAAAAAAAAAAAC50ZXh0AAAA5AsAAAAgAAAADAAAAAIA
+AAAAAAAAAAAAAAAAACAAAGAucnNyYwAAADADAAAAQAAAAAQAAAAOAAAAAAAAAAAAAAAAAABAAABA
+LnJlbG9jAAAMAAAAAGAAAAACAAAAEgAAAAAAAAAAAAAAAAAAQAAAQgAAAAAAAAAAAAAAAAAAAADA
+KwAAAAAAAEgAAAACAAUAXCEAACwKAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAswBAB7AAAAAAAAAAIoBAAACm8FAAAKcgEAAHBvBgAACgIo
+BAAACm8FAAAKcgEAAHBvBgAACm8HAAAKAigEAAAKbwUAAApyHQAAcG8GAAAKbwcAAApvCAAACm8J
+AAAKKAoAAApvCwAACgIoBAAAChZvDAAACt4PJgIoBAAAChdvDAAACt4AKgABEAAAAAAAAGtrAA8E
+AAABHgIoDQAACioafgQAAAQqLnMEAAAGgAQAAAQqHgIoDwAACioeAigSAAAKKgATMAIALQAAAAEA
+ABF+BQAABC0gcjEAAHDQBQAAAigTAAAKbxQAAApzFQAACgoGgAUAAAR+BQAABCoafgYAAAQqHgKA
+BgAABCpCU0pCAQABAAAAAAAMAAAAdjQuMC4zMDMxOQAAAAAFAGwAAAA0AwAAI34AAKADAACsBAAA
+I1N0cmluZ3MAAAAATAgAALQAAAAjVVMAAAkAABAAAAAjR1VJRAAAABAJAAAcAQAAI0Jsb2IAAAAA
+AAAAAgAAAVcdogEJAgAAAPolMwAWAAABAAAAFQAAAAUAAAAGAAAACQAAAAEAAAAWAAAAAgAAAAkA
+AAABAAAAAgAAAAMAAAAEAAAAAQAAAAQAAAABAAAAAAAKAAEAAAAAAAYA4wC6AAoADwEIAQ4AKQEU
+AQoAQQEIAQoAoAGPAQoA0QG8AQoARwInAgoAZwInAgYAsAK6AAYA0gK6ABIAKwMLAxIAQwMLAwoA
+aAMIAQoAlAMnAg4AzgO2AwoA+APlAwoAFQQIAQoAGgQIAQoAUAQ+BA4AfARmBA4AlQRmBAAAAAAB
+AAAAAAABAAEAAQAQADkAAAAFAAEAAQADAQAARAAAAAkAAQADAAABEABSAFsADQAEAAMAAAAQAJEA
+WwARAAUABgAGBlMBFwBWgFsBGgBWgGMBGgARAGsBKAARALABNgARAN0BOgBQIAAAAACGAEgBEwAB
+AOggAAAAAIYYTQETAAEA8CAAAAAAlgh7ASwAAQADIQAAAACGGE0BEwABAPcgAAAAAJEYrwOAAAEA
+CyEAAAAAgxhNARMAAQAUIQAAAACTCO0BPgABAE0hAAAAAJMIAQJDAAEAVCEAAAAAkwgNAkgAAQAA
+AAEAIQI5AE0BWABBAE0BEwBJAE0BEwAJAOQCXQBRADUDYgBZAEwDZwBhAFUDbQAhAF8DcQBpAG8D
+cQBpAHQDdQBhAHsDewBRAIUDWAAJAE0BEwBxAE0BEwAZAE0BEwB5AE0BhACBAE0BEwAhAE0BEwCJ
+ACwEywCJAFkE0gApAE0B1wChAE0B4wAIAAgAHgAIAAwAIwAuAAsA8gAuABMA+wBDABsAIwBJALMA
+6QBpALMA6QCBAHMAIwCjAHMAIwCjAIsAIwCjAIMAigDeAAQAAQAFAAIAAACHATEAAACgAU4AAAAZ
+AlMAAgADAAMAAgAHAAUAAgAIAAcAAQAJAAcABIAAAAAAAAAAAAAAAAAAAAAAhQIAAA0AAAAAAAAA
+AAAAAAEAmwAAAAAABAAAAAAAAAAAAAAACgD/AAAAAAAEAAAAAAAAAAAAAAAKAAgBAAAAAA0AAAAA
+AAAAAAAAAAEA7AIAAAAAAwACAAAAADxNb2R1bGU+AHNwXzZmYWU4ZTg3ZWFiYzRkMzFhNjQwNDMz
+Y2ZlMTA4YmViLmNzcHJvai5kbGwAU2NyaXB0TWFpbgBTY3JpcHRSZXN1bHRzAFNldHRpbmdzAHNw
+XzZmYWU4ZTg3ZWFiYzRkMzFhNjQwNDMzY2ZlMTA4YmViLmNzcHJvai5Qcm9wZXJ0aWVzAFJlc291
+cmNlcwBNaWNyb3NvZnQuU3FsU2VydmVyLlNjcmlwdFRhc2sATWljcm9zb2Z0LlNxbFNlcnZlci5E
+dHMuVGFza3MuU2NyaXB0VGFzawBWU1RBUlRTY3JpcHRPYmplY3RNb2RlbEJhc2UAbXNjb3JsaWIA
+U3lzdGVtAEVudW0AU3lzdGVtLkNvbmZpZ3VyYXRpb24AQXBwbGljYXRpb25TZXR0aW5nc0Jhc2UA
+T2JqZWN0AE1haW4ALmN0b3IAdmFsdWVfXwBTdWNjZXNzAEZhaWx1cmUAZGVmYXVsdEluc3RhbmNl
+AGdldF9EZWZhdWx0AERlZmF1bHQAU3lzdGVtLlJlc291cmNlcwBSZXNvdXJjZU1hbmFnZXIAcmVz
+b3VyY2VNYW4AU3lzdGVtLkdsb2JhbGl6YXRpb24AQ3VsdHVyZUluZm8AcmVzb3VyY2VDdWx0dXJl
+AGdldF9SZXNvdXJjZU1hbmFnZXIAZ2V0X0N1bHR1cmUAc2V0X0N1bHR1cmUAQ3VsdHVyZQB2YWx1
+ZQBTeXN0ZW0uUnVudGltZS5Db21waWxlclNlcnZpY2VzAENvbXBpbGF0aW9uUmVsYXhhdGlvbnNB
+dHRyaWJ1dGUAUnVudGltZUNvbXBhdGliaWxpdHlBdHRyaWJ1dGUAc3BfNmZhZThlODdlYWJjNGQz
+MWE2NDA0MzNjZmUxMDhiZWIuY3Nwcm9qAFNTSVNTY3JpcHRUYXNrRW50cnlQb2ludEF0dHJpYnV0
+ZQBTY3JpcHRPYmplY3RNb2RlbABnZXRfRHRzAE1pY3Jvc29mdC5TcWxTZXJ2ZXIuTWFuYWdlZERU
+UwBNaWNyb3NvZnQuU3FsU2VydmVyLkR0cy5SdW50aW1lAFZhcmlhYmxlcwBnZXRfVmFyaWFibGVz
+AFZhcmlhYmxlAGdldF9JdGVtAGdldF9WYWx1ZQBUb1N0cmluZwBTdHJpbmcAVHJpbQBDb25jYXQA
+c2V0X1ZhbHVlAHNldF9UYXNrUmVzdWx0AENvbXBpbGVyR2VuZXJhdGVkQXR0cmlidXRlAC5jY3Rv
+cgBTeXN0ZW0uQ29kZURvbS5Db21waWxlcgBHZW5lcmF0ZWRDb2RlQXR0cmlidXRlAFN5c3RlbS5E
+aWFnbm9zdGljcwBEZWJ1Z2dlck5vblVzZXJDb2RlQXR0cmlidXRlAFR5cGUAUnVudGltZVR5cGVI
+YW5kbGUAR2V0VHlwZUZyb21IYW5kbGUAU3lzdGVtLlJlZmxlY3Rpb24AQXNzZW1ibHkAZ2V0X0Fz
+c2VtYmx5AFN5c3RlbS5Db21wb25lbnRNb2RlbABFZGl0b3JCcm93c2FibGVBdHRyaWJ1dGUARWRp
+dG9yQnJvd3NhYmxlU3RhdGUAAAAAG0wAaQBuAGUAYQBnAGUAUwB0AHIAaQBuAGcAABNMAGkAbgBl
+AGEAZwBlAEkARAAAf3MAcABfADYAZgBhAGUAOABlADgANwBlAGEAYgBjADQAZAAzADEAYQA2ADQA
+MAA0ADMAMwBjAGYAZQAxADAAOABiAGUAYgAuAGMAcwBwAHIAbwBqAC4AUAByAG8AcABlAHIAdABp
+AGUAcwAuAFIAZQBzAG8AdQByAGMAZQBzAAAAAAAMfV7Izhl/TKsdHDHxrqVKAAiJhF3NgIDMkQi3
+elxWGTTgiQMgAAECBggDBhEMBAAAAAAEAQAAAAMGEhAEAAASEAQIABIQAwYSFQMGEhkEAAASFQQA
+ABIZBQABARIZBAgAEhUECAASGQQgAQEIBCAAEikEIAASLQUgARIxHAMgABwDIAAOBQACDhwcBCAB
+ARwDAAABBSACAQ4OQAEAM1N5c3RlbS5SZXNvdXJjZXMuVG9vbHMuU3Ryb25nbHlUeXBlZFJlc291
+cmNlQnVpbGRlcgcyLjAuMC4wAAAGAAESRRFJBCAAEk0GIAIBDhJNBAcBEhUFIAEBEVUIAQACAAAA
+AAAIAQAIAAAAAAAeAQABAFQCFldyYXBOb25FeGNlcHRpb25UaHJvd3MBAACwKwAAAAAAAAAAAADO
+KwAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwCsAAAAAAAAAAAAAAAAAAAAAX0NvckRsbE1haW4A
+bXNjb3JlZS5kbGwAAAAAAP8lACAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAEAEAAAABgAAIAAAAAAAAAAAAAAAAAAAAEAAQAAADAAAIAAAAAAAAAAAAAAAAAAAAEA
+AAAAAEgAAABYQAAA1AIAAAAAAAAAAAAA1AI0AAAAVgBTAF8AVgBFAFIAUwBJAE8ATgBfAEkATgBG
+AE8AAAAAAL0E7/4AAAEAAAAAAAAAAAAAAAAAAAAAAD8AAAAAAAAABAAAAAIAAAAAAAAAAAAAAAAA
+AABEAAAAAQBWAGEAcgBGAGkAbABlAEkAbgBmAG8AAAAAACQABAAAAFQAcgBhAG4AcwBsAGEAdABp
+AG8AbgAAAAAAAACwBDQCAAABAFMAdAByAGkAbgBnAEYAaQBsAGUASQBuAGYAbwAAABACAAABADAA
+MAAwADAAMAA0AGIAMAAAACwAAgABAEYAaQBsAGUARABlAHMAYwByAGkAcAB0AGkAbwBuAAAAAAAg
+AAAAMAAIAAEARgBpAGwAZQBWAGUAcgBzAGkAbwBuAAAAAAAwAC4AMAAuADAALgAwAAAAgAAvAAEA
+SQBuAHQAZQByAG4AYQBsAE4AYQBtAGUAAABzAHAAXwA2AGYAYQBlADgAZQA4ADcAZQBhAGIAYwA0
+AGQAMwAxAGEANgA0ADAANAAzADMAYwBmAGUAMQAwADgAYgBlAGIALgBjAHMAcAByAG8AagAuAGQA
+bABsAAAAAAAoAAIAAQBMAGUAZwBhAGwAQwBvAHAAeQByAGkAZwBoAHQAAAAgAAAAiAAvAAEATwBy
+AGkAZwBpAG4AYQBsAEYAaQBsAGUAbgBhAG0AZQAAAHMAcABfADYAZgBhAGUAOABlADgANwBlAGEA
+YgBjADQAZAAzADEAYQA2ADQAMAA0ADMAMwBjAGYAZQAxADAAOABiAGUAYgAuAGMAcwBwAHIAbwBq
+AC4AZABsAGwAAAAAADQACAABAFAAcgBvAGQAdQBjAHQAVgBlAHIAcwBpAG8AbgAAADAALgAwAC4A
+MAAuADAAAAA4AAgAAQBBAHMAcwBlAG0AYgBsAHkAIABWAGUAcgBzAGkAbwBuAAAAMAAuADAALgAw
+AC4AMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAwAAADg
+OwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</BinaryItem>
+            </ScriptProject>
+          </DTS:ObjectData>
+        </DTS:Executable>
+      </DTS:Executables>
+      <DTS:PrecedenceConstraints>
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\SetUp.PrecedenceConstraints[Constraint]"
+          DTS:CreationName=""
+          DTS:DTSID="{D250B3EF-6438-4F5B-A1F1-28A7BC02189B}"
+          DTS:From="Package\SetUp\Get Lineage - Insert Audit Record"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint"
+          DTS:To="Package\SetUp\Set Lineage String" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\SetUp.PrecedenceConstraints[Constraint_Check for Incremental Record_To_Get Last Incremental Update]"
+          DTS:CreationName=""
+          DTS:DTSID="{76508707-22E1-41F4-B439-C65C6F662534}"
+          DTS:From="Package\SetUp\Check for Incremental Record"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint_Check for Incremental Record_To_Get Last Incremental Update"
+          DTS:To="Package\SetUp\Get Last Incremental Update" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\SetUp.PrecedenceConstraints[Constraint_Set Lineage String_To_Check for Incremental Record]"
+          DTS:CreationName=""
+          DTS:DTSID="{8CD33F16-ADA8-461F-B3EC-38F5E1FEC0C4}"
+          DTS:From="Package\SetUp\Set Lineage String"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint_Set Lineage String_To_Check for Incremental Record"
+          DTS:To="Package\SetUp\Check for Incremental Record" />
+      </DTS:PrecedenceConstraints>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Successful Loading Closeout"
+      DTS:CreationName="STOCK:SEQUENCE"
+      DTS:DTSID="{BA068AFC-DD29-4479-A238-B40B362BDEB5}"
+      DTS:ExecutableType="STOCK:SEQUENCE"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Successful Loading Closeout">
+      <DTS:Variables />
+      <DTS:Executables>
+        <DTS:Executable
+          DTS:refId="Package\Successful Loading Closeout\Update Incremental Dates"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:DTSID="{B2997B68-F288-4641-AB44-53A6B2B0F138}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Update Incremental Dates"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2014; © 2014 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="1">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{1A8664F3-BE3D-46FF-AEB7-5A71CAFC73DE}"
+              SQLTask:SqlStatementSource=" UPDATE log.SSISIncrementalTracking SET LastRunTMST = ?, LastRunDT = ?, UpdateBy = SUSER_SNAME(), LastUpdateTMST = GETDATE() WHERE PackageName = ?&#xA;&#xA;                            " xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="0"
+                SQLTask:DtsVariableName="System::StartTime"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="7"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="1"
+                SQLTask:DtsVariableName="System::StartTime"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="7"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="2"
+                SQLTask:DtsVariableName="System::PackageName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="130"
+                SQLTask:ParameterSize="-1" />
+            </SQLTask:SqlTaskData>
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\Successful Loading Closeout\Write Success Record"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:DTSID="{0FD3D0B8-F3C0-4A38-87E7-9D52EE026855}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Write Success Record"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2014; © 2014 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="1">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{1A8664F3-BE3D-46FF-AEB7-5A71CAFC73DE}"
+              SQLTask:SqlStatementSource="UPDATE log.[SSISAudit_MDSDQS]&#xA;  SET&#xA;      [BatchID] = ?,&#xA;      [PackageName] = ?,&#xA;      [CompleteTMST] = GETDATE(),&#xA;      [CompletionMessage] = ?,&#xA;      [ExecutionInstanceGUID] = ?,&#xA;      [MDSImportType] = ?,&#xA;      [MDSBatchTag] = ?, &#xA;      [MDSVersionName] = ?,&#xA;      [MDSLogFlag] = ?,&#xA;      [MDSDisableRunBatch] = ?,&#xA;      [RowCountProcessedTotal] = ?,&#xA;      [RowCountFailed] = ?&#xA;FROM [log].[SSISAudit_MDSDQS]&#xA;WHERE [SSISAuditKey] = ?;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="0"
+                SQLTask:DtsVariableName="$Package::Param_BatchID"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="1"
+                SQLTask:DtsVariableName="System::PackageName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="2"
+                SQLTask:DtsVariableName="User::Message_Success"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="3"
+                SQLTask:DtsVariableName="System::VersionGUID"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="4"
+                SQLTask:DtsVariableName="User::MDS_ImportType_Delete"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="5"
+                SQLTask:DtsVariableName="User::MDS_BatchTag"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="7"
+                SQLTask:DtsVariableName="User::MDS_LogFlag"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="8"
+                SQLTask:DtsVariableName="$Package::Disable_RunBatch"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="9"
+                SQLTask:DtsVariableName="User::RecordCount_Total"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="10"
+                SQLTask:DtsVariableName="User::RecordCount_Error"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="11"
+                SQLTask:DtsVariableName="User::LineageID"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="6"
+                SQLTask:DtsVariableName="User::MDS_VersionName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="129"
+                SQLTask:ParameterSize="-1" />
+            </SQLTask:SqlTaskData>
+          </DTS:ObjectData>
+        </DTS:Executable>
+      </DTS:Executables>
+      <DTS:PrecedenceConstraints>
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\Successful Loading Closeout.PrecedenceConstraints[Constraint]"
+          DTS:CreationName=""
+          DTS:DTSID="{BD229215-2443-4909-B36F-FE4152C9413A}"
+          DTS:From="Package\Successful Loading Closeout\Write Success Record"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint"
+          DTS:To="Package\Successful Loading Closeout\Update Incremental Dates" />
+      </DTS:PrecedenceConstraints>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:PrecedenceConstraints>
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint]"
+      DTS:CreationName=""
+      DTS:DTSID="{C736DCE8-EA76-4045-8384-87CE89061515}"
+      DTS:From="Package\SetUp"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint"
+      DTS:To="Package\Get MDS Version Name" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 1]"
+      DTS:CreationName=""
+      DTS:DTSID="{7D2ED85F-88B4-49AA-8375-895B19847DB5}"
+      DTS:From="Package\Get MDS Version Number"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 1"
+      DTS:To="Package\Deletes Existing Data" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 2]"
+      DTS:CreationName=""
+      DTS:DTSID="{8960C8EC-3B51-4506-940E-EC377364D2AB}"
+      DTS:From="Package\Deletes Existing Data"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 2"
+      DTS:To="Package\Successful Loading Closeout" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 3]"
+      DTS:CreationName=""
+      DTS:DTSID="{0D58A2BF-6F6C-48BA-B0E8-2D44C2243C48}"
+      DTS:From="Package\Deletes Existing Data"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 3"
+      DTS:To="Package\Failure Loading Closeout"
+      DTS:Value="1" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 5]"
+      DTS:CreationName=""
+      DTS:DTSID="{1B49A3F4-7AB6-470B-8C03-2F4D30BD3D7E}"
+      DTS:From="Package\Get MDS Version Name"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 5"
+      DTS:To="Package\Get MDS Version Number" />
+  </DTS:PrecedenceConstraints>
+  <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
+<!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
+<!--If you manually edit this section and make a mistake, you can delete it. -->
+<!--The package will still be able to load normally but the previous layout information will be lost and the designer will automatically re-arrange the elements on the design surface.-->
+<Objects
+  Version="8">
+  <!--Each node below will contain properties that do not affect runtime behavior.-->
+  <Package
+    design-time-name="Package">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="32" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        <NodeLayout
+          Size="176,42"
+          Id="Package\Deletes Existing Data\Import Data into Stg"
+          TopLeft="20.5,209.5" />
+        <NodeLayout
+          Size="206,42"
+          Id="Package\Deletes Existing Data\MDSClearUnexecutedBatch"
+          TopLeft="5.5,5.5" />
+        <NodeLayout
+          Size="172,42"
+          Id="Package\Deletes Existing Data\Merge Staging Data"
+          TopLeft="22.5,311.5" />
+        <NodeLayout
+          Size="145,42"
+          Id="Package\Deletes Existing Data\Set Batch Tag"
+          TopLeft="36,107.5" />
+        <EdgeLayout
+          Id="Package\Deletes Existing Data.PrecedenceConstraints[Constraint]"
+          TopLeft="108.5,149.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,60"
+              Start="0,0"
+              End="0,52.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Deletes Existing Data.PrecedenceConstraints[Constraint 1]"
+          TopLeft="108.5,251.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,60"
+              Start="0,0"
+              End="0,52.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Deletes Existing Data.PrecedenceConstraints[Constraint 2]"
+          TopLeft="108.5,47.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,60"
+              Start="0,0"
+              End="0,52.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <ContainerLayout
+          HeaderHeight="43"
+          IsExpanded="True"
+          PanelSize="217,409"
+          Size="217,452"
+          Id="Package\Deletes Existing Data"
+          TopLeft="268.5,721.5" />
+        <NodeLayout
+          Size="184,42"
+          Id="Package\Failure Loading Closeout\Set RecordCount Error"
+          TopLeft="5.50000000000001,5.5" />
+        <NodeLayout
+          Size="175,42"
+          Id="Package\Failure Loading Closeout\Write Failure Record"
+          TopLeft="10,107.5" />
+        <EdgeLayout
+          Id="Package\Failure Loading Closeout.PrecedenceConstraints[Constraint]"
+          TopLeft="97.5,47.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,60"
+              Start="0,0"
+              End="0,52.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <ContainerLayout
+          HeaderHeight="43"
+          IsExpanded="True"
+          PanelSize="195,205"
+          Size="195,248"
+          Id="Package\Failure Loading Closeout"
+          TopLeft="279.5,1233.5" />
+        <NodeLayout
+          Size="191,42"
+          Id="Package\Get MDS Version Name"
+          TopLeft="281.5,517.5" />
+        <NodeLayout
+          Size="201,42"
+          Id="Package\Get MDS Version Number"
+          TopLeft="276.5,619.5" />
+        <NodeLayout
+          Size="220,42"
+          Id="Package\SetUp\Check for Incremental Record"
+          TopLeft="14,209.5" />
+        <NodeLayout
+          Size="214,42"
+          Id="Package\SetUp\Get Last Incremental Update"
+          TopLeft="17,311.5" />
+        <NodeLayout
+          Size="237,42"
+          Id="Package\SetUp\Get Lineage - Insert Audit Record"
+          TopLeft="5.5,5.5" />
+        <NodeLayout
+          Size="165,42"
+          Id="Package\SetUp\Set Lineage String"
+          TopLeft="41.5,107.5" />
+        <EdgeLayout
+          Id="Package\SetUp.PrecedenceConstraints[Constraint]"
+          TopLeft="124,47.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,60"
+              Start="0,0"
+              End="0,52.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\SetUp.PrecedenceConstraints[Constraint_Check for Incremental Record_To_Get Last Incremental Update]"
+          TopLeft="124,251.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,60"
+              Start="0,0"
+              End="0,52.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\SetUp.PrecedenceConstraints[Constraint_Set Lineage String_To_Check for Incremental Record]"
+          TopLeft="124,149.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,60"
+              Start="0,0"
+              End="0,52.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <ContainerLayout
+          HeaderHeight="43"
+          IsExpanded="True"
+          PanelSize="248,409"
+          Size="248,452"
+          Id="Package\SetUp"
+          TopLeft="253,5.5" />
+        <NodeLayout
+          Size="202,42"
+          Id="Package\Successful Loading Closeout\Update Incremental Dates"
+          TopLeft="5.50000000000001,107.5" />
+        <NodeLayout
+          Size="180,42"
+          Id="Package\Successful Loading Closeout\Write Success Record"
+          TopLeft="16.5,5.5" />
+        <EdgeLayout
+          Id="Package\Successful Loading Closeout.PrecedenceConstraints[Constraint]"
+          TopLeft="106.5,47.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,60"
+              Start="0,0"
+              End="0,52.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <ContainerLayout
+          HeaderHeight="43"
+          IsExpanded="True"
+          PanelSize="213,205"
+          Size="213,248"
+          Id="Package\Successful Loading Closeout"
+          TopLeft="5.50000000000017,1233.5" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint]"
+          TopLeft="377,457.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,60"
+              Start="0,0"
+              End="0,52.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 1]"
+          TopLeft="377,661.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,60"
+              Start="0,0"
+              End="0,52.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 2]"
+          TopLeft="342.166666666667,1173.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-230.166666666666,60"
+              Start="0,0"
+              End="-230.166666666666,52.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,20.263494967978" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,20.263494967978"
+                    Point2="0,24.263494967978"
+                    Point3="-4,24.263494967978" />
+                  <mssgle:LineSegment
+                    End="-226.166666666666,24.263494967978" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-226.166666666666,24.263494967978"
+                    Point2="-230.166666666666,24.263494967978"
+                    Point3="-230.166666666666,28.263494967978" />
+                  <mssgle:LineSegment
+                    End="-230.166666666666,52.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 3]"
+          TopLeft="411.833333333333,1173.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-34.8333333333333,60"
+              Start="0,0"
+              End="-34.8333333333333,52.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,20.263494967978" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,20.263494967978"
+                    Point2="0,24.263494967978"
+                    Point3="-4,24.263494967978" />
+                  <mssgle:LineSegment
+                    End="-30.8333333333333,24.263494967978" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-30.8333333333333,24.263494967978"
+                    Point2="-34.8333333333333,24.263494967978"
+                    Point3="-34.8333333333333,28.263494967978" />
+                  <mssgle:LineSegment
+                    End="-34.8333333333333,52.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-32.6580143229167,29.263494967978,30.4826953125,9.7490234375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 5]"
+          TopLeft="377,559.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,60"
+              Start="0,0"
+              End="0,52.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </Package>
+  <TaskHost
+    design-time-name="Package\Deletes Existing Data\Import Data into Stg">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="130,42"
+          Id="Package\Deletes Existing Data\Import Data into Stg\Row Count"
+          TopLeft="56.0000000000001,617.5" />
+        <NodeLayout
+          Size="231,42"
+          Id="Package\Deletes Existing Data\Import Data into Stg\Data Conversion Transformation"
+          TopLeft="5.50000000000006,413.5" />
+        <NodeLayout
+          Size="123,42"
+          Id="Package\Deletes Existing Data\Import Data into Stg\Trim"
+          TopLeft="59.5,311.5" />
+        <NodeLayout
+          Size="154,42"
+          Id="Package\Deletes Existing Data\Import Data into Stg\Derived Column"
+          TopLeft="44,107.5" />
+        <NodeLayout
+          Size="175,42"
+          Id="Package\Deletes Existing Data\Import Data into Stg\Row_Number"
+          TopLeft="33.5000000000001,515.5" />
+        <NodeLayout
+          Size="150,42"
+          Id="Package\Deletes Existing Data\Import Data into Stg\OLE DB Source"
+          TopLeft="46,5.5" />
+        <NodeLayout
+          Size="127,42"
+          Id="Package\Deletes Existing Data\Import Data into Stg\Add Batch"
+          TopLeft="57.5,209.5" />
+        <NodeLayout
+          Size="171,42"
+          Id="Package\Deletes Existing Data\Import Data into Stg\OLE DB Destination"
+          TopLeft="35.5000000000001,719.5" />
+        <EdgeLayout
+          Id="Package\Deletes Existing Data\Import Data into Stg.Paths[Trim_Output_Data Conversion Transformation]"
+          TopLeft="121,353.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,60"
+              Start="0,0"
+              End="0,52.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Deletes Existing Data\Import Data into Stg.Paths[Row_Number_Output0_Row Count]"
+          TopLeft="121,557.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,60"
+              Start="0,0"
+              End="0,52.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Deletes Existing Data\Import Data into Stg.Paths[Output]"
+          TopLeft="121,659.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,60"
+              Start="0,0"
+              End="0,52.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Deletes Existing Data\Import Data into Stg.Paths[OLE DB Source Output]"
+          TopLeft="121,47.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,60"
+              Start="0,0"
+              End="0,52.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Deletes Existing Data\Import Data into Stg.Paths[Derived Column Output1]"
+          TopLeft="121,149.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,60"
+              Start="0,0"
+              End="0,52.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Deletes Existing Data\Import Data into Stg.Paths[Derived Column Output]"
+          TopLeft="121,251.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,60"
+              Start="0,0"
+              End="0,52.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Deletes Existing Data\Import Data into Stg.Paths[Data Conversion Transformation_Output_Row_Number]"
+          TopLeft="121,455.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,60"
+              Start="0,0"
+              End="0,52.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\Deletes Existing Data\Import Data into Stg\OLE DB Source">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\Deletes Existing Data\Import Data into Stg\OLE DB Destination">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+</Objects>]]></DTS:DesignTimeProperties>
+</DTS:Executable>

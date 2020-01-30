@@ -1,0 +1,2 @@
+﻿CREATE SCHEMA [ODS_Rpt]
+AUTHORIZATION [dbo];

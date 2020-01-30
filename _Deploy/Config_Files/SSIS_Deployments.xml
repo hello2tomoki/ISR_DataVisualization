@@ -1,0 +1,66 @@
+<SSISDeployments>
+	<SSISDeployment catalog="SSISDB" server="W0353079\MSSQL12">
+		<SSISFolder name="RiskETL">			
+			<SSISEnvironment name="RiskETL_DEV">
+					<SSISEnvironmentVariable name="DWStaging_InitalCatalog" value="RiskStaging" sensitive="False" />
+					<SSISEnvironmentVariable name="DWStaging_ServerName" value="Delta" sensitive="False" />
+					<SSISEnvironmentVariable name="DWUtility_InitalCatalog" value="RiskStaging" sensitive="False" />
+					<SSISEnvironmentVariable name="DWUtility_ServerName" value="Delta" sensitive="False" />
+					<SSISEnvironmentVariable name="DW_InitalCatalog" value="RiskDM" sensitive="False" />
+					<SSISEnvironmentVariable name="DW_ServerName" value="Delta" sensitive="False" />
+					<SSISEnvironmentVariable name="Path_Archived" value="\\Delta\IRSR_Insight\Archived\" sensitive="False" />
+					<SSISEnvironmentVariable name="Path_Source" value="\\Delta\IRSR_Insight\Input\Working\" sensitive="False" />
+			</SSISEnvironment>
+			<SSISEnvironment name="RiskETL_TEST">
+					<SSISEnvironmentVariable name="DWStaging_InitalCatalog" value="RiskStaging" sensitive="False" />
+					<SSISEnvironmentVariable name="DWStaging_ServerName" value="Tokyo" sensitive="False" />
+					<SSISEnvironmentVariable name="DWUtility_InitalCatalog" value="RiskStaging" sensitive="False" />
+					<SSISEnvironmentVariable name="DWUtility_ServerName" value="Tokyo" sensitive="False" />
+					<SSISEnvironmentVariable name="DW_InitalCatalog" value="RiskDM" sensitive="False" />
+					<SSISEnvironmentVariable name="DW_ServerName" value="Tokyo" sensitive="False" />
+					<SSISEnvironmentVariable name="Path_Archived" value="\\Tokyo\IRSR_Insight\Archived\" sensitive="False" />
+					<SSISEnvironmentVariable name="Path_Source" value="\\Tokyo\IRSR_Insight\Input\Working\" sensitive="False" />
+			</SSISEnvironment>
+			<SSISProject name="RiskStaging" deploymentFile="C:\agent\_work\16\a\RiskStaging\framework\bin\Development\framework.ispac">
+				<SSISProjectEnvironmentReference environment="RiskETL_DEV">
+					<SSISProjectParameterEnvironmentVariableReference environmentVariable="DWStaging_InitalCatalog" projectParameter="DWStaging_InitalCatalog" />
+					<SSISProjectParameterEnvironmentVariableReference environmentVariable="DWStaging_ServerName" projectParameter="DWStaging_ServerName" />
+					<SSISProjectParameterEnvironmentVariableReference environmentVariable="DWUtility_InitalCatalog" projectParameter="DWUtility_InitalCatalog" />
+					<SSISProjectParameterEnvironmentVariableReference environmentVariable="DWUtility_ServerName" projectParameter="DWUtility_ServerName" />
+					<SSISProjectParameterEnvironmentVariableReference environmentVariable="DW_InitalCatalog" projectParameter="DW_InitalCatalog" />
+					<SSISProjectParameterEnvironmentVariableReference environmentVariable="DW_ServerName" projectParameter="DW_ServerName" />
+					<SSISProjectParameterEnvironmentVariableReference environmentVariable="Path_Archived" projectParameter="Path_Archived" />
+					<SSISProjectParameterEnvironmentVariableReference environmentVariable="Path_Source" projectParameter="Path_Source" />
+				</SSISProjectEnvironmentReference>
+				<SSISProjectEnvironmentReference environment="RiskETL_TEST">
+					<SSISProjectParameterEnvironmentVariableReference environmentVariable="DWStaging_InitalCatalog" projectParameter="DWStaging_InitalCatalog" />
+					<SSISProjectParameterEnvironmentVariableReference environmentVariable="DWStaging_ServerName" projectParameter="DWStaging_ServerName" />
+					<SSISProjectParameterEnvironmentVariableReference environmentVariable="DWUtility_InitalCatalog" projectParameter="DWUtility_InitalCatalog" />
+					<SSISProjectParameterEnvironmentVariableReference environmentVariable="DWUtility_ServerName" projectParameter="DWUtility_ServerName" />
+					<SSISProjectParameterEnvironmentVariableReference environmentVariable="DW_InitalCatalog" projectParameter="DW_InitalCatalog" />
+					<SSISProjectParameterEnvironmentVariableReference environmentVariable="DW_ServerName" projectParameter="DW_ServerName" />
+					<SSISProjectParameterEnvironmentVariableReference environmentVariable="Path_Archived" projectParameter="Path_Archived" />
+					<SSISProjectParameterEnvironmentVariableReference environmentVariable="Path_Source" projectParameter="Path_Source" />
+				</SSISProjectEnvironmentReference>
+			</SSISProject>
+			<SSISProject name="RiskDM" deploymentFile="C:\agent\_work\16\a\RiskDM\framework\bin\Development\framework.ispac">
+				<SSISProjectEnvironmentReference environment="RiskETL_DEV">
+					<SSISProjectParameterEnvironmentVariableReference environmentVariable="DWStaging_InitalCatalog" projectParameter="DWStaging_InitalCatalog" />
+					<SSISProjectParameterEnvironmentVariableReference environmentVariable="DWStaging_ServerName" projectParameter="DWStaging_ServerName" />
+					<SSISProjectParameterEnvironmentVariableReference environmentVariable="DWUtility_InitalCatalog" projectParameter="DWUtility_InitalCatalog" />
+					<SSISProjectParameterEnvironmentVariableReference environmentVariable="DWUtility_ServerName" projectParameter="DWUtility_ServerName" />
+					<SSISProjectParameterEnvironmentVariableReference environmentVariable="DW_InitalCatalog" projectParameter="DW_InitalCatalog" />
+					<SSISProjectParameterEnvironmentVariableReference environmentVariable="DW_ServerName" projectParameter="DW_ServerName" />
+				</SSISProjectEnvironmentReference>
+				<SSISProjectEnvironmentReference environment="RiskETL_TEST">
+					<SSISProjectParameterEnvironmentVariableReference environmentVariable="DWStaging_InitalCatalog" projectParameter="DWStaging_InitalCatalog" />
+					<SSISProjectParameterEnvironmentVariableReference environmentVariable="DWStaging_ServerName" projectParameter="DWStaging_ServerName" />
+					<SSISProjectParameterEnvironmentVariableReference environmentVariable="DWUtility_InitalCatalog" projectParameter="DWUtility_InitalCatalog" />
+					<SSISProjectParameterEnvironmentVariableReference environmentVariable="DWUtility_ServerName" projectParameter="DWUtility_ServerName" />
+					<SSISProjectParameterEnvironmentVariableReference environmentVariable="DW_InitalCatalog" projectParameter="DW_InitalCatalog" />
+					<SSISProjectParameterEnvironmentVariableReference environmentVariable="DW_ServerName" projectParameter="DW_ServerName" />
+				</SSISProjectEnvironmentReference>
+			</SSISProject>
+		</SSISFolder>
+	</SSISDeployment>
+</SSISDeployments>

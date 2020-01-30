@@ -1,0 +1,403 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report MustUnderstand="df" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2016/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner" xmlns:df="http://schemas.microsoft.com/sqlserver/reporting/2016/01/reportdefinition/defaultfontfamily">
+  <df:DefaultFontFamily>Segoe UI</df:DefaultFontFamily>
+  <AutoRefresh>0</AutoRefresh>
+  <DataSources>
+    <DataSource Name="DataSource_MSDB">
+      <DataSourceReference>DataSource_MSDB</DataSourceReference>
+      <rd:SecurityType>None</rd:SecurityType>
+      <rd:DataSourceID>e2797d1d-45f5-4ba3-9321-a167b0663c86</rd:DataSourceID>
+    </DataSource>
+  </DataSources>
+  <DataSets>
+    <DataSet Name="DataSet_usp_run_job">
+      <Query>
+        <DataSourceName>DataSource_MSDB</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@jobName">
+            <Value>=Parameters!jobName.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandType>StoredProcedure</CommandType>
+        <CommandText>usp_run_job</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="ErrorNumber">
+          <DataField>ErrorNumber</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="ErrorSeverity">
+          <DataField>ErrorSeverity</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="ErrorState">
+          <DataField>ErrorState</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="ErrorProcedure">
+          <DataField>ErrorProcedure</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ErrorLine">
+          <DataField>ErrorLine</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="ErrorMessage">
+          <DataField>ErrorMessage</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="DataSet_JobName">
+      <Query>
+        <DataSourceName>DataSource_MSDB</DataSourceName>
+        <CommandText>Declare @Results Table (
+	[JobID] [uniqueidentifier] NOT NULL,
+	[JobName] [nvarchar](128) NOT NULL,
+	[JobOwner] [nvarchar](128) NULL,
+	[JobCategory] [nvarchar](128) NULL,
+	[JobDescription] [nvarchar](512) NULL,
+	[IsEnabled] [varchar](3) NULL,
+	[JobCreatedOn] [datetime] NOT NULL,
+	[JobLastModifiedOn] [datetime] NOT NULL,
+	[OriginatingServerName] [nvarchar](128) NULL,
+	[JobStartStepNo] [int] NULL,
+	[JobStartStepName] [nvarchar](128) NULL,
+	[IsScheduled] [varchar](3) NOT NULL,
+	[JobScheduleID] [uniqueidentifier] NULL,
+	[JobScheduleName] [nvarchar](128) NULL,
+	[JobDeletionCriterion] [varchar](13) NULL
+) 
+
+insert into @Results
+EXEC	msdb.dbo.usp_get_job_info @jobName = NULL
+SELECT DISTINCT JobName
+FROM @Results;</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="JobName">
+          <DataField>JobName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+  </DataSets>
+  <ReportSections>
+    <ReportSection>
+      <Body>
+        <ReportItems>
+          <Textbox Name="textbox1">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>Run Job</Value>
+                    <Style>
+                      <FontFamily>Segoe UI Light</FontFamily>
+                      <FontSize>24pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>textbox1</rd:DefaultName>
+            <Left>1.27cm</Left>
+            <Height>0.43in</Height>
+            <Width>7in</Width>
+            <Style>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Tablix Name="table1">
+            <TablixBody>
+              <TablixColumns>
+                <TablixColumn>
+                  <Width>5in</Width>
+                </TablixColumn>
+              </TablixColumns>
+              <TablixRows>
+                <TablixRow>
+                  <Height>0.22in</Height>
+                  <TablixCells>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="textbox2">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Message</Value>
+                                  <Style>
+                                    <FontFamily />
+                                    <FontSize>11pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                    <Color>#666666</Color>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <FontFamily />
+                                <TextAlign>Left</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>textbox2</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                            </Border>
+                            <BottomBorder>
+                              <Style>Solid</Style>
+                            </BottomBorder>
+                            <FontFamily />
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                  </TablixCells>
+                </TablixRow>
+                <TablixRow>
+                  <Height>0.21in</Height>
+                  <TablixCells>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="ErrorMessage">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!ErrorMessage.Value</Value>
+                                  <Style>
+                                    <FontFamily />
+                                    <Color>#333333</Color>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>ErrorMessage</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                            </Border>
+                            <BottomBorder>
+                              <Style>Solid</Style>
+                            </BottomBorder>
+                            <FontFamily />
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                  </TablixCells>
+                </TablixRow>
+              </TablixRows>
+            </TablixBody>
+            <TablixColumnHierarchy>
+              <TablixMembers>
+                <TablixMember />
+              </TablixMembers>
+            </TablixColumnHierarchy>
+            <TablixRowHierarchy>
+              <TablixMembers>
+                <TablixMember>
+                  <KeepWithGroup>After</KeepWithGroup>
+                  <RepeatOnNewPage>true</RepeatOnNewPage>
+                  <KeepTogether>true</KeepTogether>
+                </TablixMember>
+                <TablixMember>
+                  <Group Name="table1_Details_Group">
+                    <DataElementName>Detail</DataElementName>
+                  </Group>
+                  <TablixMembers>
+                    <TablixMember />
+                  </TablixMembers>
+                  <DataElementName>Detail_Collection</DataElementName>
+                  <DataElementOutput>Output</DataElementOutput>
+                  <KeepTogether>true</KeepTogether>
+                </TablixMember>
+              </TablixMembers>
+            </TablixRowHierarchy>
+            <DataSetName>DataSet_usp_run_job</DataSetName>
+            <Top>0.43in</Top>
+            <Height>0.43in</Height>
+            <Width>5in</Width>
+            <ZIndex>1</ZIndex>
+            <Style />
+          </Tablix>
+          <Textbox Name="Textbox5">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>="SQL Job Called " + Parameters!jobName.Value + " has been executed!"</Value>
+                    <Style>
+                      <FontWeight>Bold</FontWeight>
+                      <Color>Red</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Textbox5</rd:DefaultName>
+            <Top>0.86in</Top>
+            <Height>0.25in</Height>
+            <Width>5in</Width>
+            <ZIndex>2</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="Textbox6">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>View Job Execution Info (Last Run Status)</Value>
+                    <Style />
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Textbox6</rd:DefaultName>
+            <ActionInfo>
+              <Actions>
+                <Action>
+                  <Drillthrough>
+                    <ReportName>usp_get_job_execution_info</ReportName>
+                    <Parameters>
+                      <Parameter Name="jobName">
+                        <Value>=Parameters!jobName.Value</Value>
+                      </Parameter>
+                      <Parameter Name="DisplayRunJobLink">
+                        <Value>Hide</Value>
+                      </Parameter>
+                    </Parameters>
+                  </Drillthrough>
+                </Action>
+              </Actions>
+            </ActionInfo>
+            <Top>1.11in</Top>
+            <Height>0.25in</Height>
+            <Width>5in</Width>
+            <ZIndex>3</ZIndex>
+            <ToolTip>Click Here to View Job Execution Info (Last Run Status)...</ToolTip>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Image Name="Image1">
+            <Source>Embedded</Source>
+            <Value>home</Value>
+            <Sizing>FitProportional</Sizing>
+            <ActionInfo>
+              <Actions>
+                <Action>
+                  <Drillthrough>
+                    <ReportName>usp_get_job_info</ReportName>
+                  </Drillthrough>
+                </Action>
+              </Actions>
+            </ActionInfo>
+            <Height>0.43in</Height>
+            <Width>0.43in</Width>
+            <ZIndex>4</ZIndex>
+            <ToolTip>Home</ToolTip>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+            </Style>
+          </Image>
+        </ReportItems>
+        <Height>1.36in</Height>
+        <Style />
+      </Body>
+      <Width>7.5in</Width>
+      <Page>
+        <LeftMargin>1in</LeftMargin>
+        <RightMargin>1in</RightMargin>
+        <TopMargin>1in</TopMargin>
+        <BottomMargin>1in</BottomMargin>
+        <Style />
+      </Page>
+    </ReportSection>
+  </ReportSections>
+  <ReportParameters>
+    <ReportParameter Name="jobName">
+      <DataType>String</DataType>
+      <Prompt>job Name</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>DataSet_JobName</DataSetName>
+          <ValueField>JobName</ValueField>
+          <LabelField>JobName</LabelField>
+        </DataSetReference>
+      </ValidValues>
+    </ReportParameter>
+  </ReportParameters>
+  <ReportParametersLayout>
+    <GridLayoutDefinition>
+      <NumberOfColumns>1</NumberOfColumns>
+      <NumberOfRows>1</NumberOfRows>
+      <CellDefinitions>
+        <CellDefinition>
+          <ColumnIndex>0</ColumnIndex>
+          <RowIndex>0</RowIndex>
+          <ParameterName>jobName</ParameterName>
+        </CellDefinition>
+      </CellDefinitions>
+    </GridLayoutDefinition>
+  </ReportParametersLayout>
+  <EmbeddedImages>
+    <EmbeddedImage Name="home">
+      <MIMEType>image/png</MIMEType>
+      <ImageData>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
+AAAIJAAAIJAAAIBAAgAAAgkAAAgkAAAgkAAAgEACAAACCQAACCQAACCQAACAQAIAAAIJAAAIJAAAIJAAAIBAAgAAAgkAAAgkAAAg0Jfbz2Rfbz9hhvR/B/37x0zR//75GwAACCQAACCQAACAQAIAAAIJAAAIJAAAIJAAAIBAAgAAAgkAAAgkAAAgkAAAgEACAAACCQAACCQAACCQAACAQAIAAAIJAAAIJAAAIJAAAIBAAgAAAgkAAAgkAAAgkAAAgEACAAACCQAACCQAACCQAACAQAIAAAIJAAAIJAAAIJAAAIBAAgAAAgkAAAgkAAAgkAAAgEACAAACCQAACCQAACCQAACAQAIAAAIJAAAIJAAAIJAAAIBAAgAAAgkAAAgkAAAgkAAAgEACAAACCQAACCQAACCQAACAQAIAAAIJAAAIJAAAIJAAAIBAAgAAAgkAAAgkAAAgkAAAgEACAAACCQAACCQAACCQAACAQAIAAAIJAAAIJAAAIJAAAIBAAgAAAgkAAAgkAAAgkAAAgEACAAACCQAACCQAACCQAACAQAIAAAIJAAAIJAAAIJAAAIBAAgAAAgkAAAgkAAAgkAAAgEACAAACCQAACCQAACCQAACAQAIAAAIJAAAIJAAAIJAAAIBAAgAAAgkAAAgkAAAgkAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAo7Y8//g9vhD3V3P5AoQAAAABJRU5ErkJggg==</ImageData>
+    </EmbeddedImage>
+  </EmbeddedImages>
+  <Language>en-US</Language>
+  <ConsumeContainerWhitespace>true</ConsumeContainerWhitespace>
+  <rd:ReportUnitType>Inch</rd:ReportUnitType>
+  <rd:ReportID>4bc825a3-cce9-4781-aa4d-b423bdaeccdf</rd:ReportID>
+</Report>
