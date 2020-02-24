@@ -1,4 +1,4 @@
-﻿<?xml version="1.0"?>
+<?xml version="1.0"?>
 <DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
   DTS:refId="Package"
   DTS:CreationDate="4/19/2018 9:14:15 AM"
@@ -8,12 +8,12 @@
   DTS:DelayValidation="True"
   DTS:DTSID="{4DDE729A-236A-4D57-8FB5-AFEF8261C61A}"
   DTS:ExecutableType="Microsoft.Package"
-  DTS:LastModifiedProductVersion="13.0.4561.14"
+  DTS:LastModifiedProductVersion="14.0.3002.106"
   DTS:LocaleID="4105"
   DTS:ObjectName="Weekly_Active_Report_Runby_RiskDateOrVersion"
   DTS:ProtectionLevel="0"
   DTS:VersionBuild="298"
-  DTS:VersionGUID="{7F7F2C57-9768-4FDF-B2F5-BF0924D13CCE}"
+  DTS:VersionGUID="{D909CA89-7AF4-419D-A4AB-A6A63681C58C}"
   DTS:VersionMajor="0">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
@@ -540,7 +540,7 @@ Select @DAX_Portfolio_Exclude</DTS:VariableValue>
       DTS:Namespace="User"
       DTS:ObjectName="LineageTMST">
       <DTS:VariableValue
-        DTS:DataType="7">10/10/2019 12:26:18 PM</DTS:VariableValue>
+        DTS:DataType="7">2/24/2020 2:00:48 PM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -2723,7 +2723,7 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=]]></arrayElement>
                           dataType="System.String"
                           description="The SQL command to be executed."
                           name="SqlCommand"
-                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
                         <property
                           dataType="System.Int32"
                           description="Specifies the column code page to use when code page information is unavailable from the data source."
@@ -2757,8 +2757,8 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=]]></arrayElement>
                       <connections>
                         <connection
                           refId="Package\Loops for Each Date to Move data from cube to MDS\Copies_Data_From_Cube_to_MDS\Import Data into Stg\OLE DB Destination.Connections[OleDbConnection]"
-                          connectionManagerID="{87323F27-D30B-4DBD-B723-02E2B4F94F0B}:external"
-                          connectionManagerRefId="Project.ConnectionManagers[MDS]"
+                          connectionManagerID="{87323F27-D30B-4DBD-B723-02E2B4F94F0B}:invalid"
+                          connectionManagerRefId="{87323F27-D30B-4DBD-B723-02E2B4F94F0B}:invalid"
                           description="The OLE DB runtime connection used to access the database."
                           name="OleDbConnection" />
                       </connections>
@@ -3099,7 +3099,7 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=]]></arrayElement>
                           dataType="System.String"
                           description="The SQL command to be executed."
                           name="SqlCommand"
-                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
                         <property
                           dataType="System.String"
                           description="The variable that contains the SQL command to be executed."
@@ -4521,8 +4521,8 @@ public class Input0Buffer: ScriptBuffer
           <DTS:ObjectData>
             <ScriptProject
               Name="sp_6fae8e87eabc4d31a640433cfe108beb"
-              VSTAMajorVersion="14"
-              VSTAMinorVersion="0"
+              VSTAMajorVersion="2"
+              VSTAMinorVersion="2"
               Language="CSharp"
               ReadOnlyVariables="User::LineageID"
               ReadWriteVariables="User::LineageString">

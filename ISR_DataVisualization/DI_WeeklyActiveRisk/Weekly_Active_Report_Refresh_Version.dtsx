@@ -1,4 +1,4 @@
-﻿<?xml version="1.0"?>
+<?xml version="1.0"?>
 <DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
   DTS:refId="Package"
   DTS:CreationDate="4/19/2018 9:14:15 AM"
@@ -8,12 +8,12 @@
   DTS:DelayValidation="True"
   DTS:DTSID="{4786380E-89BD-494B-B1A4-588879DC6E0E}"
   DTS:ExecutableType="Microsoft.Package"
-  DTS:LastModifiedProductVersion="13.0.4561.14"
+  DTS:LastModifiedProductVersion="14.0.3002.106"
   DTS:LocaleID="4105"
   DTS:ObjectName="Weekly_Active_Report_Refresh_Version"
   DTS:ProtectionLevel="0"
   DTS:VersionBuild="323"
-  DTS:VersionGUID="{E671D469-981F-4F93-B695-963DD6C82077}"
+  DTS:VersionGUID="{C51F0F6E-A219-4B0F-BE5D-F980E4AC80B7}"
   DTS:VersionMajor="0">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
@@ -173,7 +173,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="LineageTMST">
       <DTS:VariableValue
-        DTS:DataType="7">10/10/2019 12:10:21 PM</DTS:VariableValue>
+        DTS:DataType="7">2/24/2020 2:00:48 PM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -782,7 +782,7 @@ ORDER BY LastChgUser_DTM DESC;
                       dataType="System.String"
                       description="The SQL command to be executed."
                       name="SqlCommand"
-                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
                     <property
                       dataType="System.Int32"
                       description="Specifies the column code page to use when code page information is unavailable from the data source."
@@ -816,8 +816,8 @@ ORDER BY LastChgUser_DTM DESC;
                   <connections>
                     <connection
                       refId="Package\Deletes any Working Version\Import Data into Stg\OLE DB Destination.Connections[OleDbConnection]"
-                      connectionManagerID="{87323F27-D30B-4DBD-B723-02E2B4F94F0B}:external"
-                      connectionManagerRefId="Project.ConnectionManagers[MDS]"
+                      connectionManagerID="{87323F27-D30B-4DBD-B723-02E2B4F94F0B}:invalid"
+                      connectionManagerRefId="{87323F27-D30B-4DBD-B723-02E2B4F94F0B}:invalid"
                       description="The OLE DB runtime connection used to access the database."
                       name="OleDbConnection" />
                   </connections>
@@ -950,7 +950,7 @@ ORDER BY LastChgUser_DTM DESC;
                       dataType="System.String"
                       description="The SQL command to be executed."
                       name="SqlCommand"
-                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
                     <property
                       dataType="System.String"
                       description="The variable that contains the SQL command to be executed."
@@ -976,8 +976,8 @@ ORDER BY LastChgUser_DTM DESC;
                   <connections>
                     <connection
                       refId="Package\Deletes any Working Version\Import Data into Stg\OLE DB Source.Connections[OleDbConnection]"
-                      connectionManagerID="{87323F27-D30B-4DBD-B723-02E2B4F94F0B}:external"
-                      connectionManagerRefId="Project.ConnectionManagers[MDS]"
+                      connectionManagerID="{87323F27-D30B-4DBD-B723-02E2B4F94F0B}:invalid"
+                      connectionManagerRefId="{87323F27-D30B-4DBD-B723-02E2B4F94F0B}:invalid"
                       description="The OLE DB runtime connection used to access the database."
                       name="OleDbConnection" />
                   </connections>
@@ -1939,7 +1939,7 @@ public class Input0Buffer: ScriptBuffer
           DTS:LocaleID="-1"
           DTS:ObjectName="Set RecordCount Error"
           DTS:TaskContact="Expression Task;Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
-          DTS:ThreadHint="0">
+          DTS:ThreadHint="1">
           <DTS:Variables />
           <DTS:ObjectData>
             <ExpressionTask
@@ -1954,7 +1954,7 @@ public class Input0Buffer: ScriptBuffer
           DTS:LocaleID="-1"
           DTS:ObjectName="Write Failure Record"
           DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2014; © 2014 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
-          DTS:ThreadHint="0">
+          DTS:ThreadHint="1">
           <DTS:Variables />
           <DTS:ObjectData>
             <SQLTask:SqlTaskData
@@ -2379,7 +2379,7 @@ public class Input0Buffer: ScriptBuffer
                       dataType="System.String"
                       description="The SQL command to be executed."
                       name="SqlCommand"
-                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
                     <property
                       dataType="System.Int32"
                       description="Specifies the column code page to use when code page information is unavailable from the data source."
@@ -2413,8 +2413,8 @@ public class Input0Buffer: ScriptBuffer
                   <connections>
                     <connection
                       refId="Package\Inserts Working Version\Import Data into Stg\OLE DB Destination.Connections[OleDbConnection]"
-                      connectionManagerID="{87323F27-D30B-4DBD-B723-02E2B4F94F0B}:external"
-                      connectionManagerRefId="Project.ConnectionManagers[MDS]"
+                      connectionManagerID="{87323F27-D30B-4DBD-B723-02E2B4F94F0B}:invalid"
+                      connectionManagerRefId="{87323F27-D30B-4DBD-B723-02E2B4F94F0B}:invalid"
                       description="The OLE DB runtime connection used to access the database."
                       name="OleDbConnection" />
                   </connections>
@@ -2547,7 +2547,7 @@ public class Input0Buffer: ScriptBuffer
                       dataType="System.String"
                       description="The SQL command to be executed."
                       name="SqlCommand"
-                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
                     <property
                       dataType="System.String"
                       description="The variable that contains the SQL command to be executed."
@@ -2573,8 +2573,8 @@ public class Input0Buffer: ScriptBuffer
                   <connections>
                     <connection
                       refId="Package\Inserts Working Version\Import Data into Stg\OLE DB Source.Connections[OleDbConnection]"
-                      connectionManagerID="{87323F27-D30B-4DBD-B723-02E2B4F94F0B}:external"
-                      connectionManagerRefId="Project.ConnectionManagers[MDS]"
+                      connectionManagerID="{87323F27-D30B-4DBD-B723-02E2B4F94F0B}:invalid"
+                      connectionManagerRefId="{87323F27-D30B-4DBD-B723-02E2B4F94F0B}:invalid"
                       description="The OLE DB runtime connection used to access the database."
                       name="OleDbConnection" />
                   </connections>
@@ -3651,8 +3651,8 @@ public class Input0Buffer: ScriptBuffer
           <DTS:ObjectData>
             <ScriptProject
               Name="sp_6fae8e87eabc4d31a640433cfe108beb"
-              VSTAMajorVersion="14"
-              VSTAMinorVersion="0"
+              VSTAMajorVersion="2"
+              VSTAMinorVersion="2"
               Language="CSharp"
               ReadOnlyVariables="User::LineageID"
               ReadWriteVariables="User::LineageString">
@@ -4169,7 +4169,7 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</BinaryItem>
           DTS:LocaleID="-1"
           DTS:ObjectName="Update Incremental Dates"
           DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2014; © 2014 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
-          DTS:ThreadHint="1">
+          DTS:ThreadHint="0">
           <DTS:Variables />
           <DTS:ObjectData>
             <SQLTask:SqlTaskData
@@ -4204,7 +4204,7 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</BinaryItem>
           DTS:LocaleID="-1"
           DTS:ObjectName="Write Success Record"
           DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2014; © 2014 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
-          DTS:ThreadHint="1">
+          DTS:ThreadHint="0">
           <DTS:Variables />
           <DTS:ObjectData>
             <SQLTask:SqlTaskData
