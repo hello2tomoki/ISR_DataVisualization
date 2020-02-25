@@ -140,11 +140,6 @@
     <Build Include="Stg_Rpt\Procedures\RM_Generate_Active_Risk_DAX.sql" />
     <Build Include="Security\_ServiceAccountRole.sql" />
     <None Include="Scripts\PostDeployment\_GrantAuditPrivilegesServiceAccount.sql" />
-    <Build Include="ODS_Rpt\Procedures\SystemTableAccessSSISDb.sql" />
-    <Build Include="ODS_Rpt\Tables\ExecutionStats.sql" />
-    <Build Include="ODS_Rpt\Tables\JobFailures.sql" />
-    <Build Include="ODS_Rpt\Tables\JobsHistory.sql" />
-    <Build Include="ODS_Rpt\Tables\RunningSQLJobs.sql" />
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="Scripts\PostDeployment\Script.PostDeployment.sql" />
@@ -164,11 +159,6 @@
       <HintPath>$(DacPacRootPath)\Extensions\Microsoft\SQLDB\Extensions\SqlServer\140\SqlSchemas\master.dacpac</HintPath>
       <SuppressMissingDependenciesErrors>False</SuppressMissingDependenciesErrors>
       <DatabaseVariableLiteralValue>master</DatabaseVariableLiteralValue>
-    </ArtifactReference>
-    <ArtifactReference Include="..\..\..\..\..\..\..\dacpac\SSISDB.dacpac">
-      <HintPath>..\..\..\..\..\..\..\dacpac\SSISDB.dacpac</HintPath>
-      <SuppressMissingDependenciesErrors>False</SuppressMissingDependenciesErrors>
-      <DatabaseSqlCmdVariable>SSISDB</DatabaseSqlCmdVariable>
     </ArtifactReference>
   </ItemGroup>
   <ItemGroup>
