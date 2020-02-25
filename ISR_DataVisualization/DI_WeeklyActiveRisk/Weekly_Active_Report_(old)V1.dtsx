@@ -1,4 +1,4 @@
-﻿<?xml version="1.0"?>
+<?xml version="1.0"?>
 <DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
   DTS:refId="Package"
   DTS:CreationDate="4/19/2018 9:14:15 AM"
@@ -7,12 +7,12 @@
   DTS:CreatorName="pdosanjh"
   DTS:DTSID="{5F3D9144-AEB2-42ED-A155-9A4101AE558C}"
   DTS:ExecutableType="Microsoft.Package"
-  DTS:LastModifiedProductVersion="13.0.4561.14"
+  DTS:LastModifiedProductVersion="14.0.3002.106"
   DTS:LocaleID="4105"
   DTS:ObjectName="Weekly_Active_Report_ old V1"
   DTS:ProtectionLevel="0"
   DTS:VersionBuild="239"
-  DTS:VersionGUID="{7CEEB249-9576-4EAA-AC04-C791F9FB64BF}"
+  DTS:VersionGUID="{16C540C3-295C-4772-95D0-CBD308A66B9D}"
   DTS:VersionMajor="0">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
@@ -158,7 +158,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="LineageTMST">
       <DTS:VariableValue
-        DTS:DataType="7">8/20/2019 11:35:47 AM</DTS:VariableValue>
+        DTS:DataType="7">2/24/2020 2:00:45 PM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -484,7 +484,7 @@ ORDER BY LastChgUser_DTM DESC;</DTS:VariableValue>
           DTS:LocaleID="-1"
           DTS:ObjectName="Set RecordCount Error"
           DTS:TaskContact="Expression Task;Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
-          DTS:ThreadHint="1">
+          DTS:ThreadHint="0">
           <DTS:Variables />
           <DTS:ObjectData>
             <ExpressionTask
@@ -499,7 +499,7 @@ ORDER BY LastChgUser_DTM DESC;</DTS:VariableValue>
           DTS:LocaleID="-1"
           DTS:ObjectName="Write Failure Record"
           DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2014; © 2014 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
-          DTS:ThreadHint="1">
+          DTS:ThreadHint="0">
           <DTS:Variables />
           <DTS:ObjectData>
             <SQLTask:SqlTaskData
@@ -1973,7 +1973,7 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=]]></arrayElement>
                           dataType="System.String"
                           description="The SQL command to be executed."
                           name="SqlCommand"
-                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
                         <property
                           dataType="System.Int32"
                           description="Specifies the column code page to use when code page information is unavailable from the data source."
@@ -2007,8 +2007,8 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=]]></arrayElement>
                       <connections>
                         <connection
                           refId="Package\Move data from cube to MDS\MDS_CopyDataFromReleaseToWorking\Import Data into Stg\OLE DB Destination.Connections[OleDbConnection]"
-                          connectionManagerID="{87323F27-D30B-4DBD-B723-02E2B4F94F0B}:external"
-                          connectionManagerRefId="Project.ConnectionManagers[MDS]"
+                          connectionManagerID="{87323F27-D30B-4DBD-B723-02E2B4F94F0B}:invalid"
+                          connectionManagerRefId="{87323F27-D30B-4DBD-B723-02E2B4F94F0B}:invalid"
                           description="The OLE DB runtime connection used to access the database."
                           name="OleDbConnection" />
                       </connections>
@@ -3033,7 +3033,7 @@ public class Input0Buffer: ScriptBuffer
                           dataType="System.String"
                           description="The SQL command to be executed."
                           name="SqlCommand"
-                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
                         <property
                           dataType="System.String"
                           description="The variable that contains the SQL command to be executed."
@@ -3059,8 +3059,8 @@ public class Input0Buffer: ScriptBuffer
                       <connections>
                         <connection
                           refId="Package\Move data from cube to MDS\MDS_CopyDataFromReleaseToWorking\Import Data into Stg\Source_Data.Connections[OleDbConnection]"
-                          connectionManagerID="{13A4F419-9D7E-46AB-8F72-7E6F654DC223}:external"
-                          connectionManagerRefId="Project.ConnectionManagers[Source]"
+                          connectionManagerID="{13A4F419-9D7E-46AB-8F72-7E6F654DC223}:invalid"
+                          connectionManagerRefId="{13A4F419-9D7E-46AB-8F72-7E6F654DC223}:invalid"
                           description="The OLE DB runtime connection used to access the database."
                           name="OleDbConnection" />
                       </connections>
@@ -3740,8 +3740,8 @@ public class Input0Buffer: ScriptBuffer
           <DTS:ObjectData>
             <ScriptProject
               Name="sp_6fae8e87eabc4d31a640433cfe108beb"
-              VSTAMajorVersion="14"
-              VSTAMinorVersion="0"
+              VSTAMajorVersion="2"
+              VSTAMinorVersion="2"
               Language="CSharp"
               ReadOnlyVariables="User::LineageID"
               ReadWriteVariables="User::LineageString">
@@ -4258,7 +4258,7 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</BinaryItem>
           DTS:LocaleID="-1"
           DTS:ObjectName="Update Incremental Dates"
           DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2014; © 2014 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
-          DTS:ThreadHint="0">
+          DTS:ThreadHint="1">
           <DTS:Variables />
           <DTS:ObjectData>
             <SQLTask:SqlTaskData
@@ -4293,7 +4293,7 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</BinaryItem>
           DTS:LocaleID="-1"
           DTS:ObjectName="Write Success Record"
           DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2014; © 2014 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
-          DTS:ThreadHint="0">
+          DTS:ThreadHint="1">
           <DTS:Variables />
           <DTS:ObjectData>
             <SQLTask:SqlTaskData

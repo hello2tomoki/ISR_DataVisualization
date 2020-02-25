@@ -1,4 +1,4 @@
-﻿<?xml version="1.0"?>
+<?xml version="1.0"?>
 <DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
   DTS:refId="Package"
   DTS:CreationDate="1/23/2019 3:24:45 PM"
@@ -7,12 +7,12 @@
   DTS:CreatorName="spalla"
   DTS:DTSID="{3B94514F-A98C-4ECD-ABA1-DD31050CE0BA}"
   DTS:ExecutableType="Microsoft.Package"
-  DTS:LastModifiedProductVersion="13.0.4561.14"
+  DTS:LastModifiedProductVersion="14.0.3002.106"
   DTS:LocaleID="4105"
   DTS:ObjectName="Controller_Weekly_Active_Report"
   DTS:ProtectionLevel="0"
   DTS:VersionBuild="45"
-  DTS:VersionGUID="{0D464F1B-DD6D-45F6-BDD8-11F5BB945563}"
+  DTS:VersionGUID="{8D58D78A-8F94-4957-B99D-6281BC3D137C}"
   DTS:VersionMajor="0">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
@@ -352,8 +352,8 @@
           <DTS:ObjectData>
             <ScriptProject
               Name="sp_8f00c05a2f794161b716a186f832c6d6"
-              VSTAMajorVersion="14"
-              VSTAMinorVersion="0"
+              VSTAMajorVersion="2"
+              VSTAMinorVersion="2"
               Language="CSharp"
               ReadOnlyVariables="User::LineageID"
               ReadWriteVariables="User::LineageString">
